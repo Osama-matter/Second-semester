@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PHP — Lecture 6</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Syne:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+  <style>
+    :root {
+      --bg-deep: #0d1117;
+      --bg-panel: #161b22;
+      --bg-card: #1c2128;
+      --bg-code: #0d1117;
+      --border: #30363d;
+      --border-light: #21262d;
+      --text-primary: #e6edf3;
+      --text-secondary: #8b949e;
+      --text-muted: #484f58;
+      --accent: #7c6aff;
+      --accent-glow: rgba(124, 106, 255, .18);
+      --accent-dim: rgba(124, 106, 255, .08);
+      --green: #3fb950;
+      --green-dim: rgba(63, 185, 80, .12);
+      --amber: #d29922;
+      --amber-dim: rgba(210, 153, 34, .12);
+      --red: #f85149;
+      --red-dim: rgba(248, 81, 73, .12);
+      --blue: #58a6ff;
+      --blue-dim: rgba(88, 166, 255, .12);
+      --teal: #39d353;
+      --font-sans: 'Syne', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --radius-sm: 6px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --transition: .15s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 3px;
+    }
+
+    /* ── Layout ── */
+    .app {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 232px;
+      min-width: 232px;
+      background: var(--bg-panel);
+      border-right: 1px solid var(--border);
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .sidebar-brand {
+      padding: 18px 16px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sidebar-brand-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .sidebar-brand-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sidebar-brand-title .php-badge {
+      background: var(--accent);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      letter-spacing: .05em;
+    }
+
+    .nav-section {
+      padding: 10px 8px 8px;
+      flex: 1;
+    }
+
+    .nav-label {
+      font-size: 9.5px;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 0 8px;
+      margin-bottom: 6px;
+    }
+
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 10px;
+      font-size: 13px;
+      font-family: var(--font-sans);
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      border-radius: var(--radius-md);
+      transition: background var(--transition), color var(--transition);
+      position: relative;
+    }
+
+    .nav-btn:hover {
+      background: rgba(255, 255, 255, .04);
+      color: var(--text-primary);
+    }
+
+    .nav-btn.active {
+      background: var(--accent-dim);
+      color: var(--text-primary);
+    }
+
+    .nav-btn.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 6px;
+      bottom: 6px;
+      width: 2px;
+      background: var(--accent);
+      border-radius: 0 2px 2px 0;
+    }
+
+    .nav-btn .nav-num {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-left: auto;
+      transition: color var(--transition);
+    }
+
+    .nav-btn.active .nav-num {
+      color: var(--accent);
+    }
+
+    .nav-btn i {
+      font-size: 16px;
+      opacity: .6;
+      transition: opacity var(--transition), color var(--transition);
+    }
+
+    .nav-btn.active i {
+      opacity: 1;
+      color: var(--accent);
+    }
+
+    .nav-btn:hover i {
+      opacity: .9;
+    }
+
+    /* ── Main ── */
+    .main {
+      flex: 1;
+      padding: 24px 28px;
+      overflow-y: auto;
+      max-width: 900px;
+    }
+
+    /* ── Search ── */
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 9px 14px;
+      margin-bottom: 24px;
+      transition: border-color var(--transition);
+    }
+
+    .search-bar:focus-within {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    .search-bar input {
+      border: none;
+      background: none;
+      outline: none;
+      font-size: 13px;
+      font-family: var(--font-sans);
+      color: var(--text-primary);
+      width: 100%;
+    }
+
+    .search-bar input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .search-bar i {
+      font-size: 16px;
+      color: var(--text-muted);
+    }
+
+    /* ── Section ── */
+    .section {
+      display: none;
+      animation: fadeIn .2s ease;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .section-header {
+      margin-bottom: 20px;
+    }
+
+    .section-header h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-header h1::before {
+      content: attr(data-num);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--accent);
+      background: var(--accent-dim);
+      border: 1px solid rgba(124, 106, 255, .25);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .section-header p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 6px;
+      margin-left: 0;
+    }
+
+    /* ── Grids ── */
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .grid3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px 18px;
+      margin-bottom: 14px;
+      transition: border-color var(--transition);
+    }
+
+    .card:hover {
+      border-color: #40464e;
+    }
+
+    .card-title {
+      font-size: 10.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .card-title i {
+      font-size: 15px;
+      color: var(--accent);
+      opacity: .8;
+    }
+
+    /* ── Key list ── */
+    .key-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .key-list li {
+      font-size: 13px;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      line-height: 1.5;
+    }
+
+    .key-list li::before {
+      content: "›";
+      color: var(--accent);
+      font-size: 15px;
+      font-weight: 600;
+      flex-shrink: 0;
+      margin-top: 0;
+      line-height: 1.5;
+    }
+
+    /* ── Alert boxes ── */
+    .warn-box,
+    .danger-box,
+    .info-box,
+    .success-box {
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      font-size: 13px;
+      line-height: 1.55;
+      border-left-width: 3px;
+      border-left-style: solid;
+      border-top: 1px solid;
+      border-right: 1px solid;
+      border-bottom: 1px solid;
+    }
+
+    .warn-box {
+      background: var(--amber-dim);
+      border-color: rgba(210, 153, 34, .3);
+      border-left-color: var(--amber);
+      color: #d4b062;
+    }
+
+    .danger-box {
+      background: var(--red-dim);
+      border-color: rgba(248, 81, 73, .25);
+      border-left-color: var(--red);
+      color: #e07070;
+    }
+
+    .info-box {
+      background: var(--blue-dim);
+      border-color: rgba(88, 166, 255, .25);
+      border-left-color: var(--blue);
+      color: #79b8e8;
+    }
+
+    .success-box {
+      background: var(--green-dim);
+      border-color: rgba(63, 185, 80, .25);
+      border-left-color: var(--green);
+      color: #6fcf80;
+    }
+
+    .warn-box strong,
+    .danger-box strong,
+    .info-box strong,
+    .success-box strong {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    /* ── Code ── */
+    pre {
+      background: var(--bg-code);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      font-size: 12px;
+      font-family: var(--font-mono);
+      font-weight: 400;
+      overflow-x: auto;
+      margin-bottom: 12px;
+      line-height: 1.7;
+      color: #cdd9e5;
+      position: relative;
+    }
+
+    pre::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, var(--accent) 0%, transparent 60%);
+      opacity: .4;
+      border-radius: var(--radius-md) var(--radius-md) 0 0;
+    }
+
+    code {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      background: rgba(124, 106, 255, .1);
+      color: #b39dff;
+      padding: 1px 6px;
+      border-radius: 4px;
+      border: 1px solid rgba(124, 106, 255, .2);
+    }
+
+    pre code {
+      background: none;
+      border: none;
+      padding: 0;
+      color: inherit;
+    }
+
+    /* ── Badges ── */
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      padding: 2px 9px;
+      border-radius: 4px;
+      margin: 2px 3px 2px 0;
+      border: 1px solid transparent;
+    }
+
+    .badge-purple {
+      background: rgba(124, 106, 255, .15);
+      color: #b39dff;
+      border-color: rgba(124, 106, 255, .25);
+    }
+
+    .badge-teal {
+      background: rgba(57, 211, 83, .12);
+      color: #39d353;
+      border-color: rgba(57, 211, 83, .25);
+    }
+
+    .badge-amber {
+      background: var(--amber-dim);
+      color: var(--amber);
+      border-color: rgba(210, 153, 34, .3);
+    }
+
+    .badge-red {
+      background: var(--red-dim);
+      color: var(--red);
+      border-color: rgba(248, 81, 73, .3);
+    }
+
+    .badge-blue {
+      background: var(--blue-dim);
+      color: var(--blue);
+      border-color: rgba(88, 166, 255, .3);
+    }
+
+    /* ── Table ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+
+    th {
+      background: rgba(255, 255, 255, .03);
+      font-weight: 600;
+      font-size: 11px;
+      padding: 8px 12px;
+      text-align: left;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    td {
+      padding: 8px 12px;
+      border: 1px solid var(--border-light);
+      color: var(--text-secondary);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, .02);
+    }
+
+    .highlight {
+      background: var(--accent-dim);
+    }
+
+    .search-highlight {
+      background: rgba(210, 153, 34, .3);
+      color: var(--text-primary);
+      border-radius: 2px;
+      padding: 0 2px;
+    }
+
+    /* ── Search count ── */
+    #searchCount {
+      font-size: 11px;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      white-space: nowrap;
+      background: var(--bg-deep);
+      padding: 2px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+  </style>
+  <link rel="stylesheet" href="global.css" />
+  <link rel="stylesheet" href="components.css" />
+  <link rel="stylesheet" href="responsive.css" />
+  <script defer src="app.js"></script>
+</head>
+
+<body>
+
+  <div class="app">
+    <div class="sidebar">
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-label">Lecture Notes</div>
+        <div class="sidebar-brand-title">
+          <span class="php-badge">PHP</span>
+          Lecture 6
+        </div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-label">Sections</div>
+        <button class="nav-btn active" onclick="show('s1',this)">
+          <i class="ti ti-rocket"></i>Intro &amp; Scripts<span class="nav-num">01</span>
+        </button>
+        <button class="nav-btn" onclick="show('s2',this)">
+          <i class="ti ti-database"></i>Data Types &amp; Variables<span class="nav-num">02</span>
+        </button>
+        <button class="nav-btn" onclick="show('s3',this)">
+          <i class="ti ti-math-function"></i>Operators &amp; Control<span class="nav-num">03</span>
+        </button>
+        <button class="nav-btn" onclick="show('s4',this)">
+          <i class="ti ti-list"></i>Arrays &amp; Loops<span class="nav-num">04</span>
+        </button>
+        <button class="nav-btn" onclick="show('s5',this)">
+          <i class="ti ti-tools"></i>Functions &amp; Forms<span class="nav-num">05</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="search-bar">
+        <i class="ti ti-search"></i>
+        <input type="text" id="searchInput" placeholder="Search across all sections..." oninput="doSearch(this.value)">
+        <span id="searchCount"></span>
+      </div>
+
+      <!-- S1 -->
+      <div id="s1" class="section active">
+        <div class="section-header">
+          <h1 data-num="01">Introduction to PHP &amp; Scripts</h1>
+          <p>What PHP is, how it runs, and the basics of writing PHP syntax</p>
+        </div>
+        <div class="grid2">
+          <div class="card">
+            <div class="card-title"><i class="ti ti-bulb"></i>Key Concepts</div>
+            <ul class="key-list">
+              <li>PHP = HyperText Preprocessor — server-side scripting language</li>
+              <li>Code executes on the server; browser receives plain HTML output</li>
+              <li>Files use <code>.php</code> extension; can mix HTML, CSS, JS, PHP</li>
+              <li>PHP tags: <code>&lt;?php</code> … <code>?&gt;</code></li>
+              <li>Each statement ends with a semicolon <code>;</code></li>
+              <li>Used by ~78% of all websites (Facebook, Wikipedia, WordPress)</li>
+              <li>Frameworks: Laravel, Symfony, Laminas, CodeIgniter, CakePHP</li>
+              <li>PHP learning split: Language → Databases → Security</li>
+            </ul>
+          </div>
+          <div class="card">
+            <div class="card-title"><i class="ti ti-eye"></i>PHP Can Do</div>
+            <ul class="key-list">
+              <li>Generate dynamic page content</li>
+              <li>Create, read, write, delete files on server</li>
+              <li>Collect &amp; process form data</li>
+              <li>Send and receive cookies</li>
+              <li>Add/modify/delete database records</li>
+              <li>Control user access &amp; encrypt data</li>
+              <li>Output HTML, images, PDFs, XML, XHTML</li>
+            </ul>
+          </div>
+        </div>
+        <div class="warn-box">
+          <p><strong>⚠ Case Sensitivity</strong>Keywords (<code>echo</code>, <code>if</code>) and functions are
+            <em>NOT</em> case-sensitive. But <strong>variable names ARE case-sensitive</strong> — <code>$color</code>,
+            <code>$COLOR</code>, and <code>$coLOR</code> are three different variables!
+          </p>
+        </div>
+        <div class="card">
+          <div class="card-title"><i class="ti ti-code"></i>Basic Script Structure</div>
+          <pre>&lt;html&gt;
+&lt;body&gt;
+&lt;h1&gt;My page&lt;/h1&gt;
+&lt;?php
+  // Single-line comment
+  # Also single-line
+  /*
+    Multi-line comment
+  */
+  echo "Hello World!"; // semicolon required
+  ECHO "Also valid!";  // keywords are case-insensitive
+?&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+        </div>
+        <div class="info-box">
+          <p><strong>ℹ Server-Side Advantage</strong>PHP code is hidden from clients — only the resulting HTML is sent.
+            This enables secure access to databases, files, and server resources without exposing logic.</p>
+        </div>
+      </div>
+
+      <!-- S2 -->
+      <div id="s2" class="section">
+        <div class="section-header">
+          <h1 data-num="02">Data Types &amp; Variables</h1>
+          <p>PHP's 8 types, variable rules, scope, superglobals, and output</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><i class="ti ti-table"></i>Data Types Overview</div>
+          <table>
+            <tr>
+              <th>Type</th>
+              <th>Description</th>
+              <th>Example</th>
+            </tr>
+            <tr>
+              <td><span class="badge badge-purple">String</span></td>
+              <td>Sequence of characters (single or double quotes)</td>
+              <td><code>$x = "Hello";</code></td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-blue">Integer</span></td>
+              <td>Non-decimal, range ±2,147,483,647. Decimal/hex/octal</td>
+              <td><code>$x = 5985;</code></td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-teal">Float</span></td>
+              <td>Decimal or exponential number (also "double")</td>
+              <td><code>$x = 10.365;</code></td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-amber">Boolean</span></td>
+              <td>TRUE or FALSE — used in conditionals</td>
+              <td><code>$x = true;</code></td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-purple">Array</span></td>
+              <td>Multiple values in one variable</td>
+              <td><code>$a = array(1,2,3);</code></td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-blue">Object</span></td>
+              <td>Stores data + methods. Declared via <code>class</code></td>
+              <td><code>$h = new Car();</code></td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-red">NULL</span></td>
+              <td>Variable with no value; auto-assigned if no value set</td>
+              <td><code>$x = null;</code></td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-teal">Resource</span></td>
+              <td>Reference to external resource (e.g. DB connection)</td>
+              <td>—</td>
+            </tr>
+          </table>
+        </div>
+        <div class="grid2">
+          <div class="card">
+            <div class="card-title"><i class="ti ti-variable"></i>Variable Rules</div>
+            <ul class="key-list">
+              <li>Starts with <code>$</code> sign: <code>$myVar</code></li>
+              <li>No declaration needed — created on first assignment</li>
+              <li>PHP is <strong>loosely typed</strong> — type can change</li>
+              <li>Constants: <code>define("NAME", value)</code> — no <code>$</code>, global, unchangeable</li>
+            </ul>
+            <pre>$x = 42;       // integer
+echo $x + 1;   // 43, $x still 42
+$x = 'hello';  // type changes — valid!
+define("PI", 3.14); echo PI;</pre>
+          </div>
+          <div class="card">
+            <div class="card-title"><i class="ti ti-scope"></i>Variable Scope</div>
+            <table>
+              <tr>
+                <th>Scope</th>
+                <th>Description</th>
+              </tr>
+              <tr>
+                <td><span class="badge badge-purple">Local</span></td>
+                <td>Declared inside function — only accessible there</td>
+              </tr>
+              <tr>
+                <td><span class="badge badge-teal">Global</span></td>
+                <td>Declared outside function — use <code>global $x</code> inside</td>
+              </tr>
+              <tr>
+                <td><span class="badge badge-amber">Static</span></td>
+                <td>Local but persists after function ends — <code>static $x</code></td>
+              </tr>
+            </table>
+            <pre>$x = 5;  // global
+function myTest() {
+  global $x, $y;  // must declare
+  $y = $x + 10;   // now works
+}
+function counter() {
+  static $n = 0;  // persists each call
+  echo $n++;
+}</pre>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title"><i class="ti ti-world"></i>Superglobals &amp; GET vs POST</div>
+          <table>
+            <tr>
+              <th>Variable</th>
+              <th>Use case</th>
+              <th>Key trait</th>
+            </tr>
+            <tr>
+              <td><code>$_GET</code></td>
+              <td>Form data via URL query string</td>
+              <td>Visible in URL, cacheable, bookmarkable, char limit</td>
+            </tr>
+            <tr>
+              <td><code>$_POST</code></td>
+              <td>Form data in HTTP body</td>
+              <td>Hidden, secure, no size limit, not cached</td>
+            </tr>
+            <tr>
+              <td><code>$_SERVER</code></td>
+              <td>Server &amp; client info</td>
+              <td><code>['SERVER_ADDR']</code>, <code>['REMOTE_ADDR']</code>, <code>['HTTP_USER_AGENT']</code></td>
+            </tr>
+          </table>
+        </div>
+        <div class="warn-box">
+          <p><strong>⚠ echo vs print</strong><code>echo</code> has no return value, can take multiple params, slightly
+            faster. <code>print</code> returns 1, takes one arg. Use <code>echo</code> for general output. String
+            concatenation uses the dot operator <code>.</code></p>
+        </div>
+        <div class="card">
+          <div class="card-title"><i class="ti ti-abc"></i>Common String Functions</div>
+          <pre>strlen("Hello world!")            // 12
+str_word_count("Hello world!")    // 2
+strrev("Hello world!")            // !dlrow olleH
+strpos("Hello world!", "world")   // 6
+str_replace("world","Dolly","Hello world!") // Hello Dolly</pre>
+        </div>
+      </div>
+
+      <!-- S3 -->
+      <div id="s3" class="section">
+        <div class="section-header">
+          <h1 data-num="03">Operators &amp; Control Statements</h1>
+          <p>All operator categories, comparison traps, and conditional logic</p>
+        </div>
+        <div class="grid2">
+          <div class="card">
+            <div class="card-title"><i class="ti ti-calculator"></i>Operator Categories</div>
+            <table>
+              <tr>
+                <th>Type</th>
+                <th>Symbols</th>
+              </tr>
+              <tr>
+                <td>Arithmetic</td>
+                <td><code>+ - * / %</code></td>
+              </tr>
+              <tr>
+                <td>Assignment</td>
+                <td><code>= += -= *= /= %= .=</code></td>
+              </tr>
+              <tr>
+                <td>Comparison</td>
+                <td><code>== === != !== &lt; &gt; &lt;= &gt;=</code></td>
+              </tr>
+              <tr>
+                <td>Increment/Decrement</td>
+                <td><code>++ --</code></td>
+              </tr>
+              <tr>
+                <td>Logical</td>
+                <td><code>&amp;&amp; || !</code></td>
+              </tr>
+              <tr>
+                <td>String</td>
+                <td><code>.</code> (concatenate) <code>.=</code></td>
+              </tr>
+            </table>
+          </div>
+          <div class="card">
+            <div class="card-title"><i class="ti ti-equal"></i>== vs === (Critical!)</div>
+            <ul class="key-list">
+              <li><code>==</code> — equality in <em>value only</em>, ignores type</li>
+              <li><code>===</code> — identity: value <em>AND</em> type must match</li>
+            </ul>
+            <div class="danger-box" style="margin-top:.75rem">
+              <p><strong>⛔ == traps</strong><code>0 == false</code> → TRUE · <code>"" == false</code> → TRUE ·
+                <code>"0" == false</code> → TRUE · <code>1 == true</code> → TRUE · <code>"5" == 5</code> → TRUE. Always
+                use <code>===</code> for strict checks.
+              </p>
+            </div>
+            <pre>var_dump(0 == false);   // bool(true) — TRAP!
+var_dump(0 === false);  // bool(false) — correct
+var_dump("5" === 5);    // bool(false) — type differs</pre>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title"><i class="ti ti-git-branch"></i>Conditional Statements</div>
+          <pre>if ($x == 5) {
+  echo "Five!";
+} elseif ($x &gt; 5) {
+  echo "Greater";
+} else {
+  echo "Less";
+}
+
+// switch — cleaner for multiple values
+switch ($credit_card) {
+  case "Visa":
+    echo "Visa selected";
+    break;      // ← REQUIRED, or falls through!
+  case "Master":
+    echo "Mastercard";
+    break;
+  default:
+    echo "Unknown";
+}</pre>
+          <div class="warn-box" style="margin-top:.75rem;margin-bottom:0">
+            <p><strong>⚠ break is mandatory</strong>in <code>switch</code> — forgetting it causes fall-through to next
+              case!</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title"><i class="ti ti-shortcuts"></i>Shorthand Assignment</div>
+          <pre>$x += $y;   // same as $x = $x + $y
+$x -= $y;
+$x *= $y;
+$x /= $y;
+$x %= $y;
+$s .= " world"; // string concat assignment</pre>
+        </div>
+      </div>
+
+      <!-- S4 -->
+      <div id="s4" class="section">
+        <div class="section-header">
+          <h1 data-num="04">Arrays &amp; Loops</h1>
+          <p>Indexed arrays, associative arrays, and all loop types</p>
+        </div>
+        <div class="grid2">
+          <div class="card">
+            <div class="card-title"><i class="ti ti-list-numbers"></i>Indexed Arrays</div>
+            <ul class="key-list">
+              <li>Elements accessed by numeric index starting at 0</li>
+              <li>Add element: <code>$arr[] = 'value';</code></li>
+              <li>Remove: <code>unset($arr[2]);</code> then <code>array_values($arr)</code> to reindex</li>
+            </ul>
+            <pre>$colors = array('red','blue','green','black');
+$colors[] = 'purple';     // add
+unset($colors[2]);        // remove 'green'
+$colors = array_values($colors); // reindex</pre>
+          </div>
+          <div class="card">
+            <div class="card-title"><i class="ti ti-key"></i>Associative Arrays</div>
+            <ul class="key-list">
+              <li>Key-value pairs — keys must be unique</li>
+              <li>Assigning existing key <em>overwrites</em> the value</li>
+            </ul>
+            <pre>$favColors = array(
+  'Joe'   =&gt; 'blue',
+  'Elena' =&gt; 'green'
+);
+$favColors['Bob'] = 'purple';  // add 
+unset($favColors['Joe']);       // remove
+$favColors['Joe'] = 'yellow';  // overwrites!</pre>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title"><i class="ti ti-repeat"></i>All Loop Types</div>
+          <table>
+            <tr>
+              <th>Loop</th>
+              <th>Use when</th>
+              <th>Key syntax</th>
+            </tr>
+            <tr>
+              <td><code>while</code></td>
+              <td>Condition checked before each iteration</td>
+              <td>Check first, may skip entirely</td>
+            </tr>
+            <tr>
+              <td><code>do…while</code></td>
+              <td>Must run at least once</td>
+              <td>Check after; semicolon after <code>)</code></td>
+            </tr>
+            <tr>
+              <td><code>for</code></td>
+              <td>Known number of iterations</td>
+              <td><code>for(init; cond; step)</code></td>
+            </tr>
+            <tr>
+              <td><code>foreach</code></td>
+              <td>Iterating arrays</td>
+              <td><code>foreach($arr as $val)</code></td>
+            </tr>
+          </table>
+          <pre>// while
+while ($x &lt; 1000) { echo $x; $x = $x * $x; }
+
+// do-while (runs at least once)
+do { echo $x; $x = $x * $x; } while ($x &lt; 1000);
+
+// for
+for ($i = 1; $i &lt;= 10; $i++) { echo $i . ":" . ($i*$i); }
+
+// foreach — indexed
+foreach ($colors as $color) { echo $color; }
+
+// foreach — with index
+foreach ($colors as $i =&gt; $color) {
+  echo "$i =&gt; $color";
+}</pre>
+        </div>
+        <div class="warn-box">
+          <p><strong>⚠ do…while</strong>Don't forget the semicolon after the closing parenthesis:
+            <code>} while (condition);</code>
+          </p>
+        </div>
+      </div>
+
+      <!-- S5 -->
+      <div id="s5" class="section">
+        <div class="section-header">
+          <h1 data-num="05">Functions &amp; Form Handling</h1>
+          <p>User functions, built-in utilities, input sanitization &amp; validation</p>
+        </div>
+        <div class="grid2">
+          <div class="card">
+            <div class="card-title"><i class="ti ti-function"></i>Function Syntax</div>
+            <pre>function multiply($x, $y) {
+  return $x * $y;
+}
+// Call
+echo multiply(2, 3);       // 6
+$a = multiply(2, 3);       // assign result
+$b = multiply(multiply(2,3), multiply(3,4)); // 72
+
+// Note: no return = no output even if called
+multiply(2, 3);  // prints NOTHING without echo</pre>
+          </div>
+          <div class="card">
+            <div class="card-title"><i class="ti ti-check"></i>isset() &amp; empty()</div>
+            <table>
+              <tr>
+                <th>Function</th>
+                <th>Returns TRUE when</th>
+              </tr>
+              <tr>
+                <td><code>isset($v)</code></td>
+                <td>Variable is declared AND not NULL</td>
+              </tr>
+              <tr>
+                <td><code>empty($v)</code></td>
+                <td>Variable is not declared, false, null, 0, "", or "0"</td>
+              </tr>
+            </table>
+            <pre>$u = "BroCode";
+if(isset($u))  echo "set";       // set
+if(!empty($u)) echo "not empty"; // not empty
+
+$u = null;
+if(!isset($u)) echo "not set";   // not set
+if(empty($u))  echo "empty";     // empty</pre>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title"><i class="ti ti-shield"></i>Sanitize &amp; Validate User Input</div>
+          <div class="danger-box">
+            <p><strong>⛔ XSS Risk</strong>Never echo <code>$_POST['input']</code> directly — users can inject
+              <code>&lt;script&gt;alert("hacked")&lt;/script&gt;</code>. Always sanitize first!
+            </p>
+          </div>
+          <div class="grid2">
+            <div>
+              <p
+                style="font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.08em">
+                Sanitize Filters</p>
+              <table>
+                <tr>
+                  <th>Filter</th>
+                  <th>Strips</th>
+                </tr>
+                <tr>
+                  <td><code>SANITIZE_SPECIAL_CHARS</code></td>
+                  <td>HTML tags &amp; special chars</td>
+                </tr>
+                <tr>
+                  <td><code>SANITIZE_EMAIL</code></td>
+                  <td>Illegal email chars</td>
+                </tr>
+                <tr>
+                  <td><code>SANITIZE_URL</code></td>
+                  <td>Illegal URL chars</td>
+                </tr>
+                <tr>
+                  <td><code>SANITIZE_NUMBER_INT</code></td>
+                  <td>Non-digit chars (keeps +/−)</td>
+                </tr>
+                <tr>
+                  <td><code>SANITIZE_NUMBER_FLOAT</code></td>
+                  <td>Non-numeric (keeps . e E)</td>
+                </tr>
+              </table>
+            </div>
+            <div>
+              <p
+                style="font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.08em">
+                Validate Filters</p>
+              <table>
+                <tr>
+                  <th>Filter</th>
+                  <th>Checks</th>
+                </tr>
+                <tr>
+                  <td><code>VALIDATE_INT</code></td>
+                  <td>Valid integer</td>
+                </tr>
+                <tr>
+                  <td><code>VALIDATE_FLOAT</code></td>
+                  <td>Valid float</td>
+                </tr>
+                <tr>
+                  <td><code>VALIDATE_EMAIL</code></td>
+                  <td>Valid email format</td>
+                </tr>
+                <tr>
+                  <td><code>VALIDATE_URL</code></td>
+                  <td>Valid URL</td>
+                </tr>
+                <tr>
+                  <td><code>VALIDATE_IP</code></td>
+                  <td>Valid IP address</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <pre>// Sanitize then validate pattern:
+$email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL);
+$age   = filter_input(INPUT_POST, "age",   FILTER_VALIDATE_INT);
+
+if(empty($age))   echo "Invalid number";
+if(empty($email)) echo "Invalid email";</pre>
+        </div>
+        <div class="card">
+          <div class="card-title"><i class="ti ti-abc"></i>String Functions Reference</div>
+          <pre>$s = "Bro The Code";
+strtolower($s)       // "bro the code"
+strtoupper($s)       // "BRO THE CODE"
+trim($s)             // removes whitespace
+str_pad($s, 20, "0") // pad to length 20
+str_replace("-","/",$phone)
+strrev($s)           // reverses string
+strlen($s)           // character count
+strpos($s, "-")      // index of first "-"
+substr($s, 0, 3)     // "Bro" (start, length)
+substr($s, 4)        // "The Code" (from index 4)</pre>
+        </div>
+        <div class="card">
+          <div class="card-title"><i class="ti ti-file-import"></i>include() — Code Reuse</div>
+          <ul class="key-list">
+            <li><code>include("file.php")</code> copies and inserts file contents at that point</li>
+            <li>Makes sections like headers/footers reusable — change in one place</li>
+            <li>Use for repeating elements: nav, headers, footers, DB config</li>
+          </ul>
+          <pre>&lt;?php include("header.html"); ?&gt;
+&lt;body&gt;Home page content&lt;/body&gt;
+&lt;?php include("footer.html"); ?&gt;</pre>
+        </div>
+        <div class="success-box">
+          <p><strong>✓ Best Practice</strong>Always sanitize input before validation. Sanitize removes dangerous chars;
+            validate checks format. Use both together for secure form handling.</p>
+        </div>
+      </div>
+
+    </div><!-- .main -->
+  </div><!-- .app -->
+
+  <script>
+    function show(id, btn) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      btn.classList.add('active');
+      document.getElementById('searchInput').value = '';
+      document.getElementById('searchCount').textContent = '';
+    }
+
+    function doSearch(q) {
+      const sections = document.querySelectorAll('.section');
+      sections.forEach(s => {
+        const html = s.getAttribute('data-original') || s.innerHTML;
+        if (!s.getAttribute('data-original')) s.setAttribute('data-original', html);
+        s.innerHTML = s.getAttribute('data-original');
+      });
+      if (!q.trim()) { document.getElementById('searchCount').textContent = ''; return; }
+      const re = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+      let total = 0, found = [];
+      sections.forEach((s, i) => {
+        const orig = s.getAttribute('data-original');
+        const count = (orig.match(re) || []).length;
+        if (count > 0) { found.push(i); total += count; }
+        s.innerHTML = orig.replace(re, m => `<mark class="search-highlight">${m}</mark>`);
+      });
+      if (found.length > 0) {
+        const btns = document.querySelectorAll('.nav-btn');
+        btns.forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        const target = document.querySelectorAll('.section')[found[0]];
+        target.classList.add('active');
+        btns[found[0]].classList.add('active');
+      }
+      document.getElementById('searchCount').textContent = total ? `${total} match${total > 1 ? 'es' : ''}` : 'No matches';
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Missing Topics Report — StudyPortal</title>
+<meta name="description" content="Scan report of missing lectures, broken links and content gaps in the S&S semester portal."/>
+<link rel="stylesheet" href="portal.css"/>
+<style>
+.report-hero{background:linear-gradient(135deg,rgba(239,68,68,.12),rgba(245,158,11,.08));border:1px solid rgba(239,68,68,.25);border-radius:16px;padding:28px 24px;margin-bottom:24px}
+.report-hero h1{font-family:var(--f2);font-size:22px;font-weight:800;color:#f87171;margin-bottom:6px}
+.report-hero p{font-size:13px;color:var(--tx3);max-width:520px}
+.scan-meta{display:flex;gap:16px;flex-wrap:wrap;margin-top:14px}
+.scan-meta span{font-size:12px;color:var(--mu);background:var(--bg3);padding:4px 10px;border-radius:99px;border:1px solid var(--bd2)}
+
+.report-section{background:var(--card);border:1px solid var(--bd);border-radius:var(--r);margin-bottom:20px;overflow:hidden}
+.rs-head{padding:16px 20px;border-bottom:1px solid var(--bd2);display:flex;align-items:center;gap:10px}
+.rs-head h2{font-size:15px;font-weight:700;flex:1}
+.rs-body{padding:18px 20px}
+
+.issue-item{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--bd2)}
+.issue-item:last-child{border:none;padding-bottom:0}
+.issue-ico{font-size:20px;flex-shrink:0;margin-top:1px}
+.issue-info h3{font-size:13.5px;font-weight:600;margin-bottom:3px}
+.issue-info p{font-size:12px;color:var(--tx3);line-height:1.5}
+.issue-info .todo{margin-top:10px;background:var(--bg3);border-radius:var(--rs);padding:10px 14px}
+.issue-info .todo h4{font-size:11px;font-weight:700;color:var(--tx2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+.issue-info .todo ul{list-style:none;padding:0}
+.issue-info .todo ul li{font-size:12px;color:var(--tx3);padding:2px 0;display:flex;align-items:center;gap:7px}
+.issue-info .todo ul li::before{content:'→';color:var(--p);font-size:11px}
+
+.ok-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bd2);font-size:13px}
+.ok-item:last-child{border:none}
+.ok-item .ok-ico{font-size:18px;flex-shrink:0}
+
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-bottom:20px}
+.sg{background:var(--bg3);border-radius:var(--rs);padding:14px 16px;text-align:center;border:1px solid var(--bd2)}
+.sg .sv{font-size:26px;font-weight:800;font-family:var(--f2)}
+.sg .sl{font-size:11px;color:var(--mu);margin-top:3px}
+
+.todo-box{background:linear-gradient(135deg,rgba(99,102,241,.08),rgba(6,182,212,.05));border:1px solid rgba(99,102,241,.2);border-radius:var(--r);padding:20px}
+.todo-box h3{font-size:14px;font-weight:700;margin-bottom:14px;color:var(--pl)}
+.todo-step{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;padding:10px 14px;background:var(--card);border-radius:var(--rs);border:1px solid var(--bd2)}
+.todo-step .step-n{width:24px;height:24px;background:var(--p);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.todo-step p{font-size:12.5px;color:var(--tx3);line-height:1.5}
+.todo-step strong{color:var(--tx);display:block;margin-bottom:2px;font-size:13px}
+</style>
+  <link rel="stylesheet" href="global.css" />
+  <link rel="stylesheet" href="components.css" />
+  <link rel="stylesheet" href="responsive.css" />
+  <script defer src="app.js"></script>
+</head>
+<body>
+<div class="spin-wrap" id="spinner"><div class="spin"></div></div>
+<div class="sb-ov" id="sbOv" onclick="closeSidebar()"></div>
+
+<div class="layout">
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sb-logo">
+    <div class="icon">🎓</div>
+    <div class="logo-text"><h2>StudyPortal</h2><small>S&S Semester</small></div>
+    <button class="sb-close" onclick="closeSidebar()">✕</button>
+  </div>
+  <nav class="sb-nav">
+    <div class="ns">📌 Main</div>
+    <a href="index.html" class="ni"><span class="ico">🏠</span>Dashboard</a>
+    <a href="missing-topics.html" class="ni active"><span class="ico">⚠️</span>Missing Topics</a>
+    <div class="ns">🖥️ System Design</div>
+    <a href="SAD-study-notes.html" class="ni"><span class="ico">📝</span>SAD Study Notes</a>
+    <a href="SAD-Revision-and-Exam-Solutions (1).html" class="ni"><span class="ico">✅</span>SAD Exam Solutions</a>
+    <div class="ns">🌐 Web Development</div>
+    <a href="HTML_Lecture_Summary_Updated.html" class="ni"><span class="ico">🏷️</span>HTML Lectures</a>
+    <a href="Css.html" class="ni"><span class="ico">🎨</span>CSS Lectures</a>
+    <a href="Js.html" class="ni"><span class="ico">⚡</span>JavaScript</a>
+    <a href="Jssummary.html" class="ni"><span class="ico">📖</span>JS Summary</a>
+    <a href="php-file-handling-study.html" class="ni"><span class="ico">🐘</span>PHP</a>
+    <div class="ns">📡 Networking</div>
+    <a href="network_lecture_study_complete.html" class="ni"><span class="ico">📡</span>Network Lectures</a>
+    <div class="ns">💼 Business</div>
+    <a href="business-admin-study-guide.html" class="ni"><span class="ico">📊</span>Business Admin</a>
+    <div class="ns">📚 Data Structures</div>
+    <a href="#ds" class="ni"><span class="ico">🔴</span>D.S — Missing</a>
+  </nav>
+</aside>
+
+<div class="main">
+  <header class="topbar">
+    <button class="ham" onclick="openSidebar()">☰</button>
+    <div style="flex:1;font-size:14px;font-weight:600;color:var(--tx2)">⚠️ Missing Topics Report</div>
+    <div class="tb-right">
+      <button class="bico" onclick="toggleTheme()" id="themeBtn">🌙</button>
+      <a href="index.html" class="bico" title="Home">🏠</a>
+    </div>
+  </header>
+
+  <main class="page fade-in">
+    <nav class="bc">
+      <a href="index.html">🏠 Home</a><span class="bc-sep">/</span>
+      <span style="color:#f87171">Missing Topics Report</span>
+    </nav>
+
+    <!-- Hero -->
+    <div class="report-hero">
+      <h1>⚠️ Missing Topics &amp; Content Report</h1>
+      <p>Automated scan of the S&amp;S semester folder. Lists all missing lecture files, incomplete topics, and content gaps with actionable suggestions.</p>
+      <div class="scan-meta">
+        <span>📅 Scanned: May 2026</span>
+        <span>📂 Folder: S_S</span>
+        <span>📄 9 files found</span>
+        <span>❌ 1 subject missing</span>
+        <span>⚠️ 3 gaps detected</span>
+      </div>
+    </div>
+
+    <!-- Summary -->
+    <div class="summary-grid">
+      <div class="sg"><div class="sv" style="color:var(--pl)">5</div><div class="sl">Subjects Total</div></div>
+      <div class="sg"><div class="sv" style="color:#34d399">4</div><div class="sl">Subjects OK</div></div>
+      <div class="sg"><div class="sv" style="color:#f87171">1</div><div class="sl">Fully Missing</div></div>
+      <div class="sg"><div class="sv" style="color:#fbbf24">3</div><div class="sl">Gaps / Issues</div></div>
+      <div class="sg"><div class="sv" style="color:#34d399">9</div><div class="sl">Files Available</div></div>
+    </div>
+
+    <!-- ── MISSING SUBJECTS ── -->
+    <div class="report-section" id="ds">
+      <div class="rs-head">
+        <span style="font-size:20px">🔴</span>
+        <h2>Fully Missing Subjects</h2>
+        <span class="badge b-red">1 subject</span>
+      </div>
+      <div class="rs-body">
+        <div class="issue-item">
+          <div class="issue-ico">📚</div>
+          <div class="issue-info">
+            <h3>Data Structures (D.S) — No content found</h3>
+            <p>Zero lecture files detected for Data Structures. This is a key CS subject covering arrays, linked lists, trees, graphs, sorting &amp; searching algorithms.</p>
+            <div class="todo">
+              <h4>📋 TODO — Please provide:</h4>
+              <ul>
+                <li>Lecture HTML pages (lec1.html, lec2.html …)</li>
+                <li>PDF lecture slides or textbook chapters</li>
+                <li>Notes on: Arrays, Stacks, Queues, Trees, Graphs</li>
+                <li>Notes on: Sorting (Bubble, Quick, Merge) &amp; Searching (Binary)</li>
+                <li>Practice problems / solved exercises PDF</li>
+                <li>Screenshots or whiteboard photos of topics</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CONTENT GAPS ── -->
+    <div class="report-section">
+      <div class="rs-head">
+        <span style="font-size:20px">⚠️</span>
+        <h2>Content Gaps &amp; Incomplete Areas</h2>
+        <span class="badge b-amb">3 gaps</span>
+      </div>
+      <div class="rs-body">
+
+        <div class="issue-item">
+          <div class="issue-ico">📡</div>
+          <div class="issue-info">
+            <h3>Networking — Lectures 1, 2, 5, 6, 8 Missing</h3>
+            <p>The network folder only has lecture files for topics: Data &amp; Signals (lec 3), Protocol Functions (lec 4), and Ethernet (lec 7). Lectures 1, 2, 5, 6, and 8 are not present.</p>
+            <div class="todo">
+              <h4>📋 Suggested missing topics:</h4>
+              <ul>
+                <li>Lecture 1 — Introduction to Networks &amp; OSI Model</li>
+                <li>Lecture 2 — Network Types (LAN, WAN, MAN)</li>
+                <li>Lecture 5 — IP Addressing &amp; Subnetting</li>
+                <li>Lecture 6 — Routing Protocols</li>
+                <li>Lecture 8 — Network Security Fundamentals</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="issue-item">
+          <div class="issue-ico">📐</div>
+          <div class="issue-info">
+            <h3>System Design — No PDF Slides Found</h3>
+            <p>SAD has 2 HTML study files (notes + revision), but no original PDF lecture slides were found. Professors' slides are often important for exam revision.</p>
+            <div class="todo">
+              <h4>📋 TODO — Please provide:</h4>
+              <ul>
+                <li>Original PDF slides for each SAD chapter</li>
+                <li>DFD, ERD, and Use Case diagram examples as PDF or PNG</li>
+                <li>Project templates or case study PDFs</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="issue-item">
+          <div class="issue-ico">💼</div>
+          <div class="issue-info">
+            <h3>Business Administration — Single Study Guide Only</h3>
+            <p>Only one HTML study guide exists. A full course typically includes multiple lecture notes, case studies, and exam prep material.</p>
+            <div class="todo">
+              <h4>📋 TODO — Please provide:</h4>
+              <ul>
+                <li>Chapter-by-chapter lecture notes</li>
+                <li>Business case studies or assignments</li>
+                <li>Exam revision questions &amp; model answers</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── AVAILABLE CONTENT ── -->
+    <div class="report-section">
+      <div class="rs-head">
+        <span style="font-size:20px">✅</span>
+        <h2>Available &amp; Working Content</h2>
+        <span class="badge b-grn">9 files OK</span>
+      </div>
+      <div class="rs-body">
+        <div class="ok-item"><span class="ok-ico">📝</span><a href="SAD-study-notes.html" style="color:var(--tx2);flex:1">SAD Study Notes</a><span class="badge b-grn">✓ OK</span></div>
+        <div class="ok-item"><span class="ok-ico">✅</span><a href="SAD-Revision-and-Exam-Solutions (1).html" style="color:var(--tx2);flex:1">SAD Revision &amp; Exam Solutions</a><span class="badge b-grn">✓ OK</span></div>
+        <div class="ok-item"><span class="ok-ico">🏷️</span><a href="HTML_Lecture_Summary_Updated.html" style="color:var(--tx2);flex:1">HTML Lecture Summary</a><span class="badge b-grn">✓ OK</span></div>
+        <div class="ok-item"><span class="ok-ico">🎨</span><a href="Css.html" style="color:var(--tx2);flex:1">CSS Lecture Notes</a><span class="badge b-grn">✓ OK</span></div>
+        <div class="ok-item"><span class="ok-ico">⚡</span><a href="Js.html" style="color:var(--tx2);flex:1">JavaScript Lecture Notes</a><span class="badge b-grn">✓ OK</span></div>
+        <div class="ok-item"><span class="ok-ico">📖</span><a href="Jssummary.html" style="color:var(--tx2);flex:1">JavaScript Summary</a><span class="badge b-grn">✓ OK</span></div>
+        <div class="ok-item"><span class="ok-ico">🐘</span><a href="php-file-handling-study.html" style="color:var(--tx2);flex:1">PHP File Handling Study</a><span class="badge b-grn">✓ OK</span></div>
+        <div class="ok-item"><span class="ok-ico">📡</span><a href="network_lecture_study_complete.html" style="color:var(--tx2);flex:1">Network Lectures — Complete</a><span class="badge b-grn">✓ OK</span></div>
+        <div class="ok-item"><span class="ok-ico">📊</span><a href="business-admin-study-guide.html" style="color:var(--tx2);flex:1">Business Admin Study Guide</a><span class="badge b-grn">✓ OK</span></div>
+      </div>
+    </div>
+
+    <!-- ── RECOMMENDATIONS ── -->
+    <div class="todo-box">
+      <h3>🚀 Recommendations &amp; Next Steps</h3>
+      <div class="todo-step">
+        <div class="step-n">1</div>
+        <div><strong>Add Data Structures Content</strong><p>Create at least 5 HTML lecture files covering the core DS topics. Save them in the S_S folder and they will appear on the dashboard automatically.</p></div>
+      </div>
+      <div class="todo-step">
+        <div class="step-n">2</div>
+        <div><strong>Complete Missing Network Lectures</strong><p>Add lecture files for topics: OSI Model, IP Addressing, Routing, and Network Security to fill the gaps in the networking course.</p></div>
+      </div>
+      <div class="todo-step">
+        <div class="step-n">3</div>
+        <div><strong>Add PDF Slides for System Design</strong><p>Drop any SAD PDF files into the S_S folder. The portal will detect and display them with a built-in PDF viewer.</p></div>
+      </div>
+      <div class="todo-step">
+        <div class="step-n">4</div>
+        <div><strong>Expand Business Admin</strong><p>Add more lecture HTML files or PDFs for Business Administration chapters (Management, Marketing, Finance, etc.).</p></div>
+      </div>
+    </div>
+
+  </main>
+  <footer class="footer">
+    <span>🎓 StudyPortal · S&amp;S Semester</span>
+    <a href="index.html">← Back to Dashboard</a>
+  </footer>
+</div>
+</div>
+
+<script>
+function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('sbOv').classList.add('show')}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sbOv').classList.remove('show')}
+function toggleTheme(){const r=document.documentElement;const d=r.dataset.theme==='dark';r.dataset.theme=d?'light':'dark';document.getElementById('themeBtn').textContent=d?'☀️':'🌙';localStorage.setItem('theme',r.dataset.theme)}
+(()=>{const t=localStorage.getItem('theme')||'dark';document.documentElement.dataset.theme=t;document.getElementById('themeBtn').textContent=t==='dark'?'🌙':'☀️'})();
+window.addEventListener('load',()=>setTimeout(()=>document.getElementById('spinner').classList.add('gone'),500));
+</script>
+</body>
+</html>

@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>CS210 SAD — Complete Revision + Exam Solutions</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --ink: #1a1209;
+    --paper: #fdf8f0;
+    --cream: #f5ede0;
+    --rule: #d4b896;
+    --gold: #b8861e;
+    --green: #166534;
+    --blue: #1e40af;
+    --yellow-bg: #fffbeb;
+    --red-bg: #fef2f2;
+    --green-bg: #f0fdf4;
+    --blue-bg: #eff6ff;
+    --pad: clamp(12px, 4vw, 40px);
+    --max: 940px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: clamp(13.5px, 2.2vw, 15.5px);
+    line-height: 1.75;
+    overflow-x: hidden;
+  }
+
+  /* ── COVER ── */
+  .cover {
+    background: var(--ink);
+    color: #fdf8f0;
+    padding-top: clamp(4rem, 10vw, 8rem);
+    padding-bottom: clamp(4rem, 10vw, 8rem);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(45deg,transparent,transparent 30px,rgba(255,255,255,.02) 30px,rgba(255,255,255,.02) 31px);
+    pointer-events: none;
+  }
+  .cover-tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(.55rem, 1.5vw, .7rem);
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 4px 12px;
+    margin-bottom: 16px;
+  }
+  .cover h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.7rem, 6vw, 3rem);
+    font-weight: 900;
+    line-height: 1.15;
+    margin-bottom: 12px;
+  }
+  .cover h1 em { color: var(--gold); font-style: normal; }
+  .cover p {
+    font-size: clamp(.8rem, 2.1vw, .95rem);
+    color: #c8bfb0;
+    max-width: 540px;
+    margin: 0 auto 22px;
+  }
+  .cover-meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(.56rem, 1.5vw, .7rem);
+    color: #a09080;
+  }
+  .cover-meta span::before { content: '◆ '; color: var(--gold); }
+
+  /* ── MAIN ── */
+  .main { max-width: var(--max); margin: 0 auto; padding: clamp(24px,5.5vw,52px) var(--pad) clamp(40px,7vw,88px); }
+
+  /* ── CHAPTER ── */
+  .chapter { margin-top: clamp(38px,7vw,68px); }
+  .chapter-header { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px 14px; margin-bottom: 4px; }
+  .chapter-num {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 6.5vw, 3.6rem);
+    font-weight: 900;
+    color: var(--rule);
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .chapter h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1rem, 3.5vw, 1.6rem);
+    font-weight: 700;
+    border-bottom: 3px solid var(--ink);
+    padding-bottom: 5px;
+    flex: 1;
+    min-width: 0;
+    word-break: break-word;
+  }
+  .chapter-meta { font-family: 'JetBrains Mono', monospace; font-size: clamp(.56rem,1.5vw,.68rem); color: #888; margin-bottom: 18px; }
+  .chapter-meta b { color: var(--gold); }
+
+  h3 {
+    font-size: clamp(.88rem, 2.3vw, 1.03rem);
+    font-weight: 700;
+    margin: clamp(16px,3.5vw,26px) 0 7px;
+    display: flex;
+    align-items: baseline;
+    gap: 7px;
+    flex-wrap: wrap;
+  }
+  h3::before { content: '§'; color: var(--gold); font-family: 'Playfair Display', serif; flex-shrink: 0; }
+
+  p { margin-bottom: 9px; font-size: clamp(.82rem,2.1vw,.94rem); }
+
+  /* ── BOXES ── */
+  .def, .warn, .tip, .qa { margin: 10px 0; font-size: clamp(.8rem,2vw,.91rem); }
+  .def  { background: var(--green-bg); border-left: 4px solid #16a34a; padding: 11px 14px; border-radius: 0 6px 6px 0; }
+  .def strong { color: var(--green); }
+  .warn { background: var(--red-bg); border-left: 4px solid #dc2626; padding: 11px 14px; border-radius: 0 6px 6px 0; }
+  .warn::before { content: '⚠ '; font-weight: 700; }
+  .tip  { background: var(--yellow-bg); border-left: 4px solid #d97706; padding: 11px 14px; border-radius: 0 6px 6px 0; }
+  .tip::before  { content: '📌 '; }
+  .qa   { background: var(--blue-bg); border: 1px solid #bfdbfe; border-radius: 8px; padding: 12px 15px; }
+  .qa .q { font-weight: 700; color: #1e40af; margin-bottom: 5px; }
+
+  /* ── LISTS ── */
+  ul, ol { padding-left: clamp(15px,3.5vw,22px); margin: 7px 0 11px; font-size: clamp(.8rem,2vw,.92rem); }
+  li { margin-bottom: 5px; }
+
+  /* ── TABLES ── */
+  .tw { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 11px 0; border-radius: 6px; }
+  table { width: 100%; border-collapse: collapse; font-size: clamp(.7rem,1.8vw,.84rem); min-width: 320px; }
+  th { background: var(--ink); color: var(--paper); padding: 7px 10px; text-align: left; font-weight: 600; }
+  td { padding: 6px 10px; border-bottom: 1px solid #e5d5c5; vertical-align: top; }
+  tr:nth-child(even) td { background: var(--cream); }
+  caption { font-family: 'JetBrains Mono', monospace; font-size: clamp(.56rem,1.4vw,.7rem); color: #888; text-align: left; padding: 3px 1px; }
+
+  /* ── DIVIDER ── */
+  .div { border: none; border-top: 2px dashed var(--rule); margin: clamp(18px,4vw,32px) 0; }
+
+  /* ── BADGE ── */
+  .badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(.52rem,1.3vw,.63rem);
+    letter-spacing: .04em;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: 600;
+    vertical-align: middle;
+    margin-left: 3px;
+    white-space: nowrap;
+  }
+  .br { background: #fee2e2; color: #991b1b; }
+  .by { background: #fef3c7; color: #92400e; }
+
+  /* ── EXAM BANNER ── */
+  .exam-banner {
+    background: var(--ink);
+    color: var(--paper);
+    margin: clamp(44px,8vw,80px) calc(-1 * var(--pad)) 0;
+    padding: clamp(24px,5vw,42px) var(--pad);
+    text-align: center;
+  }
+  .exam-banner::before {
+    content: 'EXAM SOLUTIONS';
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(.52rem,1.3vw,.63rem);
+    letter-spacing: .2em;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 8px;
+  }
+  .exam-banner h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.2rem,4.5vw,2.1rem); font-weight: 900; }
+  .exam-banner p { color: #a09080; font-size: clamp(.74rem,1.9vw,.88rem); margin-top: 6px; }
+
+  /* ── EXAM QUESTIONS ── */
+  .eq { background: #fff; border: 2px solid var(--ink); border-radius: 10px; margin: clamp(14px,3.5vw,26px) 0; overflow: hidden; }
+  .eqh {
+    background: var(--ink);
+    color: var(--paper);
+    padding: clamp(7px,1.8vw,10px) clamp(12px,3vw,20px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .eqh .qt { font-weight: 700; font-size: clamp(.74rem,2vw,.93rem); flex: 1; min-width: 0; }
+  .eqh .qm {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(.58rem,1.5vw,.73rem);
+    background: var(--gold);
+    color: var(--ink);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 700;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .eqb { padding: clamp(12px,3vw,22px) clamp(12px,3.5vw,24px); }
+  .eqb h4 {
+    font-size: clamp(.78rem,2.1vw,.94rem);
+    font-weight: 700;
+    margin: clamp(12px,2.5vw,18px) 0 7px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .eqb h4:first-child { margin-top: 0; }
+
+  .ab {
+    background: #f9f5ee;
+    border-left: 4px solid var(--gold);
+    padding: clamp(9px,2.2vw,13px) clamp(11px,2.8vw,16px);
+    margin: 9px 0;
+    font-size: clamp(.78rem,2vw,.91rem);
+    border-radius: 0 6px 6px 0;
+    line-height: 1.7;
+  }
+  .ab strong { color: #92400e; }
+
+  /* ── DFD ── */
+  .dfd {
+    background: #f8f8f8;
+    border: 1.5px dashed #bbb;
+    border-radius: 8px;
+    padding: clamp(10px,2.5vw,18px);
+    margin: 10px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(.58rem,1.5vw,.78rem);
+    line-height: 1.65;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: pre;
+  }
+
+  /* ── CHEAT SHEET ── */
+  .cheat {
+    margin-top: clamp(28px,5.5vw,52px);
+    background: var(--cream);
+    border: 2px solid var(--rule);
+    border-radius: 10px;
+    padding: clamp(16px,3.5vw,30px);
+  }
+  .clabel {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(.54rem,1.4vw,.66rem);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .cgrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr));
+    gap: 9px 18px;
+    font-size: clamp(.75rem,1.9vw,.87rem);
+  }
+  .cgrid div {
+    padding: 6px 8px;
+    border-left: 3px solid var(--rule);
+    background: #fff;
+    border-radius: 0 5px 5px 0;
+  }
+
+  .footer { text-align: center; color: #aaa; font-family: 'JetBrains Mono', monospace; font-size: clamp(.54rem,1.4vw,.7rem); margin-top: clamp(28px,5vw,50px); padding-bottom: 24px; }
+
+  @media print {
+    body { font-size: 11px; }
+    .main { padding: 16px; }
+    .eq { break-inside: avoid; }
+  }
+
+  @media (max-width: 360px) {
+    :root { --pad: 10px; }
+    .dfd { font-size: .5rem; }
+  }
+
+  /* ── MOBILE NAV ── */
+  .ham-btn {
+    position: fixed; top: 1.25rem; left: 1.25rem; z-index: 1000;
+    width: 44px; height: 44px; border-radius: 10px;
+    background: var(--ink); border: 1px solid var(--gold);
+    color: var(--gold); font-size: 1.4rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  }
+  .sidebar {
+    position: fixed; top: 0; left: -280px; width: 280px; height: 100%;
+    background: var(--paper); border-right: 1px solid var(--rule);
+    z-index: 1001; transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 2rem; display: flex; flex-direction: column;
+  }
+  .sidebar.open { left: 0; }
+  .sidebar-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px); z-index: 1000; display: none;
+    animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .sidebar-overlay.show { display: block; }
+  .sidebar-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; }
+  .sidebar-logo { font-family: 'Playfair Display', serif; font-weight: 700; color: var(--gold); font-size: 1.1rem; }
+  .close-btn { background: none; border: none; color: var(--ink); font-size: 2rem; cursor: pointer; line-height: 1; }
+  .sidebar-nav { display: flex; flex-direction: column; gap: 6px; overflow-y: auto; }
+  .sidebar-link {
+    padding: 12px 16px; border-radius: 8px; color: var(--ink);
+    text-decoration: none; font-size: 0.85rem; font-weight: 600;
+    transition: all 0.2s; border: 1px solid transparent;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .sidebar-link:hover { background: var(--cream); color: var(--gold); border-color: var(--rule); }
+  .sidebar-link.home-link { color: var(--blue); margin-bottom: 1rem; background: var(--blue-bg); border-color: #bfdbfe; }
+
+  @media (max-width: 768px) {
+    .cover { padding-top: 6rem; }
+    .main { padding-top: 2rem; }
+    .chapter-header { flex-direction: column; align-items: flex-start; gap: 4px; }
+    .eqh { flex-direction: column; align-items: flex-start; }
+    .eqh .qm { margin-top: 4px; }
+    .dfd { font-size: 0.6rem; padding: 12px; }
+  }
+</style>
+  <link rel="stylesheet" href="global.css" />
+  <link rel="stylesheet" href="components.css" />
+  <link rel="stylesheet" href="responsive.css" />
+  <script defer src="app.js"></script>
+</head>
+<body>
+
+<!-- ── MOBILE NAV ── -->
+<button class="ham-btn" id="hamBtn" onclick="toggleSidebar()" aria-label="Open Menu">☰</button>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">🎓 SAD Revision</div>
+    <button class="close-btn" onclick="toggleSidebar()" aria-label="Close Menu">×</button>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="index.html" class="sidebar-link home-link"><span>🏠</span> Home Dashboard</a>
+    <a href="#ch1" class="sidebar-link" onclick="toggleSidebar()">Q1: IS Fundamentals</a>
+    <a href="#ch2" class="sidebar-link" onclick="toggleSidebar()">Q2: SDLC & Analysis</a>
+    <a href="#ch3" class="sidebar-link" onclick="toggleSidebar()">Q3: Planning & Analysis</a>
+    <a href="#ch4" class="sidebar-link" onclick="toggleSidebar()">Q4: Fact-Finding</a>
+    <a href="#ch5" class="sidebar-link" onclick="toggleSidebar()">Q5: Architecture</a>
+    <a href="#ch6" class="sidebar-link" onclick="toggleSidebar()">Q6: Interface Design</a>
+    <a href="#ch7" class="sidebar-link" onclick="toggleSidebar()">Q7: Program Design</a>
+    <a href="#solutions" class="sidebar-link" onclick="toggleSidebar()" style="color:var(--gold)">↓ Exam Answers</a>
+  </nav>
+</aside>
+
+<div class="cover">
+  <div class="cover-tag">CS210 · El-Shorouk Academy · 2024/2025</div>
+  <h1>System Analysis<br>&amp; <em>Design</em></h1>
+  <p>Complete revision notes organized by exam topic, followed by full model answers to every question on the final exam.</p>
+  <div class="cover-meta">
+    <span>7 Questions · 60 Marks</span>
+    <span>120 Minutes</span>
+    <span>Dr. Magdy El-Hennawy</span>
+    <span>TRG Restaurant Case Study</span>
+  </div>
+</div>
+
+<div class="main">
+
+<!-- ═══ CH1 ═══ -->
+<div class="chapter" id="ch1">
+  <div class="chapter-header">
+    <div class="chapter-num">1</div>
+    <h2>Fundamentals of IS &amp; SA&amp;D</h2>
+  </div>
+  <div class="chapter-meta">Exam Q1 · <b>9 Marks</b> · IT definition · IS components · Analyst roles</div>
+
+  <h3>Information Technology <span class="badge br">Must Memorize</span></h3>
+  <div class="def"><strong>Information Technology (IT):</strong> The use of hardware, software, services, and supporting infrastructure to manage and deliver information — including voice, data, and video.</div>
+
+  <h3>Information System &amp; Its 4 Components <span class="badge br">Must Memorize</span></h3>
+  <div class="def"><strong>Information System (IS):</strong> An arrangement of people, data, processes, and technology that collects, processes, stores, and outputs the information an organization needs.</div>
+  <div class="tw"><table>
+    <caption>4 Components — know all, explain any one</caption>
+    <thead><tr><th>Component</th><th>What it includes</th><th>TRG Example</th></tr></thead>
+    <tbody>
+      <tr><td><strong>People</strong></td><td>Users, IT staff, managers</td><td>Cashier staff, ISC technical team</td></tr>
+      <tr><td><strong>Data</strong></td><td>Raw facts collected and processed</td><td>Customer orders, item names, quantities</td></tr>
+      <tr><td><strong>Processes</strong></td><td>Activities transforming data into info</td><td>Validating an order, producing a receipt</td></tr>
+      <tr><td><strong>Technology</strong></td><td>Hardware, software, networks</td><td>Branch computers &amp; printers; ISC servers</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>The 6 Roles of the System Analyst/Designer <span class="badge br">Must Memorize</span></h3>
+  <div class="tw"><table>
+    <thead><tr><th>#</th><th>Role</th><th>What they do</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td><strong>System Analyst</strong></td><td>Studies org. problems; proposes IS solutions</td></tr>
+      <tr><td>2</td><td><strong>Business Analyst</strong></td><td>Focuses on business problems, independent of technology</td></tr>
+      <tr><td>3</td><td><strong>Systems Architect</strong></td><td>Designs the overall technical architecture</td></tr>
+      <tr><td>4</td><td><strong>Infrastructure Analyst</strong></td><td>Focuses on networks, hardware, and OS</td></tr>
+      <tr><td>5</td><td><strong>Change Management Analyst</strong></td><td>Helps employees adapt to the new system</td></tr>
+      <tr><td>6</td><td><strong>Project Manager</strong></td><td>Plans, executes, and controls the project</td></tr>
+    </tbody>
+  </table></div>
+  <div class="qa">
+    <div class="q">Primary objective of SA&amp;D?</div>
+    <div class="a">NOT to build a great system — to <strong>create business value</strong> for the organization.</div>
+  </div>
+</div>
+
+<!-- ═══ CH2 ═══ -->
+<div class="chapter" id="ch2">
+  <div class="chapter-header">
+    <div class="chapter-num">2</div>
+    <h2>SDLC, Analysis Approaches &amp; Business Requirements</h2>
+  </div>
+  <div class="chapter-meta">Exam Q2 · <b>12 Marks</b> · SDLC · phases · business requirements · analysis strategies</div>
+
+  <h3>SDLC Definition <span class="badge br">Must Memorize</span></h3>
+  <div class="def"><strong>System Development Life Cycle (SDLC):</strong> A logical process by which analysts, engineers, programmers, and users build information systems to solve business problems. It is a project management tool to plan, execute, and control development.</div>
+  <div class="warn">SDLC is <strong>NOT</strong> a methodology. SDLC = <em>what phases</em>. Methodology = <em>how to execute them</em>.</div>
+
+  <h3>3 Key SDLC Phases <span class="badge br">Must Memorize</span></h3>
+  <ol>
+    <li><strong>Planning</strong> — Identify project; feasibility analysis; steering committee approval</li>
+    <li><strong>Analysis</strong> — Understand current system; gather requirements (sub-phases: Survey → Detailed Study → Definition)</li>
+    <li><strong>Design &amp; Prototyping</strong> — Design architecture, inputs, outputs, interfaces, data storage, programs</li>
+  </ol>
+
+  <h3>Business Requirements <span class="badge br">Must Memorize</span></h3>
+  <div class="def"><strong>Business Requirements:</strong> Overall goals and capabilities an IS must have to contribute to organizational success. Describes <em>what</em> the business needs, not how it is implemented.</div>
+  <div class="tw"><table>
+    <caption>Two types</caption>
+    <thead><tr><th>Type</th><th>Definition</th><th>ASDS Example</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Functional</strong></td><td>What the system must <em>do</em></td><td>"Register order," "Send validated request to cashier"</td></tr>
+      <tr><td><strong>Non-Functional</strong></td><td>Qualities the system must <em>have</em></td><td>"Response under 2 sec," "Accessible from all 24 branches"</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Two Analysis Strategies <span class="badge by">Understand</span></h3>
+  <div class="tw"><table>
+    <thead><tr><th>Strategy</th><th>Focus</th><th>Tool</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Process-Centered</strong></td><td>What processes the system performs; how data flows</td><td>DFD (Data Flow Diagram)</td></tr>
+      <tr><td><strong>Data-Centered</strong></td><td>What data the system stores and manages</td><td>ERD (Entity-Relationship Diagram)</td></tr>
+    </tbody>
+  </table></div>
+  <div class="tip">Process-centered → DFD. Data-centered → ERD.</div>
+</div>
+
+<!-- ═══ CH3 ═══ -->
+<div class="chapter" id="ch3">
+  <div class="chapter-header">
+    <div class="chapter-num">3</div>
+    <h2>System Analysis Phases — Planning &amp; Analysis</h2>
+  </div>
+  <div class="chapter-meta">Exam Q3 · <b>6 Marks</b> · Planning sub-phases · Analysis sub-phases</div>
+
+  <h3>Sub-phases of the Planning Phase <span class="badge br">Must Memorize</span></h3>
+  <div class="tw"><table>
+    <thead><tr><th>Sub-phase</th><th>What happens</th></tr></thead>
+    <tbody>
+      <tr><td><strong>1. Project Initiation</strong></td><td>Project sponsor identifies business need; prepares System Request (contains: sponsor, business need, requirements, value, constraints). Steering committee reviews it.</td></tr>
+      <tr><td><strong>2. Project Management</strong></td><td>Project manager creates work plan, estimates costs/resources, schedules activities, selects methodology, identifies risks.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Sub-phases of the Analysis Phase <span class="badge br">Must Memorize</span></h3>
+  <div class="tw"><table>
+    <thead><tr><th>Sub-phase</th><th>What happens</th></tr></thead>
+    <tbody>
+      <tr><td><strong>1. Survey Phase</strong></td><td>Quickly understand current system problems and opportunities. Plan scope, methodology, staffing, schedule. Activities: Survey problems → Negotiate scope → Plan project → Present to management.</td></tr>
+      <tr><td><strong>2. Detailed Study Phase</strong></td><td>Deep investigation of the existing system. Model current system (DFDs), analyze processes, identify problems, define improvement objectives, present findings.</td></tr>
+      <tr><td><strong>3. Definition Phase</strong></td><td>Define requirements for proposed new system. Develop and evaluate alternative solutions. Transition to Design Phase.</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<!-- ═══ CH4 ═══ -->
+<div class="chapter" id="ch4">
+  <div class="chapter-header">
+    <div class="chapter-num">4</div>
+    <h2>Fact-Finding Techniques &amp; System Modeling (DFDs)</h2>
+  </div>
+  <div class="chapter-meta">Exam Q4 · <b>15 Marks</b> · Highest weight — master DFD drawing</div>
+
+  <h3>Observation — When to Apply <span class="badge br">Must Memorize</span></h3>
+  <div class="def"><strong>Observation:</strong> The analyst directly watches how work is actually performed (vs. documented) to collect firsthand data on processes, volumes, and timing.</div>
+  <ul>
+    <li>Actual procedure may <strong>differ from documented</strong> procedure</li>
+    <li><strong>Quantitative data</strong> on volumes or timing is needed</li>
+    <li>Interviewing is insufficient for the task</li>
+    <li>Verifying information from other techniques</li>
+  </ul>
+  <div class="warn"><strong>Hawthorne Effect:</strong> Staff change behavior when watched → less accurate data.</div>
+
+  <h3>Fact-Finding Plan for TRG <span class="badge br">Must Memorize</span></h3>
+  <div class="tw"><table>
+    <thead><tr><th>Technique</th><th>At HQ</th><th>At Branches (24 restaurants)</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Interviewing</strong></td><td>Top management: policies, strategy, budget, IT plans</td><td>Sales staff: procedures, forms, volumes, problems</td></tr>
+      <tr><td><strong>Questionnaires</strong></td><td>HQ middle managers: broad opinion</td><td>All 24 branches simultaneously — geographically dispersed, large group</td></tr>
+      <tr><td><strong>Observation</strong></td><td>HQ record-keeping and archive management</td><td>Sales Dept. in action: actual order flow, timing, volumes</td></tr>
+      <tr><td><strong>Record Inspection</strong></td><td>Reports, procedure manuals, org charts</td><td>Order forms, archive files, transaction logs</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="div"></div>
+
+  <h3>DFD Symbols <span class="badge br">Must Memorize</span></h3>
+  <div class="tw"><table>
+    <thead><tr><th>Symbol</th><th>Shape</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td><strong>External Entity</strong></td><td>Rectangle</td><td>Person/org outside the system (e.g., Customer)</td></tr>
+      <tr><td><strong>Process</strong></td><td>Circle / Oval</td><td>Transforms input data into output data</td></tr>
+      <tr><td><strong>Data Store</strong></td><td>Open-ended rectangle</td><td>Data at rest — a file, database, or archive</td></tr>
+      <tr><td><strong>Data Flow</strong></td><td>Labeled Arrow →</td><td>Movement of named data between components</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>DFD Levels</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Level</th><th>What it shows</th><th>Numbering</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Context Level</strong></td><td>Entire system = ONE bubble. External entities + flows only. No data stores.</td><td>Single process</td></tr>
+      <tr><td><strong>Level-0</strong></td><td>Major sub-processes (departments). Main data stores and flows.</td><td>1.0, 2.0, 3.0…</td></tr>
+      <tr><td><strong>Level-1</strong></td><td>Expands one Level-0 process into its sub-processes.</td><td>1.1, 1.2, 1.3…</td></tr>
+    </tbody>
+  </table></div>
+  <div class="tip"><strong>Balancing Rule:</strong> Flows entering/leaving a parent process MUST appear in its child diagram.</div>
+
+  <h3>Context-Level DFD — TRG Restaurant</h3>
+  <div class="dfd">CONTEXT-LEVEL DFD — TRG Restaurant (one branch)
+
+                Requested Order
+[CUSTOMER] ──────────────────────────►
+                                    (  TRG Restaurant  )
+                                    (  Sales System    )
+[CUSTOMER] ◄────────────────────────
+                  Service Items
+
+[CUSTOMER] ◄────────────────────────
+                  Requested Receipt
+
+──────────────────────────────────────
+One process bubble · CUSTOMER only · No data stores</div>
+
+  <h3>Level-0 DFD — TRG Restaurant (Departments)</h3>
+  <div class="dfd">LEVEL-0 DFD
+
+[CUSTOMER]
+    │ Requested Order
+    ▼
+┌──────────────┐   Validated Request   ┌────────────────┐
+│ 1.0          │──────────────────────►│ 2.0            │
+│ Sales Dept.  │                       │ Cashier Dept.  │
+└──────────────┘                       └────────────────┘
+     │                                        │
+ [Archive]                              [Archive]
+                                              │ Requested Receipt
+                                    ┌─────────▼──────────┐
+                                    │ 3.0 Meal Production │
+                                    └─────────┬──────────┘
+                                         [Archive]
+                                              │ Prepared Request
+                                    ┌─────────▼──────────┐
+                                    │ 4.0 Service Deliv. │
+                                    └─────────┬──────────┘
+                                              │ Items + Receipt
+                                              ▼
+                                         [CUSTOMER]</div>
+
+  <h3>Level-1 DFD — Sales Department</h3>
+  <div class="dfd">LEVEL-1 DFD — Sales Dept. (Process 1.0 expanded)
+
+             Requested Order
+[CUSTOMER] ──────────────► [1.1 Receive Order]
+                                    │
+                            Unverified Order
+                                    │
+                                    ▼
+                           [1.2 Validate Order] ←──► [Archive]
+                                    │
+                            Validated Request
+                                    │
+                                    ▼
+                        [1.3 Send Validated Request]
+                                    │
+                            Validated Request
+                                    ▼
+                             [Cashier Dept.]
+
+1.1 = Receive requested order from customer
+1.2 = Validate the requested order
+1.3 = Send validated request to Cashier Dept.</div>
+</div>
+
+<!-- ═══ CH5 ═══ -->
+<div class="chapter" id="ch5">
+  <div class="chapter-header">
+    <div class="chapter-num">5</div>
+    <h2>System Technical Architecture</h2>
+  </div>
+  <div class="chapter-meta">Exam Q5 · <b>6 Marks</b> · STA definition · draw TRG architecture</div>
+
+  <h3>STA Definition <span class="badge br">Must Memorize</span></h3>
+  <div class="def"><strong>System Technical Architecture (STA):</strong> The fundamental functional organization of a system — its components, their relationships, and the guiding design principles. It defines technologies used for presentation, application logic, data access, and data storage, and how they are distributed across hardware.</div>
+
+  <h3>Architecture Types</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Type</th><th>Key Feature</th><th>TRG relevance</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Server-Based</strong></td><td>Server does ALL 4 functions; clients = dumb terminals</td><td>Too limited for TRG branches</td></tr>
+      <tr><td><strong>2-Tier C/S</strong></td><td>Client: presentation + logic; Server: data</td><td>Branch computer ↔ ISC server</td></tr>
+      <tr><td><strong>3-Tier C/S</strong></td><td>Client (UI) ↔ App Server (logic) ↔ DB Server (data)</td><td>Best fit for TRG 24-branch setup</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>TRG Technical Architecture (3-Tier Client-Server)</h3>
+  <div class="dfd">ARCHITECTURE DIAGRAM
+
+┌─ Branch 1  ──┐       ┌──── ISC @ HQ, Alexandria ────┐
+│ Computer     │       │  ┌──────────────────────────┐ │
+│ Printer      │──┐    │  │  Application Servers     │ │
+└──────────────┘  │    │  │  (Business Logic)        │ │
+                  │    │  └──────────────────────────┘ │
+┌─ Branch 2  ──┐  ├WAN►│  ┌──────────────────────────┐ │
+│ Computer     │──┤    │  │  Database Servers         │ │
+│ Printer      │  │    │  │  (Data Storage)          │ │
+└──────────────┘  │    │  └──────────────────────────┘ │
+   ...            │    └───────────────────────────────┘
+┌─ Branch 24 ──┐  │
+│ Computer     │──┘
+│ Printer      │
+└──────────────┘</div>
+</div>
+
+<!-- ═══ CH6 ═══ -->
+<div class="chapter" id="ch6">
+  <div class="chapter-header">
+    <div class="chapter-num">6</div>
+    <h2>Interface Design: Inputs &amp; Outputs</h2>
+  </div>
+  <div class="chapter-meta">Exam Q6 · <b>6 Marks</b> · Answer any TWO of A, B, C</div>
+
+  <h3>Make Input Completion Easy &amp; Efficient <span class="badge br">Must Memorize</span></h3>
+  <ol>
+    <li>Capture only <strong>variable data</strong> (changes each transaction)</li>
+    <li>Capture only <strong>base data</strong> (not data that can be calculated)</li>
+    <li>Use UI controls — dropdowns, checkboxes — <strong>minimize free text</strong></li>
+    <li>Sequence fields <strong>top-to-bottom, left-to-right</strong></li>
+    <li>Include clear <strong>labels and instructions</strong> on every field</li>
+  </ol>
+
+  <h3>Input Screen — Requested Order (ASDS)</h3>
+  <div class="dfd">╔══════════════════════════════════════════════╗
+║   AUTOMATED SALES DEPT. SYSTEM (ASDS)      ║
+║        Register Customer Order             ║
+╠══════════════════╦═════════════════════════╣
+║ Order No: [AUTO] ║ Date: [  /  /     ]     ║
+╠══════════════════╩═════════════════════════╣
+║ Customer Name:    [_____________________]  ║
+║ Customer Address: [_____________________]  ║
+╠═══╦═══════════════════════════╦════════════╣
+║ # ║ Item Name                 ║ Quantity   ║
+╠═══╬═══════════════════════════╬════════════╣
+║ 1 ║ [_______________________] ║ [______]   ║
+║ 2 ║ [_______________________] ║ [______]   ║
+║ 3 ║ [_______________________] ║ [______]   ║
+║ 4 ║ [_______________________] ║ [______]   ║
+║ 5 ║ [_______________________] ║ [______]   ║
+╠════════════════════════════════════════════╣
+║   [ VALIDATE ORDER ]    [  CLEAR  ]       ║
+╚════════════════════════════════════════════╝</div>
+
+  <h3>Output Report — Requested Order</h3>
+  <div class="dfd">╔══════════════════════════════════════════════╗
+║        TRG GROUP — ORDER RECEIPT           ║
+║      Branch: _______________               ║
+╠══════════════════╦═════════════════════════╣
+║ Order No:        ║ Date:                   ║
+║ Customer Name:   ║ Customer Address:       ║
+╠═══╦═══════════════════════════╦════════════╣
+║ # ║ Item Name                 ║ Quantity   ║
+╠═══╬═══════════════════════════╬════════════╣
+║ 1 ║                           ║            ║
+║ 2 ║                           ║            ║
+║ 3 ║                           ║            ║
+║ 4 ║                           ║            ║
+║ 5 ║                           ║            ║
+╠════════════════════════════════════════════╣
+║ Status: [ ] Received  [ ] Validated       ║
+║         [ ] Sent to Cashier               ║
+║ Served by: __________  Time: _______      ║
+╚════════════════════════════════════════════╝</div>
+</div>
+
+<!-- ═══ CH7 ═══ -->
+<div class="chapter" id="ch7">
+  <div class="chapter-header">
+    <div class="chapter-num">7</div>
+    <h2>Data Storage &amp; Program Design</h2>
+  </div>
+  <div class="chapter-meta">Exam Q7 · <b>6 Marks</b> · Flat file advantages · Top-down strategy</div>
+
+  <h3>Flat File Storage — Two Advantages <span class="badge br">Must Memorize</span></h3>
+  <div class="def"><strong>Flat File Storage:</strong> Data stored in simple independent 2D table files managed directly by the OS — no DBMS needed.</div>
+  <ol>
+    <li><strong>Simplicity</strong> — Easy to create and manage; no DBMS or DBA required</li>
+    <li><strong>Low cost</strong> — No DBMS license; uses the OS directly</li>
+    <li><strong>Fast sequential access</strong> — Efficient when hit rate is very high</li>
+    <li><strong>Application autonomy</strong> — Each app controls its own data independently</li>
+  </ol>
+
+  <h3>Top-Down Strategy in Modern Structured Program Design <span class="badge by">Understand</span></h3>
+  <div class="def"><strong>Top-Down Strategy:</strong> Design begins at the highest-level (main) module and progressively decomposes downward into sub-modules until all functions are defined.</div>
+  <ol>
+    <li>Identify the <strong>main module</strong> (e.g., "Process Customer Order")</li>
+    <li>Break into <strong>major sub-modules</strong> (Receive Order, Validate, Send to Cashier, Print)</li>
+    <li>Continue decomposing until each module performs exactly <em>one task</em></li>
+    <li>Draw a <strong>Structure Chart</strong> showing hierarchy and data passed between modules</li>
+    <li>Implement top-down using <strong>stub modules</strong> for lower levels — critical interfaces tested first</li>
+  </ol>
+  <div class="tip">HIGH cohesion (focused on one task) + LOOSE coupling (minimal inter-module dependency) = good program design.</div>
+</div>
+
+<!-- ══════════════════════════════════ SOLUTIONS ══════════════════════════════════ -->
+<div class="exam-banner" id="solutions">
+  <h2>Complete Model Answers — Final Exam</h2>
+  <p>CS210 · 21/5/2025 · TRG Restaurant Case · 60 Marks Total</p>
+</div>
+
+<!-- Q1 -->
+<div class="eq">
+  <div class="eqh"><span class="qt">Question 1 — Fundamentals of SA&amp;D</span><span class="qm">9 Marks</span></div>
+  <div class="eqb">
+    <h4>A — Define "Information Technology"</h4>
+    <div class="ab"><strong>Information Technology (IT)</strong> is the use of hardware, software, services, and supporting infrastructure to manage and deliver information — including voice, data, and video — within an organization.</div>
+
+    <h4>B — Two IS components; explain one in ≤ 3 lines</h4>
+    <div class="ab">
+      <strong>Two components:</strong> (1) People, (2) Technology.<br><br>
+      <strong>Technology:</strong> Technology refers to the hardware, software, and communication networks that support the IS. In TRG, this includes the computers and printers in each branch restaurant, the servers at the ISC in HQ, and the communication network linking them together.
+    </div>
+
+    <h4>C — Two analyst/designer roles; explain one in ≤ 3 lines</h4>
+    <div class="ab">
+      <strong>Two roles:</strong> (1) System Analyst, (2) Systems Architect.<br><br>
+      <strong>Systems Architect:</strong> Responsible for designing the overall technical structure of the IS — deciding which hardware, software, and networking technologies to use, how they relate to each other, and how processing is distributed. For TRG, the architect would design the client-server setup linking branch computers to ISC servers.
+    </div>
+  </div>
+</div>
+
+<!-- Q2 -->
+<div class="eq">
+  <div class="eqh"><span class="qt">Question 2 — SDLC, Analysis Approaches &amp; Info. Req. Analysis</span><span class="qm">12 Marks</span></div>
+  <div class="eqb">
+    <h4>A — Define SDLC and state its abbreviation</h4>
+    <div class="ab">The <strong>System Development Life Cycle (SDLC)</strong> is a logical, structured process by which analysts, engineers, programmers, and end users build information systems to solve business problems. It serves as a project management tool to plan, execute, and control the development process from start to finish.</div>
+
+    <h4>B — Three phases of the SDLC</h4>
+    <div class="ab">
+      1. <strong>Planning</strong> — Identify the project; perform feasibility analysis; obtain steering committee approval.<br>
+      2. <strong>Analysis</strong> — Investigate the current system; gather requirements; define the new system's needs. (Sub-phases: Survey, Detailed Study, Definition.)<br>
+      3. <strong>Design &amp; Prototyping</strong> — Design architecture, user interfaces, input/output, data storage, and programs.
+    </div>
+
+    <h4>C — Define business requirements; state two types</h4>
+    <div class="ab">
+      <strong>Business Requirements</strong> are the overall goals and capabilities an IS must fulfill to contribute to organizational success. They describe <em>what</em> the business needs, independent of implementation.<br><br>
+      1. <strong>Functional Requirements</strong> — Specific behaviors the system must perform (e.g., "Register a customer order," "Send validated request to cashier").<br>
+      2. <strong>Non-Functional Requirements</strong> — Qualities the system must have (e.g., "Response under 2 seconds," "Accessible from all 24 branches").
+    </div>
+
+    <h4>D — Two Analysis Strategies; explain one in ≤ 3 lines</h4>
+    <div class="ab">
+      <strong>Two strategies:</strong> (1) Process-Centered Analysis, (2) Data-Centered Analysis.<br><br>
+      <strong>Process-Centered Analysis:</strong> This strategy focuses on identifying and modeling <em>what processes</em> the system must perform and how data flows between them. The primary tool is the Data Flow Diagram (DFD). Suitable when business processes are complex — as is the case for TRG's multi-department sales workflow.
+    </div>
+  </div>
+</div>
+
+<!-- Q3 -->
+<div class="eq">
+  <div class="eqh"><span class="qt">Question 3 — System Analysis Approaches (Planning &amp; Analysis Phases)</span><span class="qm">6 Marks</span></div>
+  <div class="eqb">
+    <h4>A — Two Planning Phase sub-phases; explain one</h4>
+    <div class="ab">
+      <strong>Two sub-phases:</strong> (1) Project Initiation, (2) Project Management.<br><br>
+      <strong>Project Initiation:</strong> The project sponsor identifies a business need and formally requests a new system by preparing a <em>System Request</em>. This document describes the business need, expected value, requirements, and constraints. The steering committee reviews it to decide whether to approve the project.
+    </div>
+
+    <h4>B — Two Analysis Phase sub-phases; explain one</h4>
+    <div class="ab">
+      <strong>Two sub-phases:</strong> (1) Survey Phase, (2) Detailed Study Phase.<br><br>
+      <strong>Detailed Study Phase:</strong> Analysts perform a thorough investigation of the existing system. They model the current system using DFDs, analyze all business processes, identify problems and opportunities, define improvement objectives, and present findings to management. For TRG, this involves studying how orders are received, validated, and passed between departments across all 24 branches.
+    </div>
+  </div>
+</div>
+
+<!-- Q4 -->
+<div class="eq">
+  <div class="eqh"><span class="qt">Question 4 — Fact-Finding Techniques &amp; System Modeling</span><span class="qm">15 Marks</span></div>
+  <div class="eqb">
+    <h4>A — Conditions to apply "Observation"</h4>
+    <div class="ab">
+      1. The actual procedure may <strong>differ from the documented procedure</strong>.<br>
+      2. <strong>Quantitative data</strong> on volumes or timing is needed (e.g., orders per hour in a branch).<br>
+      3. Interviewing is insufficient — work involves <strong>hands-on tasks</strong> better seen than described.<br>
+      4. Need to <strong>verify</strong> information collected from other techniques.
+    </div>
+
+    <h4>B — Fact-Finding Plan for TRG (HQ and Branches)</h4>
+    <div class="ab">
+      <strong>At TRG HQ (Alexandria):</strong><br>
+      • <strong>Interviewing</strong> — Top management: policies, IT strategy, budget constraints, ISC plans. Use two interviewers (one asks, one records).<br>
+      • <strong>Sampling &amp; Record Inspection</strong> — Inspect org charts, procedure manuals, previous IT documentation.<br>
+      • <strong>Observation</strong> — Observe HQ coordination with branches; existing record-keeping processes.<br><br>
+      <strong>At Individual Restaurants (24 branches):</strong><br>
+      • <strong>Questionnaires</strong> — Distribute to Sales staff in all 24 branches simultaneously — geographically dispersed, large number, efficient.<br>
+      • <strong>Interviewing</strong> — Sales Dept. staff at selected branches (3–4 representative branches): order workflow, forms used, problems.<br>
+      • <strong>Observation</strong> — Observe the Sales Dept. in action: actual order receipt, validation, and handoff to Cashier Dept.
+    </div>
+
+    <h4>C — Context-Level DFD for One TRG Restaurant</h4>
+    <div class="dfd">CONTEXT-LEVEL DFD — TRG Restaurant (one branch)
+
+              Requested Order
+[CUSTOMER] ──────────────────────────►
+                                    (  TRG Restaurant  )
+                                    (  Sales System    )
+[CUSTOMER] ◄────────────────────────
+                Service Items
+
+[CUSTOMER] ◄────────────────────────
+                Requested Receipt
+
+One process bubble · CUSTOMER only · No data stores</div>
+
+    <h4>D — Level-0 DFD for One TRG Restaurant</h4>
+    <div class="dfd">LEVEL-0 DFD
+
+[CUSTOMER]
+    │ Requested Order
+    ▼
+┌──────────────┐  Validated Request  ┌────────────────┐
+│ 1.0          │────────────────────►│ 2.0            │
+│ Sales Dept.  │                     │ Cashier Dept.  │
+└──────────────┘                     └────────────────┘
+     │                                      │
+ [Archive]                            [Archive]
+                                           │ Requested Receipt
+                                 ┌─────────▼──────────┐
+                                 │ 3.0 Meal Production │
+                                 └─────────┬──────────┘
+                                      [Archive]
+                                           │ Prepared Request
+                                 ┌─────────▼──────────┐
+                                 │ 4.0 Service Deliv. │
+                                 └─────────┬──────────┘
+                                           │ Items + Receipt
+                                           ▼
+                                      [CUSTOMER]</div>
+
+    <h4>E — Level-1 DFD of the Sales Department</h4>
+    <div class="dfd">LEVEL-1 DFD — Sales Dept. (Process 1.0 expanded)
+
+           Requested Order
+[CUSTOMER] ──────────────► [1.1 Receive Order]
+                                    │
+                            Unverified Order
+                                    │
+                                    ▼
+                           [1.2 Validate Order] ←──► [Archive]
+                                    │
+                            Validated Request
+                                    │
+                                    ▼
+                        [1.3 Send Validated Request]
+                                    │
+                            Validated Request
+                                    ▼
+                             [Cashier Dept.]
+
+1.1 = Receive requested order from customer
+1.2 = Validate the requested order
+1.3 = Send validated request to Cashier Dept.</div>
+  </div>
+</div>
+
+<!-- Q5 -->
+<div class="eq">
+  <div class="eqh"><span class="qt">Question 5 — System Design: Building the System Technical Architecture</span><span class="qm">6 Marks</span></div>
+  <div class="eqb">
+    <h4>A — Define "System Technical Architecture" in ≤ 3 lines</h4>
+    <div class="ab"><strong>System Technical Architecture (STA)</strong> is the fundamental functional organization of a system — defining its components, their relationships, and the principles guiding its design. It specifies the technologies used for presentation, application logic, data access, and data storage, and describes how these functions are distributed across hardware, software, and communication networks.</div>
+
+    <h4>B — Design the Technical Architecture for TRG Group Restaurants</h4>
+    <div class="ab">
+      The proposed architecture is a <strong>3-Tier Client-Server</strong> architecture:<br><br>
+      <strong>Tier 1 — Client (each branch):</strong> One computer (presentation &amp; input) + one printer per restaurant. Used by Sales Dept. staff.<br>
+      <strong>Tier 2 — Application Server (ISC, HQ):</strong> Hosts all business logic — receiving, validating, routing orders. Ensures centralized control across all 24 branches.<br>
+      <strong>Tier 3 — Database Server (ISC, HQ):</strong> Stores all order data, customer records, and archives for all branches.<br>
+      <strong>Communication:</strong> Branch computers connect to ISC servers via WAN, enabling orders from any branch.
+    </div>
+    <div class="dfd">ARCHITECTURE DIAGRAM (3-Tier Client-Server)
+
+┌─ Branch 1  ──┐       ┌──── ISC @ HQ, Alexandria ────┐
+│ Computer     │       │  ┌──────────────────────────┐ │
+│ Printer      │──┐    │  │  Application Servers     │ │
+└──────────────┘  │    │  │  (Business Logic)        │ │
+                  │WAN►│  └──────────────────────────┘ │
+┌─ Branch 2  ──┐  │    │  ┌──────────────────────────┐ │
+│ Computer     │──┤    │  │  Database Servers         │ │
+│ Printer      │  │    │  │  (Data Storage)          │ │
+└──────────────┘  │    │  └──────────────────────────┘ │
+   ...            │    └───────────────────────────────┘
+┌─ Branch 24 ──┐  │
+│ Computer     │──┘
+│ Printer      │
+└──────────────┘</div>
+  </div>
+</div>
+
+<!-- Q6 -->
+<div class="eq">
+  <div class="eqh"><span class="qt">Question 6 — Inputs, Outputs, and Navigation Design</span><span class="qm">6 Marks — Any TWO of A, B, C</span></div>
+  <div class="eqb">
+    <h4>A — How to make input completion easy and efficient</h4>
+    <div class="ab">
+      1. <strong>Capture only variable data</strong> — fields that change per transaction only.<br>
+      2. <strong>Capture only base data</strong> — never ask for data that can be calculated automatically.<br>
+      3. <strong>Use UI controls</strong> — dropdowns, checkboxes, spin boxes — to minimize free text and reduce errors.<br>
+      4. <strong>Logical sequencing</strong> — top-to-bottom, left-to-right, following natural workflow.<br>
+      5. <strong>Field labels and instructions</strong> — every field clearly labeled.
+    </div>
+
+    <h4>B — Input screen for the requested order</h4>
+    <div class="dfd">╔══════════════════════════════════════════════╗
+║   AUTOMATED SALES DEPT. SYSTEM (ASDS)      ║
+║        Register Customer Order             ║
+╠══════════════════╦═════════════════════════╣
+║ Order No: [AUTO] ║ Date: [  /  /     ]     ║
+╠══════════════════╩═════════════════════════╣
+║ Customer Name:    [_____________________]  ║
+║ Customer Address: [_____________________]  ║
+╠═══╦═══════════════════════════╦════════════╣
+║ # ║ Item Name                 ║ Quantity   ║
+╠═══╬═══════════════════════════╬════════════╣
+║ 1 ║ [_______________________] ║ [______]   ║
+║ 2 ║ [_______________________] ║ [______]   ║
+║ 3 ║ [_______________________] ║ [______]   ║
+║ 4 ║ [_______________________] ║ [______]   ║
+║ 5 ║ [_______________________] ║ [______]   ║
+╠════════════════════════════════════════════╣
+║   [ VALIDATE ORDER ]    [  CLEAR  ]       ║
+╚════════════════════════════════════════════╝</div>
+
+    <h4>C — Output report for the requested order</h4>
+    <div class="dfd">╔══════════════════════════════════════════════╗
+║        TRG GROUP — ORDER RECEIPT           ║
+║      Branch: _______________               ║
+╠══════════════════╦═════════════════════════╣
+║ Order No:        ║ Date:                   ║
+║ Customer Name:   ║ Customer Address:       ║
+╠═══╦═══════════════════════════╦════════════╣
+║ # ║ Item Name                 ║ Quantity   ║
+╠═══╬═══════════════════════════╬════════════╣
+║ 1 ║                           ║            ║
+║ 2 ║                           ║            ║
+║ 3 ║                           ║            ║
+║ 4 ║                           ║            ║
+║ 5 ║                           ║            ║
+╠════════════════════════════════════════════╣
+║ Status: [ ] Received  [ ] Validated       ║
+║         [ ] Sent to Cashier               ║
+║ Served by: __________  Time: _______      ║
+╚════════════════════════════════════════════╝</div>
+  </div>
+</div>
+
+<!-- Q7 -->
+<div class="eq">
+  <div class="eqh"><span class="qt">Question 7 — Data Storage and Program Design</span><span class="qm">6 Marks</span></div>
+  <div class="eqb">
+    <h4>A — Two flat file storage advantages; explain one in ≤ 3 lines</h4>
+    <div class="ab">
+      <strong>Two advantages:</strong> (1) Simplicity, (2) Low cost.<br><br>
+      <strong>Simplicity:</strong> Flat files are simple 2D tables managed directly by the OS without requiring any DBMS software or a dedicated DBA. This makes them quick to set up and easy to understand for small, standalone applications where data relationships are not complex.
+    </div>
+
+    <h4>B — How to follow Top-Down strategy in Modern Structured Program Design</h4>
+    <div class="ab">
+      1. <strong>Define the main module</strong> (e.g., "Process Customer Order in ASDS").<br>
+      2. <strong>Decompose into major sub-modules</strong> (Receive Order, Validate Order, Send to Cashier, Print Receipt).<br>
+      3. <strong>Continue decomposing</strong> until each module performs exactly <em>one</em> simple, well-defined task (high cohesion).<br>
+      4. <strong>Draw a Structure Chart</strong> showing module hierarchy and data passed between parent and child modules.<br>
+      5. <strong>Implement top-down</strong> — code highest-level modules first; use stub (placeholder) modules for lower levels so critical interfaces are verified early.
+    </div>
+  </div>
+</div>
+
+<!-- CHEAT SHEET -->
+<div class="cheat">
+  <div class="clabel">Last-Minute Cheat Sheet</div>
+  <div class="cgrid">
+    <div><strong>IT</strong> = hardware + software + services + infrastructure → manage &amp; deliver info</div>
+    <div><strong>IS components</strong> = People · Data · Processes · Technology</div>
+    <div><strong>SDLC</strong> = System Development Life Cycle</div>
+    <div><strong>SDLC ≠ methodology</strong>: SDLC = what phases; methodology = how to do them</div>
+    <div><strong>Business req. types</strong> = Functional + Non-Functional</div>
+    <div><strong>Analysis strategies</strong> = Process-Centered (DFD) + Data-Centered (ERD)</div>
+    <div><strong>Observation</strong> = use when actual ≠ documented procedure</div>
+    <div><strong>Context DFD</strong> = 1 bubble · all external entities · no data stores</div>
+    <div><strong>Level-0 DFD</strong> = departments as processes (1.0, 2.0, 3.0…)</div>
+    <div><strong>Level-1 DFD</strong> = sub-processes within dept. (1.1, 1.2, 1.3…)</div>
+    <div><strong>Balancing rule</strong> = parent flows = child diagram flows</div>
+    <div><strong>STA for TRG</strong> = Branch client ↔ ISC App Server ↔ ISC DB Server via WAN</div>
+    <div><strong>Top-Down</strong> = main module → decompose → structure chart → stub modules</div>
+    <div><strong>High cohesion + loose coupling</strong> = good program design</div>
+    <div><strong>Flat file advantage</strong> = simple + low cost + no DBMS needed</div>
+    <div><strong>Input design objectives</strong> = ease of use + accuracy</div>
+  </div>
+</div>
+
+<p class="footer">CS210 System Analysis &amp; Design · El-Shorouk Academy · Dr. Magdy El-Hennawy · Good Luck 🎓</p>
+
+</div><!-- .main -->
+<script src="portal-nav.js"></script>  <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('show');
+      document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
+    }
+  </script>
+</body>
+</html>
+

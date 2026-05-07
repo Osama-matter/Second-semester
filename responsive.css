@@ -1,0 +1,44 @@
+/* Breakpoints: 320 / 480 / 768 / 1024 / 1440 */
+
+/* Baseline small devices */
+@media (max-width: 480px){
+  .ss-brand-text span{max-width: 62vw}
+  .ss-btn{height: 36px;border-radius: 12px}
+  .ss-progress{display:none}
+}
+
+/* Phones / small tablets */
+@media (max-width: 768px){
+  .ss-lecturebar .ss-wrap{flex-wrap:wrap}
+  .ss-bc{width:100%}
+  body.ss-responsive .ss-wrap{width: 100%}
+  body.ss-responsive :where(pre){border-radius: 12px}
+  .ss-table :where(table){min-width: 520px}
+
+  /* Portal-layout pages: enforce off-canvas sidebar + full-width main */
+  body.ss-portal :where(.main){margin-left:0 !important}
+  body.ss-portal :where(.sidebar){transform:translateX(-100%) !important}
+  body.ss-portal :where(.sidebar.open){transform:translateX(0) !important}
+
+  /* Common "hero" blocks often have desktop padding */
+  body.ss-responsive :where(.hero){padding: 18px 14px !important; min-height: auto !important}
+}
+
+/* Tablet */
+@media (min-width: 769px) and (max-width: 1024px){
+  :root{--ss-container: 980px}
+}
+
+/* Desktop */
+@media (min-width: 1025px) and (max-width: 1440px){
+  :root{--ss-container: 1120px}
+}
+
+/* Large screens */
+@media (min-width: 1441px){
+  :root{--ss-container: 1200px}
+}
+
+/* Safety: prevent common overflow patterns */
+body.ss-responsive :where(pre, code, table, iframe){max-width: 100%}
+body.ss-responsive :where(.container, .wrapper, .content, .main, .page){max-width: 100%}

@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JavaScript — Exam Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d0d0f;
+    --surface: #16161a;
+    --surface2: #1e1e24;
+    --surface3: #26262e;
+    --border: #2e2e38;
+    --accent: #7c6af7;
+    --accent2: #56cfb2;
+    --accent3: #f7a556;
+    --accent4: #f75680;
+    --accent5: #56a8f7;
+    --text: #e8e8f0;
+    --text2: #9898b0;
+    --text3: #5c5c72;
+    --code-bg: #0a0a0e;
+    --warn-bg: #1e1610;
+    --warn-border: #f7a556;
+    --tip-bg: #101e1a;
+    --tip-border: #56cfb2;
+  }
+
+  html, body { height: 100%; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.6; }
+
+  /* ── Layout ── */
+  .app { display: flex; height: 100vh; overflow: hidden; }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: 240px; min-width: 240px; background: var(--surface);
+    border-right: 1px solid var(--border); display: flex; flex-direction: column;
+    padding: 20px 0; overflow-y: auto; z-index: 10;
+  }
+  .logo { padding: 0 20px 20px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+  .logo h1 { font-size: 15px; font-weight: 700; color: var(--accent); letter-spacing: .5px; }
+  .logo p { font-size: 11px; color: var(--text3); margin-top: 2px; }
+
+  .search-wrap { padding: 0 12px 16px; }
+  .search-wrap input {
+    width: 100%; background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 7px 10px; color: var(--text); font-size: 12px;
+    font-family: 'Inter', sans-serif; outline: none; transition: border .2s;
+  }
+  .search-wrap input:focus { border-color: var(--accent); }
+  .search-wrap input::placeholder { color: var(--text3); }
+
+  .nav-label { font-size: 10px; font-weight: 600; color: var(--text3); letter-spacing: 1px; text-transform: uppercase; padding: 0 20px 8px; }
+
+  .nav-item {
+    display: flex; align-items: center; gap: 10px; padding: 9px 20px;
+    cursor: pointer; transition: background .15s, color .15s; border-left: 3px solid transparent;
+    font-size: 13px; font-weight: 500; color: var(--text2); position: relative;
+  }
+  .nav-item:hover { background: var(--surface2); color: var(--text); }
+  .nav-item.active { background: var(--surface2); color: var(--text); border-left-color: var(--accent); }
+  .nav-item .icon { font-size: 16px; width: 20px; text-align: center; }
+  .nav-item .badge {
+    margin-left: auto; font-size: 10px; background: var(--accent); color: #fff;
+    padding: 1px 6px; border-radius: 20px; font-weight: 600;
+  }
+
+  /* ── Main ── */
+  .main { flex: 1; overflow-y: auto; padding: 32px; scroll-behavior: smooth; }
+
+  .section { display: none; animation: fadeIn .3s ease; }
+  .section.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── Section Header ── */
+  .section-header { margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+  .section-header .tag { font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+  .section-header h2 { font-size: 26px; font-weight: 700; color: var(--text); }
+  .section-header p { color: var(--text2); margin-top: 6px; font-size: 13px; max-width: 600px; }
+
+  /* ── Cards ── */
+  .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); margin-bottom: 24px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px; transition: border-color .2s, transform .15s;
+  }
+  .card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .card h3 { font-size: 13px; font-weight: 600; color: var(--accent); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+  .card h3 span { font-size: 15px; }
+
+  /* ── Lists ── */
+  ul.key-list { list-style: none; padding: 0; }
+  ul.key-list li { padding: 5px 0; color: var(--text2); font-size: 13px; display: flex; align-items: flex-start; gap: 8px; border-bottom: 1px solid var(--border); }
+  ul.key-list li:last-child { border: none; }
+  ul.key-list li::before { content: '›'; color: var(--accent); font-weight: 700; margin-top: 1px; flex-shrink: 0; }
+  ul.key-list li strong { color: var(--text); }
+
+  /* ── Warning / Tip Boxes ── */
+  .warn-box {
+    background: var(--warn-bg); border: 1px solid var(--warn-border); border-left-width: 4px;
+    border-radius: 8px; padding: 14px 16px; margin: 16px 0;
+  }
+  .warn-box .label { font-size: 11px; font-weight: 700; color: var(--accent3); letter-spacing: .5px; margin-bottom: 6px; }
+  .warn-box p, .warn-box li { font-size: 13px; color: #d4b896; }
+  .warn-box ul { padding-left: 16px; }
+  .warn-box ul li { margin-bottom: 3px; }
+
+  .tip-box {
+    background: var(--tip-bg); border: 1px solid var(--tip-border); border-left-width: 4px;
+    border-radius: 8px; padding: 14px 16px; margin: 16px 0;
+  }
+  .tip-box .label { font-size: 11px; font-weight: 700; color: var(--accent2); letter-spacing: .5px; margin-bottom: 6px; }
+  .tip-box p, .tip-box li { font-size: 13px; color: #96d4c0; }
+  .tip-box ul { padding-left: 16px; }
+  .tip-box ul li { margin-bottom: 3px; }
+
+  /* ── Code ── */
+  .code-block {
+    background: var(--code-bg); border: 1px solid var(--border); border-radius: 10px;
+    overflow: hidden; margin: 14px 0;
+  }
+  .code-block .code-header {
+    background: var(--surface2); padding: 7px 14px; font-size: 11px;
+    color: var(--text3); font-family: 'JetBrains Mono', monospace;
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid var(--border);
+  }
+  .code-block pre { padding: 16px; overflow-x: auto; }
+  .code-block code {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.7;
+    color: #c8c8e0;
+  }
+  .kw { color: #c792ea; }
+  .fn { color: #82aaff; }
+  .str { color: #c3e88d; }
+  .num { color: #f78c6c; }
+  .cmt { color: #546e7a; font-style: italic; }
+  .prop { color: #56cfb2; }
+  .op { color: #89ddff; }
+
+  /* ── Tables ── */
+  .tbl-wrap { overflow-x: auto; margin: 16px 0; border-radius: 10px; border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  thead tr { background: var(--surface2); }
+  th { padding: 10px 14px; text-align: left; color: var(--accent); font-weight: 600; font-size: 11px; letter-spacing: .5px; text-transform: uppercase; }
+  td { padding: 9px 14px; border-top: 1px solid var(--border); color: var(--text2); vertical-align: top; }
+  tr:hover td { background: var(--surface2); }
+  td code { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent2); background: var(--code-bg); padding: 1px 5px; border-radius: 4px; }
+  td strong { color: var(--text); }
+
+  /* ── Section Dividers ── */
+  .sub-heading { font-size: 14px; font-weight: 600; color: var(--text); margin: 24px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+  .sub-heading::before { content: ''; display: inline-block; width: 4px; height: 14px; background: var(--accent); border-radius: 2px; }
+
+  /* ── Progress Pills ── */
+  .pill { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; margin: 3px; }
+  .pill-purple { background: rgba(124,106,247,.15); color: var(--accent); border: 1px solid rgba(124,106,247,.3); }
+  .pill-green { background: rgba(86,207,178,.15); color: var(--accent2); border: 1px solid rgba(86,207,178,.3); }
+  .pill-orange { background: rgba(247,165,86,.15); color: var(--accent3); border: 1px solid rgba(247,165,86,.3); }
+  .pill-red { background: rgba(247,86,128,.15); color: var(--accent4); border: 1px solid rgba(247,86,128,.3); }
+  .pill-blue { background: rgba(86,168,247,.15); color: var(--accent5); border: 1px solid rgba(86,168,247,.3); }
+
+  /* ── Search Highlight ── */
+  mark { background: rgba(124,106,247,.35); color: var(--text); border-radius: 2px; padding: 0 2px; }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text3); }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+      z-index: 500;
+      width: 250px;
+    }
+    .sidebar.open { transform: translateX(0); }
+    .main { padding: 70px 15px 30px; }
+    .grid { grid-template-columns: 1fr; }
+    .section-header h2 { font-size: 20px; }
+  }
+
+  /* ── Mobile UI ── */
+  .ham-btn {
+    display: none;
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    z-index: 1000;
+    width: 40px;
+    height: 40px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+  }
+
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px);
+    z-index: 400;
+  }
+
+  @media (max-width: 768px) {
+    .ham-btn { display: flex; }
+    .sidebar-overlay.show { display: block; }
+  }
+</style>
+  <link rel="stylesheet" href="global.css" />
+  <link rel="stylesheet" href="components.css" />
+  <link rel="stylesheet" href="responsive.css" />
+  <script defer src="app.js"></script>
+</head>
+<body>
+<button class="ham-btn" onclick="toggleSidebar()">☰</button>
+<div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+<div class="app">
+
+  <!-- ═══ SIDEBAR ═══ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="logo">
+      <h1>⚡ JS Exam Prep</h1>
+      <p>Web Programming · Dr. Mohamed Mostafa</p>
+    </div>
+
+    <div class="search-wrap">
+      <input type="text" id="searchInput" placeholder="🔍  Search concepts..." oninput="doSearch(this.value)">
+    </div>
+
+    <div class="nav-label">Modules</div>
+
+    <div class="nav-item active" onclick="showSection('s1',this)">
+      <span class="icon">🧱</span> Foundations
+      <span class="badge">1</span>
+    </div>
+    <div class="nav-item" onclick="showSection('s2',this)">
+      <span class="icon">📦</span> Variables & Types
+      <span class="badge">2</span>
+    </div>
+    <div class="nav-item" onclick="showSection('s3',this)">
+      <span class="icon">⚙️</span> Operators & Control
+      <span class="badge">3</span>
+    </div>
+    <div class="nav-item" onclick="showSection('s4',this)">
+      <span class="icon">🔁</span> Functions & Loops
+      <span class="badge">4</span>
+    </div>
+    <div class="nav-item" onclick="showSection('s5',this)">
+      <span class="icon">🎯</span> DOM & Events
+      <span class="badge">5</span>
+    </div>
+  </aside>
+
+  <!-- ═══ MAIN ═══ -->
+  <main class="main" id="mainContent">
+
+    <!-- ════════════════════════════════════════
+         MODULE 1 — FOUNDATIONS
+    ════════════════════════════════════════ -->
+    <section class="section active" id="s1">
+      <div class="section-header">
+        <div class="tag">Module 01</div>
+        <h2>JS Foundations</h2>
+        <p>What JavaScript is, how it runs, where it lives in HTML, and how to output data to the browser.</p>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <h3><span>📌</span> Key Concepts</h3>
+          <ul class="key-list">
+            <li><strong>Scripting language</strong> — enhances functionality &amp; appearance of web pages</li>
+            <li><strong>Client-side</strong> — runs in the browser, not on the server</li>
+            <li><strong>Dynamic &amp; lightweight</strong> — interpreted at runtime (not compiled)</li>
+            <li><strong>Object-oriented</strong> — supports OOP capabilities</li>
+            <li><strong>Case-sensitive</strong> — <code>myVar</code> ≠ <code>MyVar</code></li>
+            <li><strong>Semicolons</strong> — best practice to terminate statements with <code>;</code></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3><span>🏆</span> 4 Advantages</h3>
+          <ul class="key-list">
+            <li><strong>Less server interaction</strong> — validate input before sending to server</li>
+            <li><strong>Immediate feedback</strong> — no page reload needed</li>
+            <li><strong>Increased interactivity</strong> — hover, keyboard, drag-and-drop</li>
+            <li><strong>Richer interfaces</strong> — sliders, accordions, dynamic UIs</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sub-heading">Script Placement in HTML</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Location</th><th>Syntax</th><th>When Runs</th><th>Use Case</th></tr></thead>
+          <tbody>
+            <tr><td><strong>&lt;head&gt;</strong></td><td><code>&lt;script&gt;…&lt;/script&gt;</code></td><td>Before body parses</td><td>Functions, global configs</td></tr>
+            <tr><td><strong>&lt;body&gt;</strong></td><td><code>&lt;script&gt;…&lt;/script&gt;</code></td><td>During body render</td><td>DOM manipulation inline</td></tr>
+            <tr><td><strong>Both</strong></td><td>Mix of above</td><td>Sequential</td><td>Large apps split into parts</td></tr>
+            <tr><td><strong>External .js</strong></td><td><code>&lt;script src="app.js"&gt;</code></td><td>When linked</td><td>Production code (reusable)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sub-heading">Output Methods</div>
+      <div class="grid">
+        <div class="card">
+          <h3><span>📤</span> 4 Output Ways</h3>
+          <ul class="key-list">
+            <li><code>innerHTML</code> / <code>innerText</code> — writes into an element (most common)</li>
+            <li><code>document.write()</code> — writes to HTML stream (test only!)</li>
+            <li><code>window.alert()</code> — popup alert box</li>
+            <li><code>console.log()</code> — browser DevTools console (debugging)</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3><span>💡</span> innerHTML vs innerText</h3>
+          <ul class="key-list">
+            <li><strong>innerHTML</strong> — parses HTML tags inside the string</li>
+            <li><strong>innerText</strong> — treats content as plain text, no HTML parsing</li>
+          </ul>
+          <div class="code-block" style="margin-top:10px;">
+            <div class="code-header"><span>example.js</span></div>
+            <pre><code><span class="prop">document</span>.<span class="fn">getElementById</span>(<span class="str">"demo"</span>).<span class="prop">innerHTML</span> <span class="op">=</span> <span class="str">"&lt;b&gt;Bold!&lt;/b&gt;"</span>;
+<span class="prop">document</span>.<span class="fn">getElementById</span>(<span class="str">"demo"</span>).<span class="prop">innerText</span> <span class="op">=</span> <span class="str">"Plain text"</span>;</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="warn-box">
+        <div class="label">⚠️ CRITICAL WARNING</div>
+        <ul>
+          <li>Using <code>document.write()</code> <strong>after</strong> the page has fully loaded will <strong>erase all existing HTML</strong> on the page.</li>
+          <li>Never use <code>document.write()</code> in production — it is for quick testing only.</li>
+          <li>The <code>window</code> keyword is optional: <code>alert()</code> === <code>window.alert()</code></li>
+        </ul>
+      </div>
+
+      <div class="sub-heading">Comments</div>
+      <div class="code-block">
+        <div class="code-header"><span>comments.js</span></div>
+        <pre><code><span class="cmt">// Single-line comment (C++ / Java style)</span>
+
+<span class="cmt">/*
+ * Multi-line comment
+ * Spans multiple lines
+ */</span></code></pre>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════
+         MODULE 2 — VARIABLES & DATA TYPES
+    ════════════════════════════════════════ -->
+    <section class="section" id="s2">
+      <div class="section-header">
+        <div class="tag">Module 02</div>
+        <h2>Variables &amp; Data Types</h2>
+        <p>var, let, const declarations, their scope rules, and the 7 JavaScript data types.</p>
+      </div>
+
+      <div class="sub-heading">7 JavaScript Data Types</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Type</th><th>Example</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td><strong>String</strong></td><td><code>let x = "Hello"</code></td><td>Single or double quotes</td></tr>
+            <tr><td><strong>Number</strong></td><td><code>let n = 42</code></td><td>Integers &amp; floats</td></tr>
+            <tr><td><strong>BigInt</strong></td><td><code>let b = BigInt("1234567890…")</code></td><td>Arbitrarily large integers</td></tr>
+            <tr><td><strong>Boolean</strong></td><td><code>let t = true</code></td><td>true / false only</td></tr>
+            <tr><td><strong>Undefined</strong></td><td><code>let car;</code></td><td>Declared but not assigned</td></tr>
+            <tr><td><strong>Null</strong></td><td><code>let car = ""</code></td><td>Empty / intentionally absent value</td></tr>
+            <tr><td><strong>Object</strong></td><td><code>const p = {name:"Ali"}</code></td><td>Key–value pairs</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sub-heading">var vs let vs const — Comparison</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Feature</th><th>var</th><th>let</th><th>const</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Scope</strong></td><td>Global / Function</td><td>Block <code>{ }</code></td><td>Block <code>{ }</code></td></tr>
+            <tr><td><strong>Re-declare</strong></td><td>✅ Allowed</td><td>❌ Error</td><td>❌ Error</td></tr>
+            <tr><td><strong>Re-assign</strong></td><td>✅ Allowed</td><td>✅ Allowed</td><td>❌ Error</td></tr>
+            <tr><td><strong>Use before declare</strong></td><td>✅ (hoisted)</td><td>❌ Error</td><td>❌ Error</td></tr>
+            <tr><td><strong>Must initialise</strong></td><td>❌ No</td><td>❌ No</td><td>✅ Yes</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="warn-box">
+        <div class="label">⚠️ CRITICAL — const Arrays &amp; Objects</div>
+        <p><strong>const does NOT make the value immutable</strong> — it locks the <em>reference</em>.</p>
+        <ul style="margin-top:8px;">
+          <li>You <strong>CAN</strong> change array elements: <code>cars[0] = "Toyota"</code> ✅</li>
+          <li>You <strong>CAN</strong> add properties to an object: <code>car.owner = "Ahmed"</code> ✅</li>
+          <li>You <strong>CANNOT</strong> reassign the variable: <code>cars = [...]</code> ❌</li>
+          <li>You <strong>CANNOT</strong> reassign the object: <code>car = {...}</code> ❌</li>
+        </ul>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header"><span>variables.js</span></div>
+        <pre><code><span class="cmt">// var — global scope, can redeclare</span>
+<span class="kw">var</span> x <span class="op">=</span> <span class="num">10</span>;
+{
+  <span class="kw">var</span> x <span class="op">=</span> <span class="num">2</span>; <span class="cmt">// same x globally — x is now 2</span>
+}
+
+<span class="cmt">// let — block scope</span>
+<span class="kw">let</span> y <span class="op">=</span> <span class="num">10</span>;
+{
+  <span class="kw">let</span> y <span class="op">=</span> <span class="num">2</span>; <span class="cmt">// different y — block scoped</span>
+}
+<span class="cmt">// y is still 10 here</span>
+
+<span class="cmt">// const — block scope, no reassign</span>
+<span class="kw">const</span> PI <span class="op">=</span> <span class="num">3.14159</span>;
+PI <span class="op">=</span> <span class="num">3.14</span>; <span class="cmt">// TypeError!</span></code></pre>
+      </div>
+
+      <div class="sub-heading">Type Coercion — String + Number</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Expression</th><th>Result</th><th>Why</th></tr></thead>
+          <tbody>
+            <tr><td><code>16 + "Volvo"</code></td><td><code>"16Volvo"</code></td><td>Number coerced to string</td></tr>
+            <tr><td><code>16 + 4 + "Volvo"</code></td><td><code>"20Volvo"</code></td><td>Left-to-right: 16+4=20 first</td></tr>
+            <tr><td><code>"Volvo" + 16 + 4</code></td><td><code>"Volvo164"</code></td><td>String first → all concatenated</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tip-box">
+        <div class="label">💡 PRO TIP</div>
+        <p>Use <code>typeof</code> to check a variable's type at runtime: <code>typeof "hello" // "string"</code></p>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════
+         MODULE 3 — OPERATORS & CONTROL FLOW
+    ════════════════════════════════════════ -->
+    <section class="section" id="s3">
+      <div class="section-header">
+        <div class="tag">Module 03</div>
+        <h2>Operators &amp; Control Flow</h2>
+        <p>All operator types, if/else, switch, and the ternary operator for conditional logic.</p>
+      </div>
+
+      <div class="sub-heading">Operator Quick Reference</div>
+      <div class="grid">
+        <div class="card">
+          <h3><span>➕</span> Arithmetic</h3>
+          <ul class="key-list">
+            <li><code>+</code> Addition</li>
+            <li><code>-</code> Subtraction</li>
+            <li><code>*</code> Multiplication</li>
+            <li><code>**</code> Exponentiation (ES6)</li>
+            <li><code>/</code> Division</li>
+            <li><code>%</code> Modulus (remainder)</li>
+            <li><code>++</code> Increment &nbsp;/&nbsp; <code>--</code> Decrement</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3><span>📊</span> Comparison</h3>
+          <ul class="key-list">
+            <li><code>==</code> Equal value (type coercion)</li>
+            <li><code>===</code> Equal value AND type (strict)</li>
+            <li><code>!=</code> Not equal</li>
+            <li><code>!==</code> Not equal value or type</li>
+            <li><code>&gt; &lt; &gt;= &lt;=</code> Greater/less than</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3><span>🔗</span> Logical</h3>
+          <ul class="key-list">
+            <li><code>&amp;&amp;</code> AND — both operands must be truthy</li>
+            <li><code>||</code> OR — at least one must be truthy</li>
+            <li><code>!</code> NOT — reverses boolean state</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3><span>🔄</span> Assignment</h3>
+          <ul class="key-list">
+            <li><code>x = y</code> &nbsp;&nbsp;<code>x += y</code> &nbsp;&nbsp;<code>x -= y</code></li>
+            <li><code>x *= y</code> &nbsp;<code>x /= y</code> &nbsp;<code>x %= y</code></li>
+            <li><code>x **= y</code> — exponent assign</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="warn-box">
+        <div class="label">⚠️ == vs === — EXAM FAVOURITE</div>
+        <ul>
+          <li><code>5 == '5'</code> → <strong>true</strong> (string '5' coerced to number)</li>
+          <li><code>5 === '5'</code> → <strong>false</strong> (number ≠ string type)</li>
+          <li><code>null == undefined</code> → <strong>true</strong> (special JS case)</li>
+          <li><strong>Always prefer <code>===</code></strong> to avoid unexpected coercion bugs</li>
+        </ul>
+      </div>
+
+      <div class="sub-heading">Ternary Operator</div>
+      <div class="code-block">
+        <div class="code-header"><span>ternary.js</span></div>
+        <pre><code><span class="cmt">// Syntax: condition ? valueIfTrue : valueIfFalse</span>
+<span class="kw">let</span> age <span class="op">=</span> <span class="num">26</span>;
+<span class="kw">let</span> drink <span class="op">=</span> (age <span class="op">&gt;=</span> <span class="num">21</span>) <span class="op">?</span> <span class="str">"Beer"</span> <span class="op">:</span> <span class="str">"Juice"</span>;
+
+<span class="cmt">// Chained ternary (right-associative)</span>
+<span class="kw">let</span> score <span class="op">=</span> <span class="num">85</span>;
+<span class="kw">let</span> grade <span class="op">=</span> score <span class="op">&gt;=</span> <span class="num">90</span> <span class="op">?</span> <span class="str">'A'</span>
+           <span class="op">:</span> score <span class="op">&gt;=</span> <span class="num">80</span> <span class="op">?</span> <span class="str">'B'</span>
+           <span class="op">:</span> score <span class="op">&gt;=</span> <span class="num">70</span> <span class="op">?</span> <span class="str">'C'</span>
+           <span class="op">:</span> score <span class="op">&gt;=</span> <span class="num">60</span> <span class="op">?</span> <span class="str">'D'</span> <span class="op">:</span> <span class="str">'F'</span>; <span class="cmt">// → 'B'</span></code></pre>
+      </div>
+
+      <div class="sub-heading">if / else if / else &amp; switch</div>
+      <div class="code-block">
+        <div class="code-header"><span>control-flow.js</span></div>
+        <pre><code><span class="cmt">// if…else</span>
+<span class="kw">if</span> (num1 <span class="op">&gt;</span> num2 <span class="op">&amp;&amp;</span> num1 <span class="op">&gt;</span> num3) {
+  <span class="prop">document</span>.<span class="fn">write</span>(<span class="str">"num1 is largest"</span>);
+} <span class="kw">else if</span> (num2 <span class="op">&gt;</span> num1 <span class="op">&amp;&amp;</span> num2 <span class="op">&gt;</span> num3) {
+  <span class="prop">document</span>.<span class="fn">write</span>(<span class="str">"num2 is largest"</span>);
+} <span class="kw">else</span> {
+  <span class="prop">window</span>.<span class="fn">alert</span>(<span class="str">"All numbers are equal"</span>);
+}
+
+<span class="cmt">// switch</span>
+<span class="kw">switch</span>(pwd) {
+  <span class="kw">case</span> <span class="str">"admin"</span>:
+    <span class="prop">document</span>.<span class="fn">write</span>(<span class="str">"Authorised"</span>);
+    <span class="kw">break</span>;
+  <span class="kw">default</span>:
+    <span class="prop">window</span>.<span class="fn">alert</span>(<span class="str">"Unauthorised"</span>);
+}</code></pre>
+      </div>
+
+      <div class="tip-box">
+        <div class="label">💡 switch vs if-else</div>
+        <p>Use <strong>switch</strong> when all branches depend on a single variable's value — it is more efficient and readable than repeated <code>if…else if</code> chains.</p>
+      </div>
+
+      <div class="sub-heading">Bitwise Operators (Quick Table)</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Op</th><th>Name</th><th>Example</th><th>Result</th><th>Decimal</th></tr></thead>
+          <tbody>
+            <tr><td><code>&amp;</code></td><td>AND</td><td><code>5 &amp; 1</code></td><td>0001</td><td>1</td></tr>
+            <tr><td><code>|</code></td><td>OR</td><td><code>5 | 1</code></td><td>0101</td><td>5</td></tr>
+            <tr><td><code>^</code></td><td>XOR</td><td><code>5 ^ 1</code></td><td>0100</td><td>4</td></tr>
+            <tr><td><code>~</code></td><td>NOT</td><td><code>~5</code></td><td>1010</td><td>10</td></tr>
+            <tr><td><code>&lt;&lt;</code></td><td>Left shift</td><td><code>5 &lt;&lt; 1</code></td><td>1010</td><td>10</td></tr>
+            <tr><td><code>&gt;&gt;</code></td><td>Right shift</td><td><code>5 &gt;&gt; 1</code></td><td>0010</td><td>2</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════
+         MODULE 4 — FUNCTIONS & LOOPS
+    ════════════════════════════════════════ -->
+    <section class="section" id="s4">
+      <div class="section-header">
+        <div class="tag">Module 04</div>
+        <h2>Functions &amp; Loops</h2>
+        <p>Defining and calling functions, built-in functions, and the three loop structures with flow diagrams.</p>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <h3><span>🔧</span> Functions — Key Facts</h3>
+          <ul class="key-list">
+            <li>Block of code designed to perform a <strong>specific task</strong></li>
+            <li><strong>Reusable</strong> — eliminates code duplication</li>
+            <li>Defined with <code>function</code> keyword + name + <code>(params)</code> + <code>{ body }</code></li>
+            <li><code>return</code> passes value back to the caller</li>
+            <li>Called explicitly: just write <code>functionName()</code></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3><span>🔁</span> 3 Loop Types</h3>
+          <ul class="key-list">
+            <li><strong>while</strong> — tests condition BEFORE executing body</li>
+            <li><strong>for</strong> — init; condition; iteration in one line</li>
+            <li><strong>do…while</strong> — tests AFTER body — executes AT LEAST ONCE</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sub-heading">Function Syntax</div>
+      <div class="code-block">
+        <div class="code-header"><span>functions.js</span></div>
+        <pre><code><span class="cmt">// Declaration</span>
+<span class="kw">function</span> <span class="fn">square</span>(j) {
+  <span class="kw">return</span> j <span class="op">*</span> j;
+}
+
+<span class="cmt">// Call it</span>
+<span class="kw">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="num">1</span>; i <span class="op">&lt;=</span> <span class="num">10</span>; i<span class="op">++</span>) {
+  <span class="prop">document</span>.<span class="fn">write</span>(<span class="str">"Square of "</span> <span class="op">+</span> i <span class="op">+</span> <span class="str">" = "</span> <span class="op">+</span> <span class="fn">square</span>(i));
+}
+
+<span class="cmt">// Using Math built-in functions</span>
+<span class="kw">let</span> maxVal <span class="op">=</span> <span class="prop">Math</span>.<span class="fn">max</span>(x, <span class="prop">Math</span>.<span class="fn">max</span>(y, z));
+<span class="kw">let</span> parsed <span class="op">=</span> <span class="fn">parseFloat</span>(<span class="fn">prompt</span>(<span class="str">"Enter a number"</span>, <span class="num">0.0</span>));</code></pre>
+      </div>
+
+      <div class="sub-heading">Loop Structures</div>
+      <div class="code-block">
+        <div class="code-header"><span>loops.js</span></div>
+        <pre><code><span class="cmt">// ── while loop ──────────────────────────────</span>
+<span class="kw">let</span> i <span class="op">=</span> <span class="num">1</span>;
+<span class="kw">while</span> (i <span class="op">&lt;=</span> <span class="num">10</span>) {
+  <span class="prop">document</span>.<span class="fn">write</span>(i);
+  i<span class="op">++</span>;
+}
+
+<span class="cmt">// ── for loop ────────────────────────────────</span>
+<span class="kw">let</span> fact <span class="op">=</span> <span class="num">1</span>;
+<span class="kw">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="num">1</span>; i <span class="op">&lt;=</span> n; i<span class="op">++</span>) {
+  fact <span class="op">=</span> fact <span class="op">*</span> i; <span class="cmt">// factorial</span>
+}
+
+<span class="cmt">// ── do…while loop ───────────────────────────</span>
+<span class="kw">var</span> counter <span class="op">=</span> <span class="num">1</span>;
+<span class="kw">do</span> {
+  <span class="prop">document</span>.<span class="fn">writeln</span>(<span class="str">"&lt;h"</span> <span class="op">+</span> counter <span class="op">+</span> <span class="str">"&gt;heading&lt;/h"</span> <span class="op">+</span> counter <span class="op">+</span> <span class="str">"&gt;"</span>);
+  <span class="op">++</span>counter;
+} <span class="kw">while</span> (counter <span class="op">&lt;=</span> <span class="num">6</span>);</code></pre>
+      </div>
+
+      <div class="warn-box">
+        <div class="label">⚠️ do…while WARNING</div>
+        <p>The <code>do…while</code> loop body <strong>always runs at least once</strong>, even if the condition is false from the start. This is the key difference from a regular <code>while</code> loop.</p>
+      </div>
+
+      <div class="sub-heading">Built-in Functions Reference</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Category</th><th>Key Functions</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Math</strong></td><td><code>Math.abs()</code> <code>Math.ceil()</code> <code>Math.floor()</code> <code>Math.round()</code> <code>Math.max()</code> <code>Math.min()</code> <code>Math.random()</code> <code>Math.sqrt()</code> <code>Math.pow()</code></td></tr>
+            <tr><td><strong>String</strong></td><td><code>charAt()</code> <code>indexOf()</code> <code>toLowerCase()</code> <code>toUpperCase()</code> <code>trim()</code> <code>split()</code> <code>replace()</code> <code>includes()</code> <code>slice()</code></td></tr>
+            <tr><td><strong>Array</strong></td><td><code>push()</code> <code>pop()</code> <code>shift()</code> <code>unshift()</code> <code>map()</code> <code>filter()</code> <code>find()</code> <code>forEach()</code> <code>sort()</code></td></tr>
+            <tr><td><strong>Number</strong></td><td><code>parseInt()</code> <code>parseFloat()</code> <code>toFixed()</code> <code>isNaN()</code> <code>Number.isInteger()</code></td></tr>
+            <tr><td><strong>Console</strong></td><td><code>console.log()</code> <code>console.error()</code> <code>console.warn()</code> <code>console.table()</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tip-box">
+        <div class="label">💡 Global Methods</div>
+        <p>Global methods like <code>isNaN()</code>, <code>parseInt()</code>, <code>parseFloat()</code> are actually <strong>window methods</strong> — <code>isNaN()</code> === <code>window.isNaN()</code></p>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════
+         MODULE 5 — DOM & EVENTS
+    ════════════════════════════════════════ -->
+    <section class="section" id="s5">
+      <div class="section-header">
+        <div class="tag">Module 05</div>
+        <h2>DOM &amp; Events</h2>
+        <p>Manipulating HTML with JavaScript, the Window object, event handling with addEventListener.</p>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <h3><span>🌳</span> DOM Concepts</h3>
+          <ul class="key-list">
+            <li>DOM = Document Object Model (tree-like structure)</li>
+            <li><strong>document</strong> = root node of HTML document</li>
+            <li>Access via <code>document.getElementById(id)</code></li>
+            <li>Manipulate: content, attributes, style, visibility</li>
+            <li><code>document</code> is a property of <code>window</code></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3><span>🪟</span> Window Object</h3>
+          <ul class="key-list">
+            <li>Represents the open browser window</li>
+            <li><code>window.alert()</code> — popup message</li>
+            <li><code>window.confirm()</code> — OK/Cancel dialog</li>
+            <li><code>window.prompt()</code> — input dialog</li>
+            <li><code>window.print()</code> — print current page</li>
+            <li><code>window.stop()</code> — stop page loading</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sub-heading">4 Things JavaScript Can Do to HTML</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Action</th><th>Method / Property</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Change content</strong></td><td><code>innerHTML</code></td><td><code>el.innerHTML = "Hello!"</code></td></tr>
+            <tr><td><strong>Change attribute</strong></td><td><code>element.attribute</code></td><td><code>img.src = "new.png"</code></td></tr>
+            <tr><td><strong>Change style</strong></td><td><code>element.style.prop</code></td><td><code>el.style.color = "red"</code></td></tr>
+            <tr><td><strong>Show/Hide element</strong></td><td><code>style.display</code></td><td><code>el.style.display = 'block'</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sub-heading">Event Handling</div>
+      <div class="code-block">
+        <div class="code-header"><span>events.js</span></div>
+        <pre><code><span class="cmt">// Inline HTML event attribute</span>
+<span class="cmt">// &lt;button onclick="myFunction()"&gt;Click Me&lt;/button&gt;</span>
+
+<span class="cmt">// document.addEventListener — attaches to whole document</span>
+<span class="prop">document</span>.<span class="fn">addEventListener</span>(<span class="str">"click"</span>, <span class="kw">function</span>() {
+  <span class="prop">document</span>.<span class="fn">getElementById</span>(<span class="str">"demo"</span>).<span class="prop">innerHTML</span> <span class="op">=</span> <span class="str">"Clicked!"</span>;
+});
+
+<span class="cmt">// element.addEventListener — attaches to specific element</span>
+<span class="kw">const</span> btn <span class="op">=</span> <span class="prop">document</span>.<span class="fn">getElementById</span>(<span class="str">"myBtn"</span>);
+btn.<span class="fn">addEventListener</span>(<span class="str">"mouseover"</span>, myFunction);
+btn.<span class="fn">addEventListener</span>(<span class="str">"click"</span>, mySecondFunction);
+btn.<span class="fn">addEventListener</span>(<span class="str">"mouseout"</span>, myThirdFunction);
+
+<span class="cmt">// Multiple events on SAME element is allowed!</span></code></pre>
+      </div>
+
+      <div class="sub-heading">Common Events</div>
+      <div class="grid">
+        <div class="card">
+          <h3><span>🖱️</span> Mouse Events</h3>
+          <ul class="key-list">
+            <li><code>click</code> — user clicks element</li>
+            <li><code>dblclick</code> — double click</li>
+            <li><code>mousedown</code> — press mouse button</li>
+            <li><code>mouseup</code> — release mouse button</li>
+            <li><code>mousemove</code> — mouse moves over element</li>
+            <li><code>mouseover</code> — pointer enters element</li>
+            <li><code>mouseout</code> — pointer leaves element</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3><span>🪟</span> Window Events</h3>
+          <ul class="key-list">
+            <li><code>load</code> — whole page has loaded</li>
+            <li><code>resize</code> — browser window resized</li>
+            <li><code>scroll</code> — user scrolls element</li>
+          </ul>
+          <h3 style="margin-top:12px;"><span>⌨️</span> Form / Key Events</h3>
+          <ul class="key-list">
+            <li><code>change</code> — input field changed</li>
+            <li><code>submit</code> — form submitted</li>
+            <li><code>keydown</code> — key pressed</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="warn-box">
+        <div class="label">⚠️ addEventListener SYNTAX — Don't confuse these</div>
+        <ul>
+          <li><code>element.addEventListener("click", myFn)</code> ← <strong>Correct</strong> — pass reference</li>
+          <li><code>element.addEventListener("click", myFn())</code> ← <strong>Wrong</strong> — this calls the function immediately, not on click</li>
+          <li>Use anonymous arrow syntax as alternative: <code>element.addEventListener("click", () =&gt; { ... })</code></li>
+        </ul>
+      </div>
+
+      <div class="sub-heading">Prompt + Switch Pattern (Common Exam Question)</div>
+      <div class="code-block">
+        <div class="code-header"><span>prompt-switch.js</span></div>
+        <pre><code><span class="kw">let</span> favDrink <span class="op">=</span> <span class="fn">prompt</span>(<span class="str">"Favourite drink?"</span>, <span class="str">"Coca-Cola"</span>);
+<span class="kw">switch</span>(favDrink) {
+  <span class="kw">case</span> <span class="str">"Coca-Cola"</span>:
+    <span class="prop">document</span>.<span class="fn">getElementById</span>(<span class="str">"demo"</span>).<span class="prop">innerHTML</span> <span class="op">=</span> <span class="str">"Great choice!"</span>;
+    <span class="kw">break</span>;
+  <span class="kw">case</span> <span class="str">"Pepsi"</span>:
+    <span class="prop">document</span>.<span class="fn">getElementById</span>(<span class="str">"demo"</span>).<span class="prop">innerHTML</span> <span class="op">=</span> <span class="str">"My fav too!"</span>;
+    <span class="kw">break</span>;
+  <span class="kw">default</span>:
+    <span class="prop">document</span>.<span class="fn">getElementById</span>(<span class="str">"demo"</span>).<span class="prop">innerHTML</span> <span class="op">=</span> <span class="str">"Never heard of it"</span>;
+}</code></pre>
+      </div>
+
+      <div class="tip-box">
+        <div class="label">💡 &lt;noscript&gt; Tag</div>
+        <p>Use <code>&lt;noscript&gt;Sorry, no JS support&lt;/noscript&gt;</code> to display fallback content for browsers with JavaScript disabled.</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  // ── Navigation ──────────────────────────────────────────────
+  function showSection(id, el) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    el.classList.add('active');
+    document.getElementById('mainContent').scrollTo({ top: 0, behavior: 'smooth' });
+    if (document.getElementById('searchInput').value) {
+      doSearch(document.getElementById('searchInput').value);
+    }
+  }
+
+  // ── Search ──────────────────────────────────────────────────
+  let originalContent = {};
+
+  function storeOriginals() {
+    document.querySelectorAll('.section').forEach(s => {
+      originalContent[s.id] = s.innerHTML;
+    });
+  }
+
+  function doSearch(query) {
+    query = query.trim();
+
+    // Restore originals first
+    document.querySelectorAll('.section').forEach(s => {
+      if (originalContent[s.id]) s.innerHTML = originalContent[s.id];
+    });
+
+    if (!query || query.length < 2) return;
+
+    const regex = new RegExp(`(${escapeRegex(query)})`, 'gi');
+    let firstMatch = null;
+
+    document.querySelectorAll('.section').forEach(s => {
+      highlightInNode(s, regex);
+      if (!firstMatch) {
+        const marked = s.querySelector('mark');
+        if (marked) firstMatch = { section: s.id, el: marked };
+      }
+    });
+
+    if (firstMatch) {
+      // Navigate to section with first match
+      const targetNav = document.querySelector(`.nav-item[onclick*="${firstMatch.section}"]`);
+      if (targetNav) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.getElementById(firstMatch.section).classList.add('active');
+        if (targetNav) targetNav.classList.add('active');
+        setTimeout(() => firstMatch.el.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
+      }
+    }
+  }
+
+  function highlightInNode(node, regex) {
+    if (node.nodeType === 3) { // Text node
+      const text = node.textContent;
+      if (regex.test(text)) {
+        const wrapper = document.createElement('span');
+        wrapper.innerHTML = text.replace(regex, '<mark>$1</mark>');
+        node.parentNode.replaceChild(wrapper, node);
+      }
+    } else if (node.nodeType === 1) {
+      const skip = ['SCRIPT', 'STYLE', 'MARK', 'INPUT'];
+      if (!skip.includes(node.tagName)) {
+        Array.from(node.childNodes).forEach(child => highlightInNode(child, regex));
+      }
+    }
+  }
+
+  function escapeRegex(str) {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  // ── Init ────────────────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(storeOriginals, 100); // after render
+  });
+
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('overlay').classList.toggle('show');
+  }
+</script>
+<script src="portal-nav.js"></script></body>
+</html>

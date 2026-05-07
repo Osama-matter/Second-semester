@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PHP Cookies & Sessions — Exam Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0f1117;
+    --bg-2: #161b27;
+    --bg-3: #1e2436;
+    --bg-4: #252d42;
+    --border: #2e3650;
+    --border-hover: #3d4a6a;
+    --text-1: #e8eaf0;
+    --text-2: #8b92a8;
+    --text-3: #5a6280;
+    --accent: #4f8ef7;
+    --accent-dim: rgba(79,142,247,0.12);
+    --green: #3ecf8e;
+    --green-dim: rgba(62,207,142,0.12);
+    --amber: #f5a623;
+    --amber-dim: rgba(245,166,35,0.12);
+    --red: #e5534b;
+    --red-dim: rgba(229,83,75,0.12);
+    --purple: #9b72f7;
+    --purple-dim: rgba(155,114,247,0.12);
+    --radius: 10px;
+    --radius-sm: 6px;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Inter', sans-serif;
+  }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text-1);
+    display: flex;
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* SIDEBAR */
+  #sidebar {
+    width: 240px;
+    min-height: 100vh;
+    background: var(--bg-2);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0;
+    overflow-y: auto;
+    z-index: 100;
+  }
+
+  .sidebar-logo {
+    padding: 20px 20px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .sidebar-logo h1 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .sidebar-logo p {
+    font-size: 11px;
+    color: var(--text-3);
+    margin-top: 2px;
+  }
+
+  .search-wrap {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .search-wrap input {
+    width: 100%;
+    background: var(--bg-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-1);
+    font-family: var(--sans);
+    font-size: 12px;
+    padding: 7px 10px 7px 32px;
+    outline: none;
+    transition: border-color 0.2s;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%235a6280' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 10px center;
+  }
+  .search-wrap input:focus { border-color: var(--accent); }
+  .search-wrap input::placeholder { color: var(--text-3); }
+
+  nav { padding: 10px 10px; flex: 1; }
+
+  .nav-section-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-3);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 8px 8px 4px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    color: var(--text-2);
+    font-size: 13px;
+    font-weight: 500;
+    transition: background 0.15s, color 0.15s;
+    margin-bottom: 2px;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+  }
+  .nav-item:hover { background: var(--bg-3); color: var(--text-1); }
+  .nav-item.active { background: var(--accent-dim); color: var(--accent); }
+
+  .nav-icon {
+    width: 20px; height: 20px;
+    border-radius: 5px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .badge {
+    margin-left: auto;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+
+  /* MAIN CONTENT */
+  main {
+    margin-left: 240px;
+    flex: 1;
+    padding: 32px 40px;
+    max-width: calc(100vw - 240px);
+  }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .section-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-icon-big {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .section-header h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-1);
+    letter-spacing: -0.02em;
+  }
+  .section-header p {
+    color: var(--text-2);
+    font-size: 13px;
+    margin-top: 3px;
+  }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+
+  .card {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+  }
+  .card h3 {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-3);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .card h3 .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  ul.concept-list { list-style: none; }
+  ul.concept-list li {
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-2);
+    font-size: 13px;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  ul.concept-list li:last-child { border-bottom: none; }
+  ul.concept-list li::before {
+    content: '→';
+    color: var(--text-3);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  ul.concept-list li strong { color: var(--text-1); font-weight: 600; }
+
+  .warning-box {
+    background: var(--amber-dim);
+    border: 1px solid rgba(245,166,35,0.25);
+    border-left: 3px solid var(--amber);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    margin-bottom: 16px;
+  }
+  .warning-box .warn-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--amber);
+    margin-bottom: 6px;
+  }
+  .warning-box p, .warning-box li {
+    font-size: 13px;
+    color: #d4a847;
+    line-height: 1.6;
+  }
+  .warning-box ul { list-style: none; }
+  .warning-box ul li::before { content: '⚠ '; }
+
+  .info-box {
+    background: var(--accent-dim);
+    border: 1px solid rgba(79,142,247,0.2);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    margin-bottom: 16px;
+  }
+  .info-box .info-title {
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.07em;
+    color: var(--accent); margin-bottom: 6px;
+  }
+  .info-box p, .info-box li {
+    font-size: 13px; color: #6fa8e8; line-height: 1.6;
+  }
+  .info-box ul { list-style: none; }
+  .info-box ul li::before { content: 'ℹ '; }
+
+  .danger-box {
+    background: var(--red-dim);
+    border: 1px solid rgba(229,83,75,0.2);
+    border-left: 3px solid var(--red);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    margin-bottom: 16px;
+  }
+  .danger-box .danger-title {
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.07em;
+    color: var(--red); margin-bottom: 6px;
+  }
+  .danger-box p, .danger-box li { font-size: 13px; color: #d4706b; line-height: 1.6; }
+  .danger-box ul { list-style: none; }
+  .danger-box ul li::before { content: '✕ '; }
+
+  .success-box {
+    background: var(--green-dim);
+    border: 1px solid rgba(62,207,142,0.2);
+    border-left: 3px solid var(--green);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    margin-bottom: 16px;
+  }
+  .success-box .success-title {
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.07em;
+    color: var(--green); margin-bottom: 6px;
+  }
+  .success-box p, .success-box li { font-size: 13px; color: #4ab882; line-height: 1.6; }
+  .success-box ul { list-style: none; }
+  .success-box ul li::before { content: '✓ '; }
+
+  pre {
+    background: var(--bg-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    overflow-x: auto;
+    margin-bottom: 16px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.7;
+    color: #c9d1e0;
+  }
+  .code-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-3);
+    margin-bottom: 6px;
+    display: block;
+  }
+  .kw { color: #c792ea; }
+  .fn { color: #82aaff; }
+  .str { color: #c3e88d; }
+  .var { color: #f07178; }
+  .cmt { color: #546e7a; font-style: italic; }
+  .num { color: #f78c6c; }
+
+  /* COMPARISON TABLE */
+  .cmp-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-bottom: 16px;
+  }
+  .cmp-table th {
+    background: var(--bg-3);
+    color: var(--text-2);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    text-align: left;
+  }
+  .cmp-table td {
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    color: var(--text-2);
+    vertical-align: top;
+  }
+  .cmp-table tr:hover td { background: var(--bg-3); }
+  .cmp-table td:first-child { color: var(--text-1); font-weight: 500; }
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .tag-green { background: var(--green-dim); color: var(--green); }
+  .tag-red { background: var(--red-dim); color: var(--red); }
+  .tag-amber { background: var(--amber-dim); color: var(--amber); }
+  .tag-blue { background: var(--accent-dim); color: var(--accent); }
+
+  /* FLOW DIAGRAM */
+  .flow {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+  .flow-step {
+    background: var(--bg-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 8px 14px;
+    font-size: 12px;
+    color: var(--text-2);
+    text-align: center;
+    min-width: 90px;
+  }
+  .flow-step .step-num {
+    display: block;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 2px;
+  }
+  .flow-arrow {
+    color: var(--text-3);
+    font-size: 16px;
+    padding: 0 6px;
+    flex-shrink: 0;
+  }
+
+  /* PARAM TABLE */
+  .param-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+    margin-bottom: 16px;
+  }
+  .param-table th {
+    background: var(--bg-4);
+    color: var(--text-3);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    text-align: left;
+  }
+  .param-table td {
+    padding: 9px 12px;
+    border: 1px solid var(--border);
+    color: var(--text-2);
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+  .param-table td:first-child { color: var(--amber); }
+  .param-table td:last-child { font-family: var(--sans); font-size: 12px; }
+  .param-table tr:hover td { background: var(--bg-3); }
+
+  /* SEARCH HIGHLIGHT */
+  .hl { background: rgba(79,142,247,0.3); border-radius: 2px; }
+
+  /* QUICK STATS */
+  .stats-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .stat-chip {
+    background: var(--bg-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 16px;
+    flex: 1;
+    text-align: center;
+  }
+  .stat-chip .sc-val {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-1);
+    font-family: var(--mono);
+  }
+  .stat-chip .sc-lbl {
+    font-size: 11px;
+    color: var(--text-3);
+    margin-top: 2px;
+  }
+
+  /* PROGRESS */
+  .progress-bar-wrap { background: var(--bg-3); border-radius: 20px; height: 6px; margin-top: 6px; }
+  .progress-bar { height: 6px; border-radius: 20px; background: var(--accent); }
+
+  /* SEARCH RESULTS */
+  #search-results {
+    display: none;
+    margin-top: 8px;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  .search-result-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--text-2);
+    border-bottom: 1px solid var(--border);
+    transition: background 0.1s;
+  }
+  .search-result-item:last-child { border-bottom: none; }
+  .search-result-item:hover { background: var(--bg-3); color: var(--text-1); }
+  .search-result-item .res-section { color: var(--text-3); font-size: 10px; display: block; margin-top: 2px; }
+
+  /* ── Mobile ── */
+  .ham-btn {
+    display: none;
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    z-index: 1000;
+    width: 40px;
+    height: 40px;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-1);
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+  }
+
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px);
+    z-index: 400;
+  }
+
+  @media (max-width: 768px) {
+    .ham-btn { display: flex; }
+    #sidebar {
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+    }
+    #sidebar.open { transform: translateX(0); }
+    .sidebar-overlay.show { display: block; }
+    main {
+      margin-left: 0;
+      padding: 70px 15px 30px;
+      max-width: 100vw;
+    }
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .section-header h2 { font-size: 18px; }
+    .stats-row { flex-wrap: wrap; }
+    .stat-chip { flex: 1 1 calc(50% - 12px); }
+  }
+</style>
+  <link rel="stylesheet" href="global.css" />
+  <link rel="stylesheet" href="components.css" />
+  <link rel="stylesheet" href="responsive.css" />
+  <script defer src="app.js"></script>
+</head>
+<body>
+<button class="ham-btn" onclick="toggleSidebar()">☰</button>
+<div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+<aside id="sidebar">
+  <div class="sidebar-logo">
+    <h1>PHP Study Guide</h1>
+    <p>Cookies &amp; Sessions — Web Programming</p>
+  </div>
+  <div class="search-wrap">
+    <input type="text" id="search-input" placeholder="Quick search topics…" autocomplete="off">
+    <div id="search-results"></div>
+  </div>
+  <nav>
+    <div class="nav-section-label">Modules</div>
+    <button class="nav-item active" data-target="m1">
+      <span class="nav-icon" style="background:rgba(79,142,247,0.15);color:var(--accent)">01</span>
+      HTTP &amp; State Problem
+      <span class="badge tag-blue">Intro</span>
+    </button>
+    <button class="nav-item" data-target="m2">
+      <span class="nav-icon" style="background:rgba(245,166,35,0.15);color:var(--amber)">02</span>
+      Cookies In Depth
+    </button>
+    <button class="nav-item" data-target="m3">
+      <span class="nav-icon" style="background:rgba(62,207,142,0.15);color:var(--green)">03</span>
+      Sessions In Depth
+    </button>
+    <button class="nav-item" data-target="m4">
+      <span class="nav-icon" style="background:rgba(155,114,247,0.15);color:var(--purple)">04</span>
+      Cookies vs Sessions
+      <span class="badge tag-amber">Key</span>
+    </button>
+    <button class="nav-item" data-target="m5">
+      <span class="nav-icon" style="background:rgba(229,83,75,0.15);color:var(--red)">05</span>
+      Login System Example
+      <span class="badge tag-green">Code</span>
+    </button>
+  </nav>
+  <div style="padding:14px 18px;border-top:1px solid var(--border);">
+    <div style="font-size:11px;color:var(--text-3);margin-bottom:6px;">Exam Readiness</div>
+    <div class="progress-bar-wrap"><div class="progress-bar" id="prog-bar" style="width:20%"></div></div>
+    <div style="font-size:10px;color:var(--text-3);margin-top:4px;" id="prog-label">1 / 5 modules</div>
+  </div>
+</aside>
+
+<main>
+
+<!-- MODULE 1 -->
+<section class="section active" id="m1">
+  <div class="section-header">
+    <div class="section-icon-big" style="background:var(--accent-dim)">🌐</div>
+    <div>
+      <h2>HTTP &amp; The State Problem</h2>
+      <p>Why cookies and sessions exist — the stateless nature of HTTP</p>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-chip"><div class="sc-val" style="color:var(--accent)">HTTP</div><div class="sc-lbl">Stateless Protocol</div></div>
+    <div class="stat-chip"><div class="sc-val" style="color:var(--amber)">2</div><div class="sc-lbl">Solutions (Cookie/Session)</div></div>
+    <div class="stat-chip"><div class="sc-val" style="color:var(--green)">4KB</div><div class="sc-lbl">Max Cookie Size</div></div>
+    <div class="stat-chip"><div class="sc-val" style="color:var(--purple)">∞</div><div class="sc-lbl">Session Data Capacity</div></div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3><span class="dot" style="background:var(--accent)"></span>Key Concepts</h3>
+      <ul class="concept-list">
+        <li><strong>Stateless HTTP:</strong> the server does NOT remember the client between requests</li>
+        <li><strong>Cookies:</strong> small text files stored on the client computer for tracking</li>
+        <li><strong>Sessions:</strong> relevant data stored server-side, identified by a unique session ID</li>
+        <li><strong>Use cases:</strong> shopping carts, "Remember Me" login, user preferences</li>
+        <li><strong>PHP support:</strong> transparently supports HTTP cookies via built-in superglobals</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><span class="dot" style="background:var(--amber)"></span>3-Step Cookie Identification Flow</h3>
+      <div style="margin-top:4px">
+        <div class="flow">
+          <div class="flow-step"><span class="step-num">STEP 1</span>Server sends<br>Set-Cookie header</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step"><span class="step-num">STEP 2</span>Browser stores<br>cookie locally</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step"><span class="step-num">STEP 3</span>Browser resends<br>cookie auto</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step" style="border-color:var(--green);color:var(--green)"><span class="step-num" style="color:var(--green)">DONE</span>Server identifies<br>the user</div>
+        </div>
+      </div>
+      <div style="height:12px"></div>
+      <ul class="concept-list">
+        <li><strong>Condition 1:</strong> Domain must match the cookie's domain attribute</li>
+        <li><strong>Condition 2:</strong> Path must match the cookie's path attribute</li>
+        <li><strong>Condition 3:</strong> Cookie must NOT be expired</li>
+        <li><strong>Condition 4:</strong> Security rules (Secure, HttpOnly, SameSite) must allow</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="warning-box">
+    <div class="warn-title">⚠ Critical Exam Point</div>
+    <ul>
+      <li>HTTP is <strong>stateless by design</strong> — each request is completely independent</li>
+      <li>Cookies and sessions are application-level workarounds, NOT part of core HTTP</li>
+      <li>Cookie is sent in the <strong>HTTP header</strong>, NOT as a file attachment</li>
+    </ul>
+  </div>
+
+  <div class="info-box">
+    <div class="info-title">ℹ HTTP Response Header Anatomy</div>
+    <p>When a PHP script calls <code>setcookie()</code>, it adds a <code>Set-Cookie</code> header to the HTTP response. The browser then stores this and automatically includes it in all subsequent requests matching the domain/path.</p>
+  </div>
+</section>
+
+<!-- MODULE 2 -->
+<section class="section" id="m2">
+  <div class="section-header">
+    <div class="section-icon-big" style="background:var(--amber-dim)">🍪</div>
+    <div>
+      <h2>Cookies In Depth</h2>
+      <p>Setting, reading, and deleting cookies with PHP — all syntax &amp; parameters</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px">
+    <h3><span class="dot" style="background:var(--amber)"></span>setcookie() — All 6 Parameters</h3>
+    <table class="param-table" style="margin-top:10px">
+      <thead>
+        <tr><th>Parameter</th><th>Type</th><th>Description</th><th>Required?</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>name</td><td>string</td><td>Cookie name — stored in HTTP_COOKIE_VARS env variable</td><td><span class="tag tag-red">Required</span></td></tr>
+        <tr><td>value</td><td>string</td><td>The data you want to store in the cookie</td><td><span class="tag tag-red">Required</span></td></tr>
+        <tr><td>expire</td><td>int</td><td>Unix timestamp. Use time()+seconds. If omitted → expires when browser closes</td><td><span class="tag tag-amber">Optional</span></td></tr>
+        <tr><td>path</td><td>string</td><td>"/" = valid for entire site. "/admin" = only /admin directory</td><td><span class="tag tag-amber">Optional</span></td></tr>
+        <tr><td>domain</td><td>string</td><td>Domain scope. Must have at least 2 periods. Cookies are host-only by default</td><td><span class="tag tag-amber">Optional</span></td></tr>
+        <tr><td>security</td><td>int</td><td>1 = HTTPS only. 0 = HTTP or HTTPS (default)</td><td><span class="tag tag-amber">Optional</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <span class="code-label">Setting Cookies (expires in 1 hour)</span>
+      <pre><span class="kw">&lt;?php</span>
+<span class="fn">setcookie</span>(<span class="str">"name"</span>, <span class="str">"John Watkin"</span>, <span class="fn">time</span>()+<span class="num">3600</span>, <span class="str">"/"</span>);
+<span class="fn">setcookie</span>(<span class="str">"age"</span>,  <span class="str">"36"</span>,         <span class="fn">time</span>()+<span class="num">3600</span>, <span class="str">"/"</span>);
+
+<span class="cmt">// Loop all cookies</span>
+<span class="kw">foreach</span>(<span class="var">$_COOKIE</span> <span class="kw">as</span> <span class="var">$key</span> =&gt; <span class="var">$value</span>) {
+    <span class="kw">echo</span> <span class="str">"{<span class="var">$key</span>} = {<span class="var">$value</span>} &lt;br&gt;"</span>;
+}
+<span class="kw">?&gt;</span></pre>
+
+      <span class="code-label">Accessing a specific cookie</span>
+      <pre><span class="kw">&lt;?php</span>
+<span class="kw">echo</span> <span class="var">$_COOKIE</span>[<span class="str">"name"</span>]; <span class="cmt">// John Watkin</span>
+<span class="kw">echo</span> <span class="var">$_COOKIE</span>[<span class="str">"age"</span>];  <span class="cmt">// 36</span>
+<span class="kw">?&gt;</span></pre>
+    </div>
+    <div>
+      <span class="code-label">Checking if cookie exists with isset()</span>
+      <pre><span class="kw">&lt;?php</span>
+<span class="kw">if</span>(<span class="fn">isset</span>(<span class="var">$_COOKIE</span>[<span class="str">"name"</span>])) {
+    <span class="kw">echo</span> <span class="str">"Welcome "</span> . <span class="var">$_COOKIE</span>[<span class="str">"name"</span>];
+} <span class="kw">else</span> {
+    <span class="kw">echo</span> <span class="str">"Sorry... Not recognized"</span>;
+}
+<span class="kw">?&gt;</span></pre>
+
+      <span class="code-label">Deleting a cookie (set expiry in the past)</span>
+      <pre><span class="kw">&lt;?php</span>
+<span class="cmt">// time()-60 = 60 seconds in the past</span>
+<span class="fn">setcookie</span>(<span class="str">"name"</span>, <span class="str">""</span>, <span class="fn">time</span>()-<span class="num">60</span>, <span class="str">"/"</span>);
+<span class="fn">setcookie</span>(<span class="str">"age"</span>,  <span class="str">""</span>, <span class="fn">time</span>()-<span class="num">60</span>, <span class="str">"/"</span>);
+<span class="kw">?&gt;</span></pre>
+    </div>
+  </div>
+
+  <div class="warning-box">
+    <div class="warn-title">⚠ Critical Notes</div>
+    <ul>
+      <li>setcookie() MUST be called <strong>before any HTML output</strong> including &lt;html&gt; tag</li>
+      <li>Each cookie requires a <strong>separate setcookie() call</strong> — no batch setting</li>
+      <li>To DELETE a cookie, set its expiry to a <strong>past timestamp</strong> (time()-60)</li>
+      <li>Cookie value is sent as plain text — never store passwords or sensitive data</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3><span class="dot" style="background:var(--accent)"></span>Time Expiry Quick Reference</h3>
+    <table class="cmp-table" style="margin-top:10px">
+      <thead><tr><th>Duration</th><th>Code</th><th>Seconds</th></tr></thead>
+      <tbody>
+        <tr><td>1 Hour</td><td><code style="font-family:var(--mono);color:var(--green)">time() + 3600</code></td><td>3,600</td></tr>
+        <tr><td>1 Day</td><td><code style="font-family:var(--mono);color:var(--green)">time() + 86400</code></td><td>86,400</td></tr>
+        <tr><td>1 Week</td><td><code style="font-family:var(--mono);color:var(--green)">time() + 604800</code></td><td>604,800</td></tr>
+        <tr><td>1 Month</td><td><code style="font-family:var(--mono);color:var(--green)">time() + 2592000</code></td><td>2,592,000</td></tr>
+        <tr><td>Delete</td><td><code style="font-family:var(--mono);color:var(--red)">time() - 60</code></td><td>Past = expired</td></tr>
+        <tr><td>Session only</td><td><code style="font-family:var(--mono);color:var(--amber)">0 or omit</code></td><td>Until browser closes</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- MODULE 3 -->
+<section class="section" id="m3">
+  <div class="section-header">
+    <div class="section-icon-big" style="background:var(--green-dim)">🔐</div>
+    <div>
+      <h2>Sessions In Depth</h2>
+      <p>Server-side state management — starting, reading, and destroying PHP sessions</p>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3><span class="dot" style="background:var(--green)"></span>Key Concepts</h3>
+      <ul class="concept-list">
+        <li><strong>session_start():</strong> must be called before HTML — creates or resumes a session</li>
+        <li><strong>$_SESSION[]:</strong> superglobal array — stores all session variables</li>
+        <li><strong>SESSID Cookie:</strong> browser stores only a session ID — actual data stays on server</li>
+        <li><strong>Auto-delete:</strong> session values are wiped when browser closes</li>
+        <li><strong>Persistence:</strong> for permanent storage, save session data to a database</li>
+        <li><strong>Global variable:</strong> a session is a global variable stored on the server</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><span class="dot" style="background:var(--purple)"></span>When to Use Sessions</h3>
+      <ul class="concept-list">
+        <li><strong>Sensitive data:</strong> store user ID securely — tamper-proof on server</li>
+        <li><strong>Multi-page data:</strong> pass values between different PHP pages</li>
+        <li><strong>Cookie-free fallback:</strong> works on browsers with cookies disabled</li>
+        <li><strong>Global variables:</strong> safer than passing in URL query strings</li>
+        <li><strong>Large data:</strong> shopping cart data exceeding the 4KB cookie limit</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <span class="code-label">Starting a session &amp; storing variables</span>
+      <pre><span class="kw">&lt;?php</span>
+<span class="fn">session_start</span>(); <span class="cmt">// MUST be before HTML</span>
+<span class="kw">?&gt;</span>
+<span class="kw">&lt;html&gt;&lt;body&gt;</span>
+<span class="kw">&lt;?php</span>
+<span class="var">$_SESSION</span>[<span class="str">"FName"</span>] = <span class="str">"ABC"</span>;
+<span class="var">$_SESSION</span>[<span class="str">"Lname"</span>] = <span class="str">"XYZ"</span>;
+<span class="kw">echo</span> <span class="str">"First: "</span> . <span class="var">$_SESSION</span>[<span class="str">"FName"</span>];
+<span class="kw">echo</span> <span class="str">"Last: "</span>  . <span class="var">$_SESSION</span>[<span class="str">"LName"</span>];
+<span class="kw">?&gt;</span>
+<span class="kw">&lt;/body&gt;&lt;/html&gt;</span></pre>
+
+      <span class="code-label">Page visit counter with sessions</span>
+      <pre><span class="kw">&lt;?php</span>
+<span class="fn">session_start</span>();
+<span class="kw">if</span>(<span class="fn">isset</span>(<span class="var">$_SESSION</span>[<span class="str">'page_count'</span>])) {
+    <span class="var">$_SESSION</span>[<span class="str">'page_count'</span>] += <span class="num">1</span>;
+} <span class="kw">else</span> {
+    <span class="var">$_SESSION</span>[<span class="str">'page_count'</span>] = <span class="num">1</span>;
+}
+<span class="kw">echo</span> <span class="str">'Visitor #'</span> . <span class="var">$_SESSION</span>[<span class="str">'page_count'</span>];
+<span class="kw">?&gt;</span></pre>
+    </div>
+    <div>
+      <span class="code-label">Destroying a specific session variable</span>
+      <pre><span class="kw">&lt;?php</span>
+<span class="fn">session_start</span>();
+<span class="cmt">// Remove only one variable</span>
+<span class="fn">unset</span>(<span class="var">$_SESSION</span>[<span class="str">'product_item'</span>]);
+<span class="cmt">// Other session data remains intact</span>
+<span class="kw">?&gt;</span></pre>
+
+      <span class="code-label">Destroying the ENTIRE session</span>
+      <pre><span class="kw">&lt;?php</span>
+<span class="fn">session_start</span>();
+<span class="fn">session_unset</span>();   <span class="cmt">// clear all variables</span>
+<span class="fn">session_destroy</span>(); <span class="cmt">// destroy session + cookie</span>
+<span class="fn">header</span>(<span class="str">"Location: login.php"</span>);
+<span class="fn">exit</span>();
+<span class="kw">?&gt;</span></pre>
+    </div>
+  </div>
+
+  <div class="warning-box">
+    <div class="warn-title">⚠ session_destroy() vs unset() — Know the Difference</div>
+    <ul>
+      <li><code>session_destroy()</code> — removes ALL session data including the SESSID cookie</li>
+      <li><code>unset($_SESSION['key'])</code> — removes ONE variable; other session data stays intact</li>
+      <li>Always call <code>session_unset()</code> before <code>session_destroy()</code> for a clean logout</li>
+    </ul>
+  </div>
+
+  <div class="success-box">
+    <div class="success-title">✓ Session Flow Summary</div>
+    <p>session_start() → set $_SESSION variables → access on other pages (also call session_start first) → logout with session_unset() + session_destroy()</p>
+  </div>
+</section>
+
+<!-- MODULE 4 -->
+<section class="section" id="m4">
+  <div class="section-header">
+    <div class="section-icon-big" style="background:var(--purple-dim)">⚖️</div>
+    <div>
+      <h2>Cookies vs Sessions — Full Comparison</h2>
+      <p>Side-by-side comparison of all key attributes — a high-priority exam topic</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px">
+    <h3><span class="dot" style="background:var(--purple)"></span>Comparison Table</h3>
+    <table class="cmp-table" style="margin-top:10px">
+      <thead>
+        <tr>
+          <th>Attribute</th>
+          <th>🍪 Cookies</th>
+          <th>🔐 Sessions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Storage Location</td>
+          <td><span class="tag tag-amber">Client (Browser)</span></td>
+          <td><span class="tag tag-blue">Server</span></td>
+        </tr>
+        <tr>
+          <td>Data Size Limit</td>
+          <td><span class="tag tag-red">~4KB max</span></td>
+          <td><span class="tag tag-green">No strict limit</span></td>
+        </tr>
+        <tr>
+          <td>Security</td>
+          <td><span class="tag tag-red">Lower — user can read/edit</span></td>
+          <td><span class="tag tag-green">Higher — data stays on server</span></td>
+        </tr>
+        <tr>
+          <td>Expiry</td>
+          <td>Custom expiry date or browser close</td>
+          <td>Browser close (unless DB-persisted)</td>
+        </tr>
+        <tr>
+          <td>PHP Superglobal</td>
+          <td><code style="font-family:var(--mono);color:var(--amber)">$_COOKIE</code></td>
+          <td><code style="font-family:var(--mono);color:var(--accent)">$_SESSION</code></td>
+        </tr>
+        <tr>
+          <td>Start/Set Function</td>
+          <td><code style="font-family:var(--mono);color:var(--amber)">setcookie()</code></td>
+          <td><code style="font-family:var(--mono);color:var(--accent)">session_start()</code></td>
+        </tr>
+        <tr>
+          <td>Browser Dependency</td>
+          <td>Requires browser to accept cookies</td>
+          <td>Works even if cookies blocked*</td>
+        </tr>
+        <tr>
+          <td>Data Type</td>
+          <td>String only</td>
+          <td>Any PHP type (arrays, objects)</td>
+        </tr>
+        <tr>
+          <td>Server Load</td>
+          <td><span class="tag tag-green">None — client holds data</span></td>
+          <td><span class="tag tag-amber">Some — server stores data</span></td>
+        </tr>
+        <tr>
+          <td>Ideal Use Case</td>
+          <td>Remember Me, preferences, tracking</td>
+          <td>Login auth, shopping cart, user state</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:11px;color:var(--text-3);margin-top:8px">* Sessions still use a cookie (SESSID) to identify the user unless URL rewriting is configured</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="warning-box">
+      <div class="warn-title">⚠ Cookies — Risks</div>
+      <ul>
+        <li>Visible and editable by the user via browser DevTools</li>
+        <li>Can be stolen via XSS if HttpOnly not set</li>
+        <li>Subject to CSRF attacks if SameSite not configured</li>
+        <li>Limited to 4KB — cannot store complex data structures</li>
+      </ul>
+    </div>
+    <div class="success-box">
+      <div class="success-title">✓ Sessions — Advantages</div>
+      <ul>
+        <li>Data never leaves the server — much more secure</li>
+        <li>Can store arrays, objects, complex state</li>
+        <li>No size restriction on stored data</li>
+        <li>Automatically ties to browser lifecycle</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="info-box">
+    <div class="info-title">ℹ How Sessions Use Cookies Internally</div>
+    <p>When session_start() is called, PHP creates a unique session ID and stores it as a cookie named <strong>PHPSESSID</strong> on the client. On every subsequent request, the browser sends this cookie, and PHP uses the ID to locate and load the session data from the server's file system (or database).</p>
+  </div>
+</section>
+
+<!-- MODULE 5 -->
+<section class="section" id="m5">
+  <div class="section-header">
+    <div class="section-icon-big" style="background:var(--red-dim)">🏗️</div>
+    <div>
+      <h2>Login System — Full Session Example</h2>
+      <p>4-file PHP project demonstrating real-world session-based authentication</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px">
+    <h3><span class="dot" style="background:var(--red)"></span>Project Structure &amp; Flow</h3>
+    <div class="flow" style="margin-top:12px">
+      <div class="flow-step" style="border-color:var(--accent);background:var(--accent-dim)"><span class="step-num" style="color:var(--accent)">login.php</span>HTML Form<br>Username/Pass</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step" style="border-color:var(--amber);background:var(--amber-dim)"><span class="step-num" style="color:var(--amber)">process.php</span>Validate<br>Credentials</div>
+      <div class="flow-arrow">✓ →</div>
+      <div class="flow-step" style="border-color:var(--green);background:var(--green-dim)"><span class="step-num" style="color:var(--green)">dashboard.php</span>Protected<br>Page</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step" style="border-color:var(--red);background:var(--red-dim)"><span class="step-num" style="color:var(--red)">logout.php</span>Destroy<br>Session</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <span class="code-label">login.php — Show form, handle errors</span>
+      <pre><span class="kw">&lt;?php</span>
+<span class="fn">session_start</span>();
+<span class="cmt">// Redirect if already logged in</span>
+<span class="kw">if</span> (<span class="fn">isset</span>(<span class="var">$_SESSION</span>[<span class="str">'username'</span>])) {
+    <span class="fn">header</span>(<span class="str">"Location: dashboard.php"</span>);
+    <span class="fn">exit</span>();
+}
+<span class="kw">?&gt;</span>
+<span class="cmt">&lt;!-- HTML form posts to process.php --&gt;</span>
+<span class="kw">&lt;?php</span>
+<span class="cmt">// Show error if one was set</span>
+<span class="kw">if</span> (<span class="fn">isset</span>(<span class="var">$_SESSION</span>[<span class="str">'error'</span>])) {
+    <span class="kw">echo</span> <span class="var">$_SESSION</span>[<span class="str">'error'</span>];
+    <span class="fn">unset</span>(<span class="var">$_SESSION</span>[<span class="str">'error'</span>]);
+}
+<span class="kw">?&gt;</span></pre>
+
+      <span class="code-label">process.php — Validate credentials</span>
+      <pre><span class="kw">&lt;?php</span>
+<span class="fn">session_start</span>();
+<span class="var">$valid_user</span> = <span class="str">"admin"</span>;
+<span class="var">$valid_pass</span> = <span class="str">"1234"</span>;
+<span class="var">$u</span> = <span class="var">$_POST</span>[<span class="str">'username'</span>];
+<span class="var">$p</span> = <span class="var">$_POST</span>[<span class="str">'password'</span>];
+
+<span class="kw">if</span> (<span class="var">$u</span> === <span class="var">$valid_user</span> &amp;&amp; <span class="var">$p</span> === <span class="var">$valid_pass</span>) {
+    <span class="var">$_SESSION</span>[<span class="str">'username'</span>] = <span class="var">$u</span>;
+    <span class="fn">header</span>(<span class="str">"Location: dashboard.php"</span>);
+} <span class="kw">else</span> {
+    <span class="var">$_SESSION</span>[<span class="str">'error'</span>] = <span class="str">"Invalid credentials!"</span>;
+    <span class="fn">header</span>(<span class="str">"Location: login.php"</span>);
+}
+<span class="fn">exit</span>();
+<span class="kw">?&gt;</span></pre>
+    </div>
+    <div>
+      <span class="code-label">dashboard.php — Protected page</span>
+      <pre><span class="kw">&lt;?php</span>
+<span class="fn">session_start</span>();
+<span class="cmt">// Guard clause — redirect if not logged in</span>
+<span class="kw">if</span> (!<span class="fn">isset</span>(<span class="var">$_SESSION</span>[<span class="str">'username'</span>])) {
+    <span class="fn">header</span>(<span class="str">"Location: login.php"</span>);
+    <span class="fn">exit</span>();
+}
+<span class="kw">?&gt;</span>
+<span class="kw">&lt;h2&gt;</span>Welcome,
+<span class="kw">&lt;?php</span> <span class="kw">echo</span> <span class="var">$_SESSION</span>[<span class="str">'username'</span>]; <span class="kw">?&gt;</span>
+<span class="kw">&lt;/h2&gt;</span>
+<span class="kw">&lt;a</span> href=<span class="str">"logout.php"</span><span class="kw">&gt;</span>Logout<span class="kw">&lt;/a&gt;</span></pre>
+
+      <span class="code-label">logout.php — Full session teardown</span>
+      <pre><span class="kw">&lt;?php</span>
+<span class="fn">session_start</span>();
+<span class="cmt">// Step 1: Clear all session variables</span>
+<span class="fn">session_unset</span>();
+<span class="cmt">// Step 2: Destroy the session itself</span>
+<span class="fn">session_destroy</span>();
+<span class="cmt">// Step 3: Redirect to login</span>
+<span class="fn">header</span>(<span class="str">"Location: login.php"</span>);
+<span class="fn">exit</span>();
+<span class="kw">?&gt;</span></pre>
+    </div>
+  </div>
+
+  <div class="warning-box">
+    <div class="warn-title">⚠ Security Notes on This Pattern</div>
+    <ul>
+      <li>Always use <strong>session_unset() before session_destroy()</strong> for a complete logout</li>
+      <li>Add <code>exit()</code> immediately after every <code>header("Location: ...")</code> to stop execution</li>
+      <li>In production, hash passwords with <code>password_hash()</code> — never compare plain text</li>
+      <li>The "guard clause" pattern in dashboard.php must appear at the very top of every protected page</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3><span class="dot" style="background:var(--green)"></span>Function Quick Reference</h3>
+    <table class="cmp-table" style="margin-top:10px">
+      <thead><tr><th>Function</th><th>Purpose</th><th>When to Use</th></tr></thead>
+      <tbody>
+        <tr><td><code style="font-family:var(--mono);color:var(--accent)">session_start()</code></td><td>Start or resume a session</td><td>Top of EVERY page using sessions</td></tr>
+        <tr><td><code style="font-family:var(--mono);color:var(--green)">$_SESSION['key'] = val</code></td><td>Store session variable</td><td>After login, form submission</td></tr>
+        <tr><td><code style="font-family:var(--mono);color:var(--amber)">isset($_SESSION['key'])</code></td><td>Check if session var exists</td><td>Guard clauses, conditional logic</td></tr>
+        <tr><td><code style="font-family:var(--mono);color:var(--amber)">unset($_SESSION['key'])</code></td><td>Delete one session variable</td><td>Removing specific data</td></tr>
+        <tr><td><code style="font-family:var(--mono);color:var(--red)">session_unset()</code></td><td>Clear all session variables</td><td>Before session_destroy()</td></tr>
+        <tr><td><code style="font-family:var(--mono);color:var(--red)">session_destroy()</code></td><td>Destroy entire session + cookie</td><td>Logout</td></tr>
+        <tr><td><code style="font-family:var(--mono);color:var(--amber)">setcookie()</code></td><td>Set a browser cookie</td><td>Remember me, tracking, prefs</td></tr>
+        <tr><td><code style="font-family:var(--mono);color:var(--amber)">$_COOKIE['key']</code></td><td>Read a cookie value</td><td>Access previously set cookies</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+</main>
+
+<script>
+  const navItems = document.querySelectorAll('.nav-item');
+  const sections = document.querySelectorAll('.section');
+  const progBar = document.getElementById('prog-bar');
+  const progLabel = document.getElementById('prog-label');
+  let visited = new Set([1]);
+
+  function showSection(target) {
+    sections.forEach(s => s.classList.remove('active'));
+    navItems.forEach(n => n.classList.remove('active'));
+    document.getElementById(target).classList.add('active');
+    document.querySelector(`[data-target="${target}"]`).classList.add('active');
+    const num = parseInt(target.replace('m',''));
+    visited.add(num);
+    const pct = Math.round((visited.size / 5) * 100);
+    progBar.style.width = pct + '%';
+    progLabel.textContent = visited.size + ' / 5 modules';
+  }
+
+  navItems.forEach(item => {
+    item.addEventListener('click', () => showSection(item.dataset.target));
+  });
+
+  const searchData = [
+    { text: 'HTTP is stateless — does not remember clients', section: 'm1', label: 'HTTP & State' },
+    { text: 'Cookies: small text files stored on the client', section: 'm1', label: 'HTTP & State' },
+    { text: 'Sessions: data stored server-side', section: 'm1', label: 'HTTP & State' },
+    { text: 'setcookie(name, value, expire, path, domain, security)', section: 'm2', label: 'Cookies' },
+    { text: 'Must call setcookie() before any HTML output', section: 'm2', label: 'Cookies' },
+    { text: 'Delete cookie by setting expiry in the past: time()-60', section: 'm2', label: 'Cookies' },
+    { text: '$_COOKIE["name"] to read a cookie value', section: 'm2', label: 'Cookies' },
+    { text: 'isset() to check if cookie exists', section: 'm2', label: 'Cookies' },
+    { text: 'time()+3600 expires in 1 hour', section: 'm2', label: 'Cookies' },
+    { text: 'session_start() must be called before HTML', section: 'm3', label: 'Sessions' },
+    { text: '$_SESSION[] stores session variables', section: 'm3', label: 'Sessions' },
+    { text: 'session_destroy() removes all session data', section: 'm3', label: 'Sessions' },
+    { text: 'unset($_SESSION[key]) removes one variable', section: 'm3', label: 'Sessions' },
+    { text: 'PHPSESSID cookie stores session ID on client', section: 'm3', label: 'Sessions' },
+    { text: 'Cookies stored client-side, sessions stored server-side', section: 'm4', label: 'Comparison' },
+    { text: 'Cookies limited to 4KB, sessions have no strict limit', section: 'm4', label: 'Comparison' },
+    { text: 'Sessions more secure — data never leaves server', section: 'm4', label: 'Comparison' },
+    { text: 'login.php process.php dashboard.php logout.php', section: 'm5', label: 'Login Example' },
+    { text: 'Guard clause: if(!isset($_SESSION)) redirect to login', section: 'm5', label: 'Login Example' },
+    { text: 'session_unset() before session_destroy() for clean logout', section: 'm5', label: 'Login Example' },
+    { text: 'exit() after every header() redirect', section: 'm5', label: 'Login Example' },
+  ];
+
+  const searchInput = document.getElementById('search-input');
+  const searchResults = document.getElementById('search-results');
+
+  searchInput.addEventListener('input', function() {
+    const q = this.value.trim().toLowerCase();
+    searchResults.innerHTML = '';
+    if (q.length < 2) { searchResults.style.display = 'none'; return; }
+    const matches = searchData.filter(d => d.text.toLowerCase().includes(q)).slice(0, 6);
+    if (matches.length === 0) { searchResults.style.display = 'none'; return; }
+    matches.forEach(m => {
+      const div = document.createElement('div');
+      div.className = 'search-result-item';
+      const hi = m.text.replace(new RegExp(q, 'gi'), s => `<mark class="hl">${s}</mark>`);
+      div.innerHTML = hi + `<span class="res-section">${m.label}</span>`;
+      div.addEventListener('click', () => {
+        showSection(m.section);
+        searchResults.style.display = 'none';
+        searchInput.value = '';
+      });
+      searchResults.appendChild(div);
+    });
+    searchResults.style.display = 'block';
+  });
+
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.search-wrap')) searchResults.style.display = 'none';
+  });
+
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('overlay').classList.toggle('show');
+  }
+</script>
+<script src="portal-nav.js"></script></body>
+</html>
+

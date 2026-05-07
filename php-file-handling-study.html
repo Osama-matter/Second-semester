@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PHP File Handling — Study Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d12;
+    --bg2: #13131a;
+    --bg3: #1a1a24;
+    --border: rgba(255,255,255,0.07);
+    --border-strong: rgba(255,255,255,0.14);
+    --text: #e8e8f0;
+    --text-muted: #8888a8;
+    --text-dim: #5a5a78;
+    --accent: #7c6aff;
+    --accent2: #ff6a8a;
+    --accent3: #3de8b0;
+    --accent4: #ffb84d;
+    --code-bg: #0a0a10;
+    --code-border: rgba(124,106,255,0.25);
+    --shadow: 0 8px 40px rgba(0,0,0,0.5);
+    --radius: 14px;
+    --tab-h: 52px;
+    --transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
+    --warning: #ff4d6d;
+    --warning-bg: rgba(255,77,109,0.08);
+    --warning-border: rgba(255,77,109,0.25);
+  }
+  [data-theme="light"] {
+    --bg: #f5f5fb;
+    --bg2: #ffffff;
+    --bg3: #ededf7;
+    --border: rgba(0,0,0,0.07);
+    --border-strong: rgba(0,0,0,0.14);
+    --text: #18181f;
+    --text-muted: #5a5a78;
+    --text-dim: #9898b8;
+    --code-bg: #f0f0fa;
+    --code-border: rgba(124,106,255,0.3);
+    --shadow: 0 8px 40px rgba(0,0,0,0.1);
+    --warning-bg: rgba(255,77,109,0.06);
+    --warning-border: rgba(255,77,109,0.3);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    transition: background 0.3s, color 0.3s;
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+    backdrop-filter: blur(20px);
+    transition: var(--transition);
+  }
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Syne', sans-serif; font-weight: 800; font-size: 18px;
+  }
+  .logo-icon {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+  .badge {
+    font-family: 'DM Sans', sans-serif; font-weight: 300; font-size: 12px;
+    color: var(--text-muted);
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    padding: 3px 10px; border-radius: 20px;
+    letter-spacing: 0.04em;
+  }
+  .header-right { display: flex; align-items: center; gap: 16px; }
+
+  .theme-toggle {
+    background: var(--bg3); border: 1px solid var(--border-strong);
+    border-radius: 30px; cursor: pointer;
+    display: flex; align-items: center; gap: 6px;
+    padding: 6px 14px; font-family: 'DM Sans', sans-serif;
+    font-size: 13px; color: var(--text-muted);
+    transition: var(--transition);
+  }
+  .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+  .theme-toggle svg { width: 15px; height: 15px; }
+
+  .progress-pill {
+    font-size: 12px; font-weight: 500; color: var(--accent3);
+    background: rgba(61,232,176,0.1);
+    border: 1px solid rgba(61,232,176,0.2);
+    padding: 4px 12px; border-radius: 20px;
+  }
+
+  /* ── MOBILE NAV ── */
+  .ham-btn {
+    display: none; width: 40px; height: 40px;
+    background: var(--bg3); border: 1px solid var(--border-strong);
+    border-radius: 10px; color: var(--accent);
+    align-items: center; justify-content: center; cursor: pointer;
+    transition: var(--transition);
+  }
+  .ham-btn:hover { border-color: var(--accent); }
+  .sidebar-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(4px); z-index: 999; display: none;
+    animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .sidebar-overlay.show { display: block; }
+
+  @media (max-width: 900px) {
+    header { padding: 0 16px; }
+    .header-right .badge { display: none; }
+    .ham-btn { display: flex; }
+    .sidebar {
+      position: fixed; top: 64px; left: -260px; height: calc(100vh - 64px);
+      z-index: 1000; transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 20px 0 60px rgba(0,0,0,0.5);
+    }
+    .sidebar.open { left: 0; }
+    .main-content { padding: 24px 16px; }
+    .grid { grid-template-columns: 1fr; }
+    .summary-card { flex-direction: column; align-items: flex-start; gap: 12px; }
+    .code-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+  }
+
+  /* ─── LAYOUT ─── */
+  .layout { display: flex; height: calc(100vh - 64px); }
+
+  /* ─── SIDEBAR ─── */
+  .sidebar {
+    width: 260px; flex-shrink: 0;
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    overflow-y: auto; padding: 24px 16px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .sidebar-label {
+    font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--text-dim); padding: 0 8px 8px;
+  }
+  .tab-btn {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: 10px;
+    border: none; background: transparent;
+    color: var(--text-muted); cursor: pointer; width: 100%;
+    font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 400;
+    transition: var(--transition); text-align: left;
+    position: relative;
+  }
+  .tab-btn:hover { background: var(--bg3); color: var(--text); }
+  .tab-btn.active {
+    background: rgba(124,106,255,0.12);
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .tab-btn.active::before {
+    content: ''; position: absolute; left: -8px; top: 50%; transform: translateY(-50%);
+    width: 3px; height: 24px; background: var(--accent); border-radius: 2px;
+  }
+  .tab-icon {
+    width: 28px; height: 28px; border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; flex-shrink: 0;
+    transition: var(--transition);
+  }
+  .tab-btn.active .tab-icon { background: rgba(124,106,255,0.2); }
+
+  .sidebar-divider {
+    height: 1px; background: var(--border);
+    margin: 8px 4px;
+  }
+
+  /* ─── MAIN ─── */
+  main {
+    flex: 1; overflow-y: auto; padding: 40px 48px;
+  }
+
+  /* ─── PANEL ─── */
+  .panel { display: none; animation: fadeSlide 0.25s ease; }
+  .panel.active { display: block; }
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── TYPOGRAPHY ─── */
+  .panel-header { margin-bottom: 32px; }
+  .panel-eyebrow {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    font-weight: 500; letter-spacing: 0.1em;
+    color: var(--accent); text-transform: uppercase;
+    margin-bottom: 8px; display: flex; align-items: center; gap: 8px;
+  }
+  .panel-eyebrow::after {
+    content: ''; flex: 1; max-width: 60px; height: 1px;
+    background: linear-gradient(to right, var(--accent), transparent);
+  }
+  h1.panel-title {
+    font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800;
+    line-height: 1.2; margin-bottom: 12px;
+  }
+  .panel-desc { color: var(--text-muted); font-size: 15px; font-weight: 300; max-width: 600px; }
+
+  h2 {
+    font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700;
+    margin: 32px 0 16px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  h2 .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent); flex-shrink: 0;
+  }
+  h3 {
+    font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 600;
+    margin: 20px 0 10px; color: var(--text);
+  }
+  p { color: var(--text-muted); margin-bottom: 12px; }
+
+  /* ─── WARNING BOX ─── */
+  .warning-box {
+    background: var(--warning-bg);
+    border: 1px solid var(--warning-border);
+    border-left: 4px solid var(--warning);
+    border-radius: var(--radius); padding: 20px 24px;
+    margin-bottom: 24px;
+  }
+  .warning-box .warning-title {
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px;
+    color: var(--warning); margin-bottom: 8px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .warning-box p { color: var(--text); font-size: 14px; margin-bottom: 8px; }
+  .warning-box p:last-child { margin-bottom: 0; }
+  .warning-box ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+  .warning-box li {
+    font-size: 14px; color: var(--text-muted);
+    padding-left: 16px; position: relative;
+  }
+  .warning-box li::before {
+    content: '→'; position: absolute; left: 0;
+    color: var(--warning); font-size: 12px;
+  }
+
+  /* ─── INFO / TIP BOX ─── */
+  .info-box {
+    background: rgba(124,106,255,0.06);
+    border: 1px solid rgba(124,106,255,0.2);
+    border-radius: var(--radius); padding: 16px 20px;
+    margin-bottom: 20px;
+    font-size: 14px; color: var(--text-muted);
+  }
+  .tip-box {
+    background: rgba(61,232,176,0.06);
+    border: 1px solid rgba(61,232,176,0.18);
+    border-left: 3px solid var(--accent3);
+    border-radius: var(--radius); padding: 16px 20px;
+    margin-bottom: 20px; font-size: 14px; color: var(--text-muted);
+  }
+  .tip-box strong { color: var(--accent3); }
+
+  /* ─── CODE BLOCK ─── */
+  .code-wrap { margin: 16px 0 24px; }
+  .code-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--accent); background: var(--bg3);
+    border: 1px solid var(--border); border-bottom: none;
+    padding: 6px 14px; border-radius: 8px 8px 0 0;
+    display: inline-block;
+  }
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--code-border);
+    border-radius: 0 8px 8px 8px;
+    padding: 20px 24px; overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; line-height: 1.7;
+    color: var(--text);
+    position: relative;
+  }
+  pre code { background: none; border: none; padding: 0; }
+  .copy-btn {
+    position: absolute; top: 12px; right: 12px;
+    background: var(--bg3); border: 1px solid var(--border-strong);
+    color: var(--text-muted); font-size: 11px;
+    padding: 5px 10px; border-radius: 6px; cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: var(--transition); opacity: 0;
+  }
+  pre:hover .copy-btn { opacity: 1; }
+  .copy-btn:hover { color: var(--accent); border-color: var(--accent); }
+  .copy-btn.copied { color: var(--accent3); border-color: var(--accent3); }
+
+  /* syntax highlighting tokens */
+  .kw  { color: #c792ea; }   /* keyword */
+  .fn  { color: #82aaff; }   /* function */
+  .str { color: #c3e88d; }   /* string */
+  .cmt { color: #546e7a; font-style: italic; } /* comment */
+  .num { color: #f78c6c; }   /* number */
+  .var { color: #ffcb6b; }   /* variable */
+  .op  { color: #89ddff; }   /* operator/symbol */
+  .con { color: var(--accent3); } /* constant/bool */
+  [data-theme="light"] .kw  { color: #7c3aed; }
+  [data-theme="light"] .fn  { color: #2563eb; }
+  [data-theme="light"] .str { color: #16a34a; }
+  [data-theme="light"] .cmt { color: #94a3b8; }
+  [data-theme="light"] .num { color: #dc2626; }
+  [data-theme="light"] .var { color: #d97706; }
+  [data-theme="light"] .op  { color: #0891b2; }
+  [data-theme="light"] .con { color: #059669; }
+
+  /* ─── TABLE ─── */
+  .table-wrap { overflow-x: auto; margin: 16px 0 28px; border-radius: var(--radius); border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  thead tr { background: var(--bg3); }
+  th {
+    font-family: 'Syne', sans-serif; font-weight: 600; font-size: 12px;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--text-muted); padding: 14px 18px; text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 14px 18px; border-bottom: 1px solid var(--border);
+    color: var(--text-muted); vertical-align: top;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: var(--bg3); }
+  td code, th code {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    background: rgba(124,106,255,0.12); color: var(--accent);
+    padding: 2px 7px; border-radius: 4px;
+  }
+  td strong { color: var(--text); font-weight: 500; }
+  .mode-flag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 500; background: rgba(124,106,255,0.15); color: var(--accent); padding: 3px 10px; border-radius: 6px; min-width: 36px; text-align: center; }
+  .tag { display: inline-block; font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 20px; }
+  .tag-r { background: rgba(61,232,176,0.12); color: var(--accent3); }
+  .tag-w { background: rgba(255,184,77,0.12); color: var(--accent4); }
+  .tag-rw { background: rgba(124,106,255,0.12); color: var(--accent); }
+  .tag-d { background: rgba(255,77,109,0.12); color: var(--warning); }
+
+  /* ─── FUNCTION CARD ─── */
+  .fn-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; margin-bottom: 28px; }
+  .fn-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 24px;
+    transition: var(--transition);
+    position: relative; overflow: hidden;
+  }
+  .fn-card::before {
+    content: ''; position: absolute; top: 0; left: 0;
+    height: 3px; width: 100%;
+  }
+  .fn-card.v1::before { background: linear-gradient(to right, var(--accent), var(--accent2)); }
+  .fn-card.v2::before { background: linear-gradient(to right, var(--accent3), var(--accent)); }
+  .fn-card.v3::before { background: linear-gradient(to right, var(--accent4), var(--accent2)); }
+  .fn-card.v4::before { background: linear-gradient(to right, var(--accent2), var(--accent3)); }
+  .fn-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow); }
+  .fn-name {
+    font-family: 'JetBrains Mono', monospace; font-size: 15px; font-weight: 500;
+    color: var(--accent); margin-bottom: 8px;
+  }
+  .fn-sig { font-size: 12px; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; margin-bottom: 12px; }
+  .fn-desc { font-size: 14px; color: var(--text-muted); margin-bottom: 16px; }
+  .fn-meta { display: flex; flex-wrap: wrap; gap: 6px; }
+  .meta-pill {
+    font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 500;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .meta-green { background: rgba(61,232,176,0.1); color: var(--accent3); border: 1px solid rgba(61,232,176,0.2); }
+  .meta-yellow { background: rgba(255,184,77,0.1); color: var(--accent4); border: 1px solid rgba(255,184,77,0.2); }
+  .meta-red { background: rgba(255,77,109,0.1); color: var(--warning); border: 1px solid rgba(255,77,109,0.2); }
+  .meta-purple { background: rgba(124,106,255,0.1); color: var(--accent); border: 1px solid rgba(124,106,255,0.2); }
+
+  /* ─── COMPARISON BLOCK ─── */
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 28px; }
+  .compare-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 22px;
+  }
+  .compare-card h3 { color: var(--accent); font-family: 'JetBrains Mono', monospace; font-size: 14px; margin-top: 0; }
+  .compare-card ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 7px; }
+  .compare-card li { font-size: 13.5px; color: var(--text-muted); padding-left: 16px; position: relative; }
+  .compare-card li::before { content: '▸'; position: absolute; left: 0; color: var(--accent3); font-size: 11px; top: 3px; }
+
+  /* ─── SECURITY CHECKLIST ─── */
+  .checklist { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+  .checklist li {
+    display: flex; align-items: flex-start; gap: 12px;
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px 18px; font-size: 14px; color: var(--text-muted);
+  }
+  .check-icon {
+    width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 12px;
+    margin-top: 1px;
+  }
+  .check-icon.ok  { background: rgba(61,232,176,0.15); color: var(--accent3); }
+  .check-icon.bad { background: rgba(255,77,109,0.15); color: var(--warning); }
+
+  /* ─── QUIZ ─── */
+  .quiz-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 28px; margin-bottom: 32px;
+  }
+  .quiz-q {
+    font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 600;
+    margin-bottom: 20px; line-height: 1.4;
+  }
+  .quiz-options { display: flex; flex-direction: column; gap: 10px; }
+  .quiz-opt {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px 18px;
+    cursor: pointer; font-size: 14px; color: var(--text-muted);
+    transition: var(--transition); text-align: left;
+    font-family: 'DM Sans', sans-serif;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .quiz-opt:hover { border-color: var(--accent); color: var(--text); }
+  .quiz-opt.correct { background: rgba(61,232,176,0.1); border-color: var(--accent3); color: var(--accent3); }
+  .quiz-opt.wrong   { background: rgba(255,77,109,0.1); border-color: var(--warning); color: var(--warning); }
+  .quiz-opt.disabled { pointer-events: none; }
+  .opt-label {
+    width: 26px; height: 26px; border-radius: 6px; flex-shrink: 0;
+    background: var(--bg); border: 1px solid var(--border-strong);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600;
+  }
+  .quiz-feedback {
+    margin-top: 16px; padding: 14px 18px; border-radius: 10px;
+    font-size: 14px; display: none;
+  }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.correct { background: rgba(61,232,176,0.08); border: 1px solid rgba(61,232,176,0.2); color: var(--accent3); }
+  .quiz-feedback.wrong   { background: rgba(255,77,109,0.08); border: 1px solid rgba(255,77,109,0.2); color: var(--warning); }
+  .quiz-reset { margin-top: 12px; font-size: 13px; color: var(--text-dim); cursor: pointer; text-decoration: underline; background: none; border: none; }
+  .quiz-reset:hover { color: var(--accent); }
+
+  /* ─── $_FILES VISUAL ─── */
+  .files-visual {
+    background: var(--code-bg); border: 1px solid var(--code-border);
+    border-radius: var(--radius); padding: 24px; margin-bottom: 24px;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 2;
+  }
+  .fv-key   { color: var(--accent4); }
+  .fv-val   { color: var(--accent3); }
+  .fv-arrow { color: var(--text-dim); }
+
+  /* ─── SCROLLBAR ─── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 6px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    .sidebar { width: 220px; }
+    main { padding: 24px 24px; }
+  }
+  @media (max-width: 700px) {
+    .layout { flex-direction: column; }
+    .sidebar { width: 100%; height: auto; flex-direction: row; overflow-x: auto; padding: 12px; }
+    .sidebar-label, .sidebar-divider { display: none; }
+    .tab-btn { flex-direction: column; gap: 4px; font-size: 11px; min-width: 70px; }
+    .tab-btn.active::before { display: none; }
+    main { padding: 20px 16px; }
+    .fn-grid, .compare-grid { grid-template-columns: 1fr; }
+    h1.panel-title { font-size: 24px; }
+  }
+</style>
+  <link rel="stylesheet" href="global.css" />
+  <link rel="stylesheet" href="components.css" />
+  <link rel="stylesheet" href="responsive.css" />
+  <script defer src="app.js"></script>
+</head>
+<body>
+
+<!-- ── SIDEBAR OVERLAY ── -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<header>
+  <div style="display:flex;align-items:center;gap:14px">
+    <div class="logo">
+      <div class="logo-icon">🗂</div>
+      PHP File Handling
+    </div>
+    <span class="badge">Exam Prep</span>
+  </div>
+  <div class="header-right">
+    <a href="index.html" class="theme-toggle" style="text-decoration:none">
+      <span>🏠</span> <span style="font-size:12px">Home</span>
+    </a>
+    <div class="ham-btn" onclick="toggleSidebar()">☰</div>
+    <span class="progress-pill" id="progress-pill">Section 1 / 5</span>
+    <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/>
+        <line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/>
+        <line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </svg>
+      <span id="theme-label">Light</span>
+    </button>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="sidebar">
+    <div class="sidebar-label">Topics</div>
+
+    <button class="tab-btn active" onclick="showTab(0,this)" data-idx="0">
+      <div class="tab-icon">⚠️</div>
+      <span>The Golden Rule</span>
+    </button>
+    <button class="tab-btn" onclick="showTab(1,this)" data-idx="1">
+      <div class="tab-icon">📂</div>
+      <span>File Opening Modes</span>
+    </button>
+    <button class="tab-btn" onclick="showTab(2,this)" data-idx="2">
+      <div class="tab-icon">📖</div>
+      <span>Reading Functions</span>
+    </button>
+    <button class="tab-btn" onclick="showTab(3,this)" data-idx="3">
+      <div class="tab-icon">✏️</div>
+      <span>Writing Functions</span>
+    </button>
+
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-label">Advanced</div>
+
+    <button class="tab-btn" onclick="showTab(4,this)" data-idx="4">
+      <div class="tab-icon">📁</div>
+      <span>Directories & Uploads</span>
+    </button>
+
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-label">Practice</div>
+    <button class="tab-btn" onclick="showTab(5,this)" data-idx="5">
+      <div class="tab-icon">🧠</div>
+      <span>Quick Quiz</span>
+    </button>
+  </nav>
+
+  <main id="main-content">
+
+    <!-- ═══════════════════════════════ PANEL 0: GOLDEN RULE ═══════════════════════════════ -->
+    <section class="panel active" id="panel-0">
+      <div class="panel-header">
+        <div class="panel-eyebrow">01 / Foundation</div>
+        <h1 class="panel-title">The Golden Rule</h1>
+        <p class="panel-desc">Before touching any file, understand what can go wrong — permanently.</p>
+      </div>
+
+      <div class="warning-box">
+        <div class="warning-title">🚨 CRITICAL: File Operations Are Destructive & Irreversible</div>
+        <p>Unlike databases with transactions, filesystem operations have <strong>no undo</strong>. The wrong mode or function can silently delete data in milliseconds.</p>
+        <ul>
+          <li>Opening a file with <code>w</code> truncates it to zero bytes — immediately, even before you write anything</li>
+          <li>Overwriting a file is permanent; there is no recycle bin on the server</li>
+          <li>Race conditions between concurrent requests can corrupt files</li>
+          <li>Writing outside the intended directory is a classic path traversal attack</li>
+        </ul>
+      </div>
+
+      <h2><span class="dot"></span>The Three Commandments</h2>
+
+      <div class="fn-grid">
+        <div class="fn-card v1">
+          <div class="fn-name">① Always close what you open</div>
+          <div class="fn-desc">Every <code>fopen()</code> must have a matching <code>fclose()</code>. Unclosed file handles leak resources, can prevent other processes from writing, and may corrupt data on some systems.</div>
+          <div class="fn-meta">
+            <span class="meta-pill meta-red">⚠ Resource leak without fclose()</span>
+          </div>
+        </div>
+        <div class="fn-card v2">
+          <div class="fn-name">② Check return values</div>
+          <div class="fn-desc"><code>fopen()</code> returns <code>false</code> on failure. Never assume a file opened successfully. Always validate before reading or writing — a <code>false</code> handle will silently do nothing or throw warnings.</div>
+          <div class="fn-meta">
+            <span class="meta-pill meta-green">✓ if ($handle === false) die("...")</span>
+          </div>
+        </div>
+        <div class="fn-card v3">
+          <div class="fn-name">③ Choose the right mode</div>
+          <div class="fn-desc">The difference between <code>"r"</code> and <code>"w"</code> is the difference between reading data and destroying it. Double-check your mode before opening production files.</div>
+          <div class="fn-meta">
+            <span class="meta-pill meta-yellow">r = safe read · w = destructive</span>
+          </div>
+        </div>
+        <div class="fn-card v4">
+          <div class="fn-name">④ Never trust user input for paths</div>
+          <div class="fn-desc">User-supplied filenames can contain <code>../</code> traversal sequences. A request for <code>../../etc/passwd</code> could expose or overwrite system files. Always sanitize and validate paths.</div>
+          <div class="fn-meta">
+            <span class="meta-pill meta-red">⚠ Path traversal vulnerability</span>
+            <span class="meta-pill meta-green">✓ Use basename() + realpath()</span>
+          </div>
+        </div>
+      </div>
+
+      <h2><span class="dot"></span>Safe File Operation Template</h2>
+      <div class="code-wrap">
+        <div class="code-label">example.php</div>
+        <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><span class="cmt">// ✅ The correct pattern every time</span>
+<span class="var">$path</span> <span class="op">=</span> <span class="str">'/var/data/users.txt'</span>;
+
+<span class="var">$handle</span> <span class="op">=</span> <span class="fn">fopen</span>(<span class="var">$path</span>, <span class="str">'r'</span>); <span class="cmt">// ① Choose mode carefully</span>
+
+<span class="kw">if</span> (<span class="var">$handle</span> <span class="op">===</span> <span class="con">false</span>) {            <span class="cmt">// ② Always check success</span>
+    <span class="kw">throw new</span> <span class="fn">RuntimeException</span>(<span class="str">"Cannot open file: $path"</span>);
+}
+
+<span class="kw">try</span> {
+    <span class="kw">while</span> ((<span class="var">$line</span> <span class="op">=</span> <span class="fn">fgets</span>(<span class="var">$handle</span>)) <span class="op">!==</span> <span class="con">false</span>) {
+        <span class="fn">processLine</span>(<span class="fn">trim</span>(<span class="var">$line</span>));
+    }
+} <span class="kw">finally</span> {
+    <span class="fn">fclose</span>(<span class="var">$handle</span>);               <span class="cmt">// ③ Always close — even on error</span>
+}</pre>
+      </div>
+
+      <div class="tip-box">
+        <strong>💡 Exam Tip:</strong> Examiners love to test whether you remember <code>fclose()</code>. In any question about file handling code, always check that handles are closed — especially in a <code>finally</code> block so cleanup happens even if an exception is thrown.
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════ PANEL 1: MODES ═══════════════════════════════ -->
+    <section class="panel" id="panel-1">
+      <div class="panel-header">
+        <div class="panel-eyebrow">02 / Core Concept</div>
+        <h1 class="panel-title">File Opening Modes</h1>
+        <p class="panel-desc">The second argument to <code>fopen()</code> controls what you can do and what happens to existing content.</p>
+      </div>
+
+      <div class="warning-box">
+        <div class="warning-title">🚨 Danger Zone: The Destructive Modes</div>
+        <p><code>w</code> and <code>w+</code> erase the entire file the moment <code>fopen()</code> is called — even if you never write a single byte. If the file doesn't exist, <code>w</code>/<code>w+</code> create it. <code>x</code>/<code>x+</code> are safer: they fail if the file exists, preventing accidental overwrites.</p>
+      </div>
+
+      <h2><span class="dot"></span>The fopen() Mode Reference</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Mode</th>
+              <th>Full Name</th>
+              <th>Read</th>
+              <th>Write</th>
+              <th>Pointer Start</th>
+              <th>File Must Exist?</th>
+              <th>Truncates?</th>
+              <th>Use Case</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="mode-flag">r</span></td>
+              <td><strong>Read Only</strong></td>
+              <td><span class="tag tag-r">✓ Yes</span></td>
+              <td><span class="tag tag-d">✗ No</span></td>
+              <td>Beginning</td>
+              <td><span class="tag tag-d">Yes — fails if missing</span></td>
+              <td><span class="tag tag-r">No</span></td>
+              <td>Safely reading a config or data file</td>
+            </tr>
+            <tr>
+              <td><span class="mode-flag">r+</span></td>
+              <td><strong>Read/Write</strong></td>
+              <td><span class="tag tag-r">✓ Yes</span></td>
+              <td><span class="tag tag-w">✓ Yes</span></td>
+              <td>Beginning</td>
+              <td><span class="tag tag-d">Yes — fails if missing</span></td>
+              <td><span class="tag tag-r">No</span></td>
+              <td>Patching specific bytes in an existing file</td>
+            </tr>
+            <tr>
+              <td><span class="mode-flag">w</span></td>
+              <td><strong>Write Only</strong></td>
+              <td><span class="tag tag-d">✗ No</span></td>
+              <td><span class="tag tag-w">✓ Yes</span></td>
+              <td>Beginning</td>
+              <td><span class="tag tag-r">No — creates if missing</span></td>
+              <td><span class="tag tag-d">⚠ YES — immediate!</span></td>
+              <td>Replacing a file with entirely new content</td>
+            </tr>
+            <tr>
+              <td><span class="mode-flag">w+</span></td>
+              <td><strong>Read/Write (trunc)</strong></td>
+              <td><span class="tag tag-r">✓ Yes</span></td>
+              <td><span class="tag tag-w">✓ Yes</span></td>
+              <td>Beginning</td>
+              <td><span class="tag tag-r">No — creates if missing</span></td>
+              <td><span class="tag tag-d">⚠ YES — immediate!</span></td>
+              <td>Write-then-verify workflows on new content</td>
+            </tr>
+            <tr>
+              <td><span class="mode-flag">a</span></td>
+              <td><strong>Append Only</strong></td>
+              <td><span class="tag tag-d">✗ No</span></td>
+              <td><span class="tag tag-w">✓ Yes</span></td>
+              <td>End</td>
+              <td><span class="tag tag-r">No — creates if missing</span></td>
+              <td><span class="tag tag-r">No</span></td>
+              <td>Log files, audit trails, growing datasets</td>
+            </tr>
+            <tr>
+              <td><span class="mode-flag">a+</span></td>
+              <td><strong>Read/Append</strong></td>
+              <td><span class="tag tag-r">✓ Yes</span></td>
+              <td><span class="tag tag-w">✓ Yes</span></td>
+              <td>End</td>
+              <td><span class="tag tag-r">No — creates if missing</span></td>
+              <td><span class="tag tag-r">No</span></td>
+              <td>Appending to a file while also reading it</td>
+            </tr>
+            <tr>
+              <td><span class="mode-flag">x</span></td>
+              <td><strong>Exclusive Write</strong></td>
+              <td><span class="tag tag-d">✗ No</span></td>
+              <td><span class="tag tag-w">✓ Yes</span></td>
+              <td>Beginning</td>
+              <td><span class="tag tag-d">No — fails if exists!</span></td>
+              <td><span class="tag tag-r">N/A</span></td>
+              <td>Creating unique files safely (prevents overwrite)</td>
+            </tr>
+            <tr>
+              <td><span class="mode-flag">x+</span></td>
+              <td><strong>Exclusive R/W</strong></td>
+              <td><span class="tag tag-r">✓ Yes</span></td>
+              <td><span class="tag tag-w">✓ Yes</span></td>
+              <td>Beginning</td>
+              <td><span class="tag tag-d">No — fails if exists!</span></td>
+              <td><span class="tag tag-r">N/A</span></td>
+              <td>Atomic file creation with immediate read-back</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2><span class="dot"></span>Binary Mode Modifier</h2>
+      <div class="info-box">
+        Append <code>b</code> to any mode (e.g., <code>"rb"</code>, <code>"wb"</code>) to open in <strong>binary mode</strong>. On Windows this prevents newline translation (<code>\r\n</code> ↔ <code>\n</code>). On Linux/Mac it has no effect but is good practice for images, PDFs, and other binary files — it documents intent.
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-label">modes.php</div>
+        <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><span class="cmt">// ─── Safe: read-only, file must already exist</span>
+<span class="var">$f</span> <span class="op">=</span> <span class="fn">fopen</span>(<span class="str">'data.txt'</span>, <span class="str">'r'</span>);
+
+<span class="cmt">// ─── DANGER: truncates instantly, even before fwrite()</span>
+<span class="var">$f</span> <span class="op">=</span> <span class="fn">fopen</span>(<span class="str">'data.txt'</span>, <span class="str">'w'</span>);  <span class="cmt">// data.txt is now EMPTY</span>
+
+<span class="cmt">// ─── Safe append: never truncates</span>
+<span class="var">$f</span> <span class="op">=</span> <span class="fn">fopen</span>(<span class="str">'log.txt'</span>, <span class="str">'a'</span>);
+
+<span class="cmt">// ─── Safest write: fails if file exists (no accidental overwrite)</span>
+<span class="var">$f</span> <span class="op">=</span> <span class="fn">fopen</span>(<span class="str">'newfile.txt'</span>, <span class="str">'x'</span>);
+
+<span class="cmt">// ─── Binary mode for images/PDFs</span>
+<span class="var">$f</span> <span class="op">=</span> <span class="fn">fopen</span>(<span class="str">'photo.jpg'</span>, <span class="str">'rb'</span>);</pre>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════ PANEL 2: READING ═══════════════════════════════ -->
+    <section class="panel" id="panel-2">
+      <div class="panel-header">
+        <div class="panel-eyebrow">03 / Functions</div>
+        <h1 class="panel-title">Reading Functions</h1>
+        <p class="panel-desc">Four functions — each with a distinct purpose, memory profile, and use case.</p>
+      </div>
+
+      <div class="fn-grid">
+        <div class="fn-card v1">
+          <div class="fn-name">readfile()</div>
+          <div class="fn-sig">readfile(string $filename): int|false</div>
+          <div class="fn-desc">Reads a file and immediately sends it to the output buffer. Does <em>not</em> return the content — returns the byte count. Ideal for file downloads. No handle needed.</div>
+          <div class="fn-meta">
+            <span class="meta-pill meta-green">✓ Memory efficient</span>
+            <span class="meta-pill meta-yellow">Output direct to browser</span>
+            <span class="meta-pill meta-red">Cannot manipulate content</span>
+          </div>
+        </div>
+        <div class="fn-card v2">
+          <div class="fn-name">file_get_contents()</div>
+          <div class="fn-sig">file_get_contents(string $filename): string|false</div>
+          <div class="fn-desc">Reads an entire file into a string. Simple one-liner, no handle needed. Also works with URLs. Can use <code>$offset</code> and <code>$length</code> to read a portion.</div>
+          <div class="fn-meta">
+            <span class="meta-pill meta-yellow">⚠ Loads all to RAM</span>
+            <span class="meta-pill meta-green">✓ Returns string</span>
+            <span class="meta-pill meta-purple">Works with URLs</span>
+          </div>
+        </div>
+        <div class="fn-card v3">
+          <div class="fn-name">fread()</div>
+          <div class="fn-sig">fread(resource $handle, int $length): string|false</div>
+          <div class="fn-desc">Reads up to <code>$length</code> bytes from an open handle. Precise control — use <code>filesize()</code> to read everything, or loop for chunked processing of large files.</div>
+          <div class="fn-meta">
+            <span class="meta-pill meta-green">✓ Chunked reading</span>
+            <span class="meta-pill meta-purple">Requires fopen() handle</span>
+            <span class="meta-pill meta-yellow">Binary safe</span>
+          </div>
+        </div>
+        <div class="fn-card v4">
+          <div class="fn-name">fgets()</div>
+          <div class="fn-sig">fgets(resource $handle, int $length = ?): string|false</div>
+          <div class="fn-desc">Reads one line at a time (up to newline or EOF). Returns <code>false</code> at end of file. Perfect for parsing CSVs, log files, or any line-oriented format.</div>
+          <div class="fn-meta">
+            <span class="meta-pill meta-green">✓ Line-by-line parsing</span>
+            <span class="meta-pill meta-green">✓ Memory efficient</span>
+            <span class="meta-pill meta-purple">Requires fopen() handle</span>
+          </div>
+        </div>
+      </div>
+
+      <h2><span class="dot"></span>Decision Guide: Which to Use?</h2>
+      <div class="compare-grid">
+        <div class="compare-card">
+          <h3>Use readfile() when…</h3>
+          <ul>
+            <li>Serving a file download directly to the user</li>
+            <li>You don't need to process the content at all</li>
+            <li>Memory efficiency is critical (large files)</li>
+            <li>Example: <code>Content-Disposition: attachment</code> downloads</li>
+          </ul>
+        </div>
+        <div class="compare-card">
+          <h3>Use file_get_contents() when…</h3>
+          <ul>
+            <li>You need the whole file as a string to manipulate it</li>
+            <li>Doing search-and-replace on file content</li>
+            <li>Fetching a remote URL response</li>
+            <li>File is small enough to fit comfortably in RAM</li>
+          </ul>
+        </div>
+        <div class="compare-card">
+          <h3>Use fread() when…</h3>
+          <ul>
+            <li>Reading binary files (images, zip, video)</li>
+            <li>Streaming large files in chunks</li>
+            <li>Reading a fixed number of bytes at a specific offset</li>
+            <li>Working with binary protocols or structured data</li>
+          </ul>
+        </div>
+        <div class="compare-card">
+          <h3>Use fgets() when…</h3>
+          <ul>
+            <li>Processing a file line-by-line (CSV, logs)</li>
+            <li>File is too large to load entirely into memory</li>
+            <li>You want to stop reading partway through</li>
+            <li>Parsing structured text formats</li>
+          </ul>
+        </div>
+      </div>
+
+      <h2><span class="dot"></span>Code Examples</h2>
+
+      <div class="code-wrap">
+        <div class="code-label">readfile() — file download</div>
+        <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><span class="var">$file</span> <span class="op">=</span> <span class="str">'/files/report.pdf'</span>;
+<span class="fn">header</span>(<span class="str">'Content-Type: application/pdf'</span>);
+<span class="fn">header</span>(<span class="str">'Content-Disposition: attachment; filename="report.pdf"'</span>);
+<span class="fn">header</span>(<span class="str">'Content-Length: '</span> <span class="op">.</span> <span class="fn">filesize</span>(<span class="var">$file</span>));
+<span class="fn">readfile</span>(<span class="var">$file</span>); <span class="cmt">// Streams directly to browser — returns byte count</span></pre>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-label">file_get_contents() — read & manipulate</div>
+        <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><span class="var">$content</span> <span class="op">=</span> <span class="fn">file_get_contents</span>(<span class="str">'template.html'</span>);
+<span class="var">$output</span>  <span class="op">=</span> <span class="fn">str_replace</span>(<span class="str">'{{NAME}}'</span>, <span class="str">'Alice'</span>, <span class="var">$content</span>);
+<span class="fn">echo</span> <span class="var">$output</span>;</pre>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-label">fread() — chunked binary read</div>
+        <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><span class="var">$handle</span> <span class="op">=</span> <span class="fn">fopen</span>(<span class="str">'largefile.bin'</span>, <span class="str">'rb'</span>);
+<span class="kw">while</span> (<span class="op">!</span><span class="fn">feof</span>(<span class="var">$handle</span>)) {
+    <span class="var">$chunk</span> <span class="op">=</span> <span class="fn">fread</span>(<span class="var">$handle</span>, <span class="num">8192</span>); <span class="cmt">// 8 KB per read</span>
+    <span class="fn">processChunk</span>(<span class="var">$chunk</span>);
+}
+<span class="fn">fclose</span>(<span class="var">$handle</span>);
+
+<span class="cmt">// Or read entire small file at once:</span>
+<span class="var">$data</span> <span class="op">=</span> <span class="fn">fread</span>(<span class="var">$handle</span>, <span class="fn">filesize</span>(<span class="str">'config.bin'</span>));</pre>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-label">fgets() — line-by-line CSV parsing</div>
+        <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button><span class="var">$handle</span> <span class="op">=</span> <span class="fn">fopen</span>(<span class="str">'users.csv'</span>, <span class="str">'r'</span>);
+<span class="kw">while</span> ((<span class="var">$line</span> <span class="op">=</span> <span class="fn">fgets</span>(<span class="var">$handle</span>)) <span class="op">!==</span> <span class="con">false</span>) {
+    <span class="var">$row</span> <span class="op">=</span> <span class="fn">str_getcsv</span>(<span class="fn">trim</span>(<span class="var">$line</span>));
+    <span class="fn">insertUser</span>(<span class="var">$row</span>[<span class="num">0</span>], <span class="var">$row</span>[<span class="num">1</span>]); <span class="cmt">// name, email</span>
+}
+<span class="fn">fclose</span>(<span class="var">$handle</span>);</pre>
+      </div>
+
+      <div class="tip-box">
+        <strong>💡 Key Distinction:</strong> <code>readfile()</code> outputs to the browser and returns a count. <code>file_get_contents()</code> returns the content as a string for you to use in PHP. <code>fread()</code> and <code>fgets()</code> both require an open handle from <code>fopen()</code>.
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════ PANEL 3: WRITING ═══════════════════════════════ -->
+    <section class="panel" id="panel-3">
+      <div class="panel-header">
+        <div class="panel-eyebrow">04 / Functions</div>
+        <h1 class="panel-title">Writing Functions</h1>
+        <p class="panel-desc">Two approaches: the convenience wrapper and the low-level handle method.</p>
+      </div>
+
+      <div class="compare-grid">
+        <div class="fn-card v1" style="grid-column:1">
+          <div class="fn-name">file_put_contents()</div>
+          <div class="fn-sig">file_put_contents(string $filename, mixed $data, int $flags = 0): int|false</div>
+          <div class="fn-desc">High-level convenience function. Handles open, write, and close automatically. Equivalent to calling <code>fopen()</code>, <code>fwrite()</code>, and <code>fclose()</code> in sequence.</div>
+          <div class="fn-meta">
+            <span class="meta-pill meta-green">✓ No handle management</span>
+            <span class="meta-pill meta-yellow">Overwrites by default</span>
+          </div>
+        </div>
+        <div class="fn-card v2" style="grid-column:2">
+          <div class="fn-name">fwrite()</div>
+          <div class="fn-sig">fwrite(resource $handle, string $string, int $length = ?): int|false</div>
+          <div class="fn-desc">Low-level write to an open file handle. Use when you need to write multiple times, interleave reads and writes, or use modes like <code>a</code> with explicit handle control.</div>
+          <div class="fn-meta">
+            <span class="meta-pill meta-purple">Requires fopen() handle</span>
+            <span class="meta-pill meta-green">✓ Full mode control</span>
+          </div>
+        </div>
+      </div>
+
+      <h2><span class="dot"></span>file_put_contents() Flags</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Flag Constant</th><th>Effect</th><th>Equivalent to</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><code>FILE_APPEND</code></td>
+              <td>Appends data to the end of the file instead of overwriting</td>
+              <td>Opening with mode <code>"a"</code></td>
+            </tr>
+            <tr>
+              <td><code>LOCK_EX</code></td>
+              <td>Acquires an exclusive lock during writing — prevents race conditions with concurrent requests</td>
+              <td><code>flock($h, LOCK_EX)</code></td>
+            </tr>
+            <tr>
+              <td><code>FILE_APPEND | LOCK_EX</code></td>
+              <td>Safe append with locking — the safest choice for log files with concurrent access</td>
+              <td>Mode <code>"a"</code> + flock</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2><span class="dot"></span>Code Examples</h2>
+
+      <div class="code-wrap">
+        <div class="code-label">file_put_contents() — common patterns</div>
+        <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button"><span class="cmt">// ① Basic write (creates or OVERWRITES)</span>
+<span class="fn">file_put_contents</span>(<span class="str">'output.txt'</span>, <span class="str">'Hello, world!'</span>);
+
+<span class="cmt">// ② Append mode (safe, won't overwrite)</span>
+<span class="fn">file_put_contents</span>(<span class="str">'app.log'</span>, <span class="var">$entry</span>, <span class="con">FILE_APPEND</span>);
+
+<span class="cmt">// ③ Thread-safe append (best for high-traffic log files)</span>
+<span class="fn">file_put_contents</span>(<span class="str">'app.log'</span>, <span class="var">$entry</span>, <span class="con">FILE_APPEND</span> <span class="op">|</span> <span class="con">LOCK_EX</span>);
+
+<span class="cmt">// ④ Write array of lines (each as a string)</span>
+<span class="var">$lines</span> <span class="op">=</span> [<span class="str">"line1\n"</span>, <span class="str">"line2\n"</span>, <span class="str">"line3\n"</span>];
+<span class="fn">file_put_contents</span>(<span class="str">'output.txt'</span>, <span class="fn">implode</span>(<span class="str">''</span>, <span class="var">$lines</span>));</pre>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-label">fwrite() — low-level control</div>
+        <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button"><span class="cmt">// Writing multiple records in a loop</span>
+<span class="var">$handle</span> <span class="op">=</span> <span class="fn">fopen</span>(<span class="str">'export.csv'</span>, <span class="str">'w'</span>);
+<span class="kw">if</span> (<span class="var">$handle</span> <span class="op">===</span> <span class="con">false</span>) <span class="kw">exit</span>(<span class="str">'Cannot open file'</span>);
+
+<span class="fn">fwrite</span>(<span class="var">$handle</span>, <span class="str">"id,name,email\n"</span>); <span class="cmt">// write header</span>
+
+<span class="kw">foreach</span> (<span class="var">$users</span> <span class="kw">as</span> <span class="var">$user</span>) {
+    <span class="var">$row</span> <span class="op">=</span> <span class="fn">implode</span>(<span class="str">','</span>, [<span class="var">$user</span>[<span class="str">'id'</span>], <span class="var">$user</span>[<span class="str">'name'</span>], <span class="var">$user</span>[<span class="str">'email'</span>]]);
+    <span class="fn">fwrite</span>(<span class="var">$handle</span>, <span class="var">$row</span> <span class="op">.</span> <span class="str">"\n"</span>);
+}
+
+<span class="fn">fclose</span>(<span class="var">$handle</span>); <span class="cmt">// ← NEVER forget this</span></pre>
+      </div>
+
+      <div class="compare-grid" style="margin-top:8px">
+        <div class="compare-card">
+          <h3>Prefer file_put_contents() when…</h3>
+          <ul>
+            <li>Writing once in a simple operation</li>
+            <li>You want clean, minimal code</li>
+            <li>Appending to a log file (use <code>FILE_APPEND</code>)</li>
+            <li>You don't need interleaved reads</li>
+          </ul>
+        </div>
+        <div class="compare-card">
+          <h3>Prefer fwrite() when…</h3>
+          <ul>
+            <li>Writing multiple times within a loop</li>
+            <li>You need full control over the file handle</li>
+            <li>Writing binary data with specific byte lengths</li>
+            <li>Interleaving reads and writes (mode <code>r+</code>)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="warning-box">
+        <div class="warning-title">⚠ Return Value: Always Check It</div>
+        <p><code>file_put_contents()</code> returns the number of bytes written, or <strong>false</strong> on failure (permissions error, disk full, etc.). Never assume success.</p>
+        <ul>
+          <li>If it returns <code>false</code>, your data is lost silently unless you check</li>
+          <li>Disk-full errors are silent by default — always verify in production code</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════ PANEL 4: DIRECTORIES ═══════════════════════════════ -->
+    <section class="panel" id="panel-4">
+      <div class="panel-header">
+        <div class="panel-eyebrow">05 / Advanced</div>
+        <h1 class="panel-title">Directories & File Uploads</h1>
+        <p class="panel-desc">Creating and scanning directories, plus the critical security requirements for <code>$_FILES</code> handling.</p>
+      </div>
+
+      <h2><span class="dot"></span>Directory Functions</h2>
+      <div class="fn-grid">
+        <div class="fn-card v1">
+          <div class="fn-name">mkdir()</div>
+          <div class="fn-sig">mkdir(string $directory, int $permissions = 0777, bool $recursive = false): bool</div>
+          <div class="fn-desc">Creates a directory. With <code>$recursive = true</code>, creates all parent directories in the path. Without it, fails if the parent doesn't exist. Use <code>0755</code> for web-accessible folders.</div>
+          <div class="fn-meta">
+            <span class="meta-pill meta-yellow">Permissions: 0755 typical</span>
+            <span class="meta-pill meta-green">✓ recursive = true for deep paths</span>
+          </div>
+        </div>
+        <div class="fn-card v2">
+          <div class="fn-name">scandir()</div>
+          <div class="fn-sig">scandir(string $directory, int $sorting = SCANDIR_SORT_ASCENDING): array|false</div>
+          <div class="fn-desc">Returns an array of all files and directories in a folder, always including <code>.</code> (current) and <code>..</code> (parent). You must filter these out in almost all real-world uses.</div>
+          <div class="fn-meta">
+            <span class="meta-pill meta-red">⚠ Always includes . and ..</span>
+            <span class="meta-pill meta-green">✓ Use array_diff to filter</span>
+          </div>
+        </div>
+        <div class="fn-card v3">
+          <div class="fn-name">is_dir() / file_exists()</div>
+          <div class="fn-sig">is_dir(string $path): bool</div>
+          <div class="fn-desc">Always check before creating directories to avoid errors. <code>is_dir()</code> confirms it's a directory specifically; <code>file_exists()</code> checks for files or directories.</div>
+          <div class="fn-meta">
+            <span class="meta-pill meta-green">✓ Use before mkdir()</span>
+            <span class="meta-pill meta-purple">Prevents redundant errors</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-label">mkdir() + scandir() — practical usage</div>
+        <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button"><span class="cmt">// ─── Create nested directories if they don't exist</span>
+<span class="var">$uploadDir</span> <span class="op">=</span> <span class="str">'uploads/2025/april'</span>;
+<span class="kw">if</span> (<span class="op">!</span><span class="fn">is_dir</span>(<span class="var">$uploadDir</span>)) {
+    <span class="fn">mkdir</span>(<span class="var">$uploadDir</span>, <span class="num">0755</span>, <span class="con">true</span>); <span class="cmt">// recursive = true</span>
+}
+
+<span class="cmt">// ─── Scan a directory, filtering out . and ..</span>
+<span class="var">$items</span> <span class="op">=</span> <span class="fn">scandir</span>(<span class="str">'./uploads'</span>);
+<span class="var">$files</span> <span class="op">=</span> <span class="fn">array_diff</span>(<span class="var">$items</span>, [<span class="str">'.'</span>, <span class="str">'..'</span>]); <span class="cmt">// remove . and ..</span>
+
+<span class="kw">foreach</span> (<span class="var">$files</span> <span class="kw">as</span> <span class="var">$file</span>) {
+    <span class="kw">if</span> (<span class="fn">is_file</span>(<span class="str">'./uploads/'</span> <span class="op">.</span> <span class="var">$file</span>)) {
+        <span class="fn">echo</span> <span class="var">$file</span> <span class="op">.</span> <span class="str">"\n"</span>;
+    }
+}</pre>
+      </div>
+
+      <h2><span class="dot"></span>The $_FILES Superglobal</h2>
+      <p>When a user submits an HTML form with <code>enctype="multipart/form-data"</code>, PHP populates <code>$_FILES</code>.</p>
+
+      <div class="files-visual">
+        <span class="fv-key">$_FILES</span><span class="fv-arrow">["avatar"]</span> <span class="fv-arrow">=</span> [<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="fv-key">"name"</span>     <span class="fv-arrow">=&gt;</span> <span class="fv-val">"profile.jpg"</span>,      <span class="cmt">// original filename (user-supplied — UNTRUSTED)</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="fv-key">"type"</span>     <span class="fv-arrow">=&gt;</span> <span class="fv-val">"image/jpeg"</span>,       <span class="cmt">// MIME type — UNTRUSTED (set by browser)</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="fv-key">"tmp_name"</span> <span class="fv-arrow">=&gt;</span> <span class="fv-val">"/tmp/php7hGbFs"</span>,   <span class="cmt">// temp path on server — safe to use</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="fv-key">"error"</span>    <span class="fv-arrow">=&gt;</span> <span class="fv-val">0</span>,                   <span class="cmt">// UPLOAD_ERR_OK = 0 means success</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="fv-key">"size"</span>     <span class="fv-arrow">=&gt;</span> <span class="fv-val">48392</span>,               <span class="cmt">// bytes — verify against your max</span><br>
+        ];
+      </div>
+
+      <h2><span class="dot"></span>Upload Security Checklist</h2>
+      <ul class="checklist">
+        <li>
+          <div class="check-icon ok">✓</div>
+          <div><strong>Check <code>$_FILES['x']['error'] === UPLOAD_ERR_OK</code> first.</strong> Never process an upload without verifying the error code is 0.</div>
+        </li>
+        <li>
+          <div class="check-icon bad">✗</div>
+          <div><strong>Never trust <code>$_FILES['x']['type']</code>.</strong> The MIME type is sent by the browser and can be forged. Use PHP's <code>finfo_file()</code> to detect the true type server-side.</div>
+        </li>
+        <li>
+          <div class="check-icon ok">✓</div>
+          <div><strong>Use <code>is_uploaded_file($tmp)</code> before <code>move_uploaded_file()</code>.</strong> Ensures the file came through an HTTP upload (not a local path injection).</div>
+        </li>
+        <li>
+          <div class="check-icon ok">✓</div>
+          <div><strong>Use <code>move_uploaded_file()</code>, never <code>copy()</code> or <code>rename()</code>.</strong> It handles the atomic move and also implicitly calls <code>is_uploaded_file()</code>.</div>
+        </li>
+        <li>
+          <div class="check-icon bad">✗</div>
+          <div><strong>Never use <code>$_FILES['x']['name']</code> directly as a path.</strong> Sanitize with <code>basename()</code> and generate your own filenames (e.g., <code>uniqid()</code>) to prevent path traversal.</div>
+        </li>
+        <li>
+          <div class="check-icon ok">✓</div>
+          <div><strong>Validate file extension from your allowlist.</strong> Combine with <code>finfo_file()</code> verification and reject anything that doesn't match both.</div>
+        </li>
+        <li>
+          <div class="check-icon ok">✓</div>
+          <div><strong>Store uploads outside the web root</strong> or disable PHP execution in the upload directory to prevent uploaded PHP scripts from running.</div>
+        </li>
+      </ul>
+
+      <div class="code-wrap">
+        <div class="code-label">secure-upload.php</div>
+        <pre><button class="copy-btn" onclick="copyCode(this)">Copy</button"><span class="var">$allowed</span> <span class="op">=</span> [<span class="str">'jpg'</span>, <span class="str">'jpeg'</span>, <span class="str">'png'</span>, <span class="str">'gif'</span>];
+<span class="var">$maxSize</span> <span class="op">=</span> <span class="num">2</span> <span class="op">*</span> <span class="num">1024</span> <span class="op">*</span> <span class="num">1024</span>; <span class="cmt">// 2 MB</span>
+<span class="var">$upload</span>  <span class="op">=</span> <span class="var">$_FILES</span>[<span class="str">'avatar'</span>];
+
+<span class="cmt">// ① Error check</span>
+<span class="kw">if</span> (<span class="var">$upload</span>[<span class="str">'error'</span>] <span class="op">!==</span> <span class="con">UPLOAD_ERR_OK</span>) {
+    <span class="fn">exit</span>(<span class="str">'Upload error: '</span> <span class="op">.</span> <span class="var">$upload</span>[<span class="str">'error'</span>]);
+}
+
+<span class="cmt">// ② Size check</span>
+<span class="kw">if</span> (<span class="var">$upload</span>[<span class="str">'size'</span>] <span class="op">&gt;</span> <span class="var">$maxSize</span>) {
+    <span class="fn">exit</span>(<span class="str">'File too large.'</span>);
+}
+
+<span class="cmt">// ③ Real MIME type (NOT $_FILES['type'] — that's untrusted)</span>
+<span class="var">$finfo</span>    <span class="op">=</span> <span class="kw">new</span> <span class="fn">finfo</span>(<span class="con">FILEINFO_MIME_TYPE</span>);
+<span class="var">$mimeType</span> <span class="op">=</span> <span class="var">$finfo</span><span class="op">-&gt;</span><span class="fn">file</span>(<span class="var">$upload</span>[<span class="str">'tmp_name'</span>]);
+<span class="var">$allowed_mimes</span> <span class="op">=</span> [<span class="str">'image/jpeg'</span>, <span class="str">'image/png'</span>, <span class="str">'image/gif'</span>];
+<span class="kw">if</span> (<span class="op">!</span><span class="fn">in_array</span>(<span class="var">$mimeType</span>, <span class="var">$allowed_mimes</span>)) {
+    <span class="fn">exit</span>(<span class="str">'Invalid file type.'</span>);
+}
+
+<span class="cmt">// ④ Extension check (from original name)</span>
+<span class="var">$ext</span> <span class="op">=</span> <span class="fn">strtolower</span>(<span class="fn">pathinfo</span>(<span class="var">$upload</span>[<span class="str">'name'</span>], <span class="con">PATHINFO_EXTENSION</span>));
+<span class="kw">if</span> (<span class="op">!</span><span class="fn">in_array</span>(<span class="var">$ext</span>, <span class="var">$allowed</span>)) {
+    <span class="fn">exit</span>(<span class="str">'Extension not allowed.'</span>);
+}
+
+<span class="cmt">// ⑤ Generate safe filename — never use user-supplied name</span>
+<span class="var">$newName</span> <span class="op">=</span> <span class="fn">uniqid</span>(<span class="str">'img_'</span>, <span class="con">true</span>) <span class="op">.</span> <span class="str">'.'</span> <span class="op">.</span> <span class="var">$ext</span>;
+<span class="var">$destPath</span> <span class="op">=</span> <span class="str">'/var/uploads/'</span> <span class="op">.</span> <span class="var">$newName</span>; <span class="cmt">// outside web root</span>
+
+<span class="cmt">// ⑥ Move — use move_uploaded_file(), never rename()</span>
+<span class="kw">if</span> (<span class="op">!</span><span class="fn">move_uploaded_file</span>(<span class="var">$upload</span>[<span class="str">'tmp_name'</span>], <span class="var">$destPath</span>)) {
+    <span class="fn">exit</span>(<span class="str">'Failed to save file.'</span>);
+}
+
+<span class="fn">echo</span> <span class="str">"Uploaded successfully as: $newName"</span>;</pre>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════ PANEL 5: QUIZ ═══════════════════════════════ -->
+    <section class="panel" id="panel-5">
+      <div class="panel-header">
+        <div class="panel-eyebrow">06 / Practice</div>
+        <h1 class="panel-title">Quick Quiz</h1>
+        <p class="panel-desc">Test your understanding. Select an answer to see instant feedback.</p>
+      </div>
+
+      <!-- Q1 -->
+      <div class="quiz-card" id="q1">
+        <div class="quiz-q">1. You call <code>fopen('data.txt', 'w')</code>. The file already contains 500 lines of data. What happens to that data?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="answer(this,'q1',false,'a')"><span class="opt-label">A</span>The data is preserved; writing starts at the beginning</button>
+          <button class="quiz-opt" onclick="answer(this,'q1',true,'b')"><span class="opt-label">B</span>The file is truncated to zero bytes immediately — all 500 lines are gone</button>
+          <button class="quiz-opt" onclick="answer(this,'q1',false,'c')"><span class="opt-label">C</span>PHP throws an error because the file already exists</button>
+          <button class="quiz-opt" onclick="answer(this,'q1',false,'d')"><span class="opt-label">D</span>The data is moved to a backup before truncation</button>
+        </div>
+        <div class="quiz-feedback" id="q1-fb"></div>
+        <button class="quiz-reset" onclick="resetQuiz('q1')">↩ Reset question</button>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-card" id="q2">
+        <div class="quiz-q">2. Which function reads a file and sends it directly to the output buffer <em>without</em> returning the content as a PHP string?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="answer(this,'q2',false,'a')"><span class="opt-label">A</span><code>file_get_contents()</code></button>
+          <button class="quiz-opt" onclick="answer(this,'q2',false,'b')"><span class="opt-label">B</span><code>fread()</code></button>
+          <button class="quiz-opt" onclick="answer(this,'q2',true,'c')"><span class="opt-label">C</span><code>readfile()</code></button>
+          <button class="quiz-opt" onclick="answer(this,'q2',false,'d')"><span class="opt-label">D</span><code>fgets()</code></button>
+        </div>
+        <div class="quiz-feedback" id="q2-fb"></div>
+        <button class="quiz-reset" onclick="resetQuiz('q2')">↩ Reset question</button>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-card" id="q3">
+        <div class="quiz-q">3. You want to append a log entry to <code>app.log</code> safely in a multi-user environment. Which call is most appropriate?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="answer(this,'q3',false,'a')"><span class="opt-label">A</span><code>file_put_contents('app.log', $entry)</code></button>
+          <button class="quiz-opt" onclick="answer(this,'q3',false,'b')"><span class="opt-label">B</span><code>file_put_contents('app.log', $entry, FILE_APPEND)</code></button>
+          <button class="quiz-opt" onclick="answer(this,'q3',true,'c')"><span class="opt-label">C</span><code>file_put_contents('app.log', $entry, FILE_APPEND | LOCK_EX)</code></button>
+          <button class="quiz-opt" onclick="answer(this,'q3',false,'d')"><span class="opt-label">D</span><code>fwrite(fopen('app.log', 'w'), $entry)</code></button>
+        </div>
+        <div class="quiz-feedback" id="q3-fb"></div>
+        <button class="quiz-reset" onclick="resetQuiz('q3')">↩ Reset question</button>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-card" id="q4">
+        <div class="quiz-q">4. <code>scandir('./images')</code> returns an array. Which two entries will <em>always</em> be present that you should filter out?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="answer(this,'q4',false,'a')"><span class="opt-label">A</span><code>root</code> and <code>home</code></button>
+          <button class="quiz-opt" onclick="answer(this,'q4',true,'b')"><span class="opt-label">B</span><code>.</code> and <code>..</code></button>
+          <button class="quiz-opt" onclick="answer(this,'q4',false,'c')"><span class="opt-label">C</span><code>null</code> and <code>false</code></button>
+          <button class="quiz-opt" onclick="answer(this,'q4',false,'d')"><span class="opt-label">D</span><code>index</code> and <code>default</code></button>
+        </div>
+        <div class="quiz-feedback" id="q4-fb"></div>
+        <button class="quiz-reset" onclick="resetQuiz('q4')">↩ Reset question</button>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-card" id="q5">
+        <div class="quiz-q">5. A user uploads a file and <code>$_FILES['doc']['type']</code> says <code>image/jpeg</code>. Is it safe to use this value to validate the file type?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="answer(this,'q5',false,'a')"><span class="opt-label">A</span>Yes — PHP verifies the MIME type server-side automatically</button>
+          <button class="quiz-opt" onclick="answer(this,'q5',false,'b')"><span class="opt-label">B</span>Yes, as long as you also check the file extension</button>
+          <button class="quiz-opt" onclick="answer(this,'q5',true,'c')"><span class="opt-label">C</span>No — it's sent by the browser and can be forged; use <code>finfo_file()</code> instead</button>
+          <button class="quiz-opt" onclick="answer(this,'q5',false,'d')"><span class="opt-label">D</span>No — <code>$_FILES</code> should never be used for security checks at all</button>
+        </div>
+        <div class="quiz-feedback" id="q5-fb"></div>
+        <button class="quiz-reset" onclick="resetQuiz('q5')">↩ Reset question</button>
+      </div>
+
+      <!-- Q6 -->
+      <div class="quiz-card" id="q6">
+        <div class="quiz-q">6. Which <code>fopen()</code> mode fails if the file already exists, preventing accidental overwrites?</div>
+        <div class="quiz-options">
+          <button class="quiz-opt" onclick="answer(this,'q6',false,'a')"><span class="opt-label">A</span><code>w</code></button>
+          <button class="quiz-opt" onclick="answer(this,'q6',false,'b')"><span class="opt-label">B</span><code>a</code></button>
+          <button class="quiz-opt" onclick="answer(this,'q6',true,'c')"><span class="opt-label">C</span><code>x</code></button>
+          <button class="quiz-opt" onclick="answer(this,'q6',false,'d')"><span class="opt-label">D</span><code>r+</code></button>
+        </div>
+        <div class="quiz-feedback" id="q6-fb"></div>
+        <button class="quiz-reset" onclick="resetQuiz('q6')">↩ Reset question</button>
+      </div>
+
+      <!-- Score -->
+      <div id="score-card" style="display:none;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:28px;text-align:center;margin-top:8px;">
+        <div style="font-family:'Syne',sans-serif;font-size:14px;color:var(--text-muted);margin-bottom:8px">QUIZ COMPLETE</div>
+        <div id="score-val" style="font-family:'Syne',sans-serif;font-size:48px;font-weight:800;"></div>
+        <div id="score-msg" style="font-size:14px;color:var(--text-muted);margin-top:8px;"></div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  const FEEDBACKS = {
+    q1: {
+      correct: '✓ Correct! Mode "w" truncates the file to zero bytes the instant <code>fopen()</code> is called — even before any <code>fwrite()</code>. This is one of the most dangerous "gotchas" in PHP file handling.',
+      wrong: '✗ Incorrect. Mode "w" (Write Only) truncates the file to zero bytes <em>immediately</em> when <code>fopen()</code> is called — all existing data is lost forever, before you write a single byte.'
+    },
+    q2: {
+      correct: '✓ Correct! <code>readfile()</code> streams the file directly to the output buffer and returns the number of bytes sent. It does <em>not</em> return the content as a string — use <code>file_get_contents()</code> for that.',
+      wrong: '✗ Incorrect. <code>readfile()</code> is the one that outputs directly to the browser and returns a byte count. <code>file_get_contents()</code> returns the content as a string.'
+    },
+    q3: {
+      correct: '✓ Correct! <code>FILE_APPEND | LOCK_EX</code> is the safest combination: <code>FILE_APPEND</code> prevents overwriting, and <code>LOCK_EX</code> prevents concurrent writes from corrupting the log.',
+      wrong: '✗ Incorrect. The safest option is <code>FILE_APPEND | LOCK_EX</code>. <code>FILE_APPEND</code> alone prevents overwriting but does not prevent race conditions in concurrent environments. Mode "w" would destroy the log entirely.'
+    },
+    q4: {
+      correct: '✓ Correct! <code>scandir()</code> always returns <code>.</code> (current directory) and <code>..</code> (parent directory). Always filter them: <code>array_diff($items, [\'.\', \'..\'])</code>.',
+      wrong: '✗ Incorrect. <code>scandir()</code> always includes <code>.</code> (current dir) and <code>..</code> (parent dir) in its output. Use <code>array_diff($items, [\'.\', \'..\'])</code> to remove them.'
+    },
+    q5: {
+      correct: '✓ Correct! <code>$_FILES[\'x\'][\'type\']</code> is supplied by the browser and can be set to anything by an attacker. Always use <code>finfo_file()</code> to detect the real MIME type on the server side.',
+      wrong: '✗ Incorrect. <code>$_FILES[\'x\'][\'type\']</code> is entirely controlled by the client (browser) and is easily forged. Never use it for security validation. Use <code>finfo_file()</code> on the <code>tmp_name</code> path instead.'
+    },
+    q6: {
+      correct: '✓ Correct! Mode <code>x</code> (Exclusive Create) fails and returns <code>false</code> if the file already exists. This is the safest mode for creating new files when you want to prevent accidental overwrites.',
+      wrong: '✗ Incorrect. Mode <code>x</code> (Exclusive Create) is the answer. It fails if the file exists. Mode <code>w</code> destroys existing content. Mode <code>a</code> appends. Mode <code>r+</code> requires the file to already exist.'
+    }
+  };
+
+  let answered = {};
+
+  function answer(btn, qid, isCorrect, letter) {
+    if (answered[qid]) return;
+    answered[qid] = { correct: isCorrect };
+
+    const card = document.getElementById(qid);
+    const opts = card.querySelectorAll('.quiz-opt');
+    const fb   = document.getElementById(qid + '-fb');
+
+    opts.forEach(o => o.classList.add('disabled'));
+
+    if (isCorrect) {
+      btn.classList.add('correct');
+      fb.innerHTML = FEEDBACKS[qid].correct;
+      fb.className = 'quiz-feedback show correct';
+    } else {
+      btn.classList.add('wrong');
+      // highlight correct
+      opts.forEach(o => {
+        if (o.getAttribute('onclick').includes(',true,')) o.classList.add('correct');
+      });
+      fb.innerHTML = FEEDBACKS[qid].wrong;
+      fb.className = 'quiz-feedback show wrong';
+    }
+
+    checkScore();
+  }
+
+  function resetQuiz(qid) {
+    delete answered[qid];
+    const card = document.getElementById(qid);
+    card.querySelectorAll('.quiz-opt').forEach(o => {
+      o.classList.remove('correct','wrong','disabled');
+    });
+    const fb = document.getElementById(qid + '-fb');
+    fb.className = 'quiz-feedback';
+    document.getElementById('score-card').style.display = 'none';
+  }
+
+  function checkScore() {
+    const total = 6;
+    if (Object.keys(answered).length < total) return;
+    const correct = Object.values(answered).filter(a => a.correct).length;
+    const sc = document.getElementById('score-card');
+    sc.style.display = 'block';
+    document.getElementById('score-val').textContent = correct + '/' + total;
+    const msgs = ['Keep studying! Review the sections above.', 'Good effort — revisit the areas you missed.', 'Solid foundation! A few things to review.', 'Good work — nearly there!', 'Excellent! Almost perfect.', '🎉 Perfect score! You\'re ready for the exam.'];
+    const sv = document.getElementById('score-val');
+    sv.style.color = correct === total ? 'var(--accent3)' : correct >= 4 ? 'var(--accent4)' : 'var(--warning)';
+    document.getElementById('score-msg').textContent = msgs[correct];
+    sc.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  // ─── Tab navigation
+  function showTab(idx, btn) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('panel-' + idx).classList.add('active');
+    btn.classList.add('active');
+    document.getElementById('progress-pill').textContent = 'Section ' + (idx + 1) + ' / 6';
+    document.getElementById('main-content').scrollTop = 0;
+  }
+
+  // ─── Theme toggle
+  function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    document.getElementById('theme-label').textContent = isDark ? 'Dark' : 'Light';
+    const btn = document.getElementById('theme-btn');
+    btn.querySelector('svg').innerHTML = isDark
+      ? '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" stroke-width="2" fill="none"/>'
+      : '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+  }
+
+  // ─── Copy code button
+  function copyCode(btn) {
+    const pre = btn.closest('pre');
+    const text = pre.innerText.replace('Copy','').replace('Copied!','').trim();
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+
+  function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('show');
+    document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
+  }
+</script>
+<script src="portal-nav.js"></script></body>
+</html>

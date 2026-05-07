@@ -1,0 +1,1691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Programming — HTML Lecture Summary</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=JetBrains+Mono:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0d0f14;
+      --surface: #13151c;
+      --card: #1a1d27;
+      --border: #252836;
+      --accent: #f0a500;
+      --accent2: #00c9a7;
+      --accent3: #e94560;
+      --text: #e8eaf0;
+      --muted: #7a7f94;
+      --code-bg: #0a0c12;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(240,165,0,0.12), transparent),
+        radial-gradient(ellipse 50% 40% at 80% 100%, rgba(0,201,167,0.08), transparent),
+        var(--bg);
+      padding: 3rem;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(240,165,0,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(240,165,0,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+
+    .tag {
+      display: inline-block;
+      background: rgba(240,165,0,0.1);
+      border: 1px solid rgba(240,165,0,0.3);
+      color: var(--accent);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      padding: 0.3rem 0.9rem;
+      border-radius: 2px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 8vw, 7rem);
+      font-weight: 900;
+      line-height: 1.05;
+      color: #fff;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+
+    .hero h1 span {
+      color: var(--accent);
+      display: block;
+    }
+
+    .hero p {
+      margin-top: 1.5rem;
+      color: var(--muted);
+      font-size: 1.1rem;
+      max-width: 540px;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 2rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      animation: fadeUp 0.6s 0.5s ease both, pulse 2s 1s infinite;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+
+    .toc {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(13,15,20,0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+    }
+
+    .section {
+      margin-bottom: 6rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 4rem;
+      font-weight: 900;
+      color: rgba(240,165,0,0.15);
+      line-height: 1;
+      min-width: 80px;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .section-subtitle {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-top: 0.3rem;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.8rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      color: var(--accent);
+      margin-bottom: 0.8rem;
+    }
+
+    .card h4 {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      color: var(--accent2);
+      margin-bottom: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .card p, .card li {
+      font-size: 0.95rem;
+      color: #b0b4c8;
+      margin-bottom: 0.4rem;
+    }
+
+    .card ul { padding-left: 1.2rem; }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 700px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    }
+
+    .code-block {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 6px;
+      padding: 1.5rem;
+      margin: 1.2rem 0;
+      overflow-x: auto;
+    }
+
+    .code-block pre {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      color: #a8d8a8;
+      line-height: 1.7;
+      white-space: pre;
+    }
+
+    .code-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .ref-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      margin-top: 1rem;
+    }
+
+    .ref-table th {
+      background: rgba(240,165,0,0.08);
+      color: var(--accent);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-align: left;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .ref-table td {
+      padding: 0.7rem 1rem;
+      border-bottom: 1px solid rgba(37,40,54,0.5);
+      color: #b0b4c8;
+    }
+
+    .ref-table td:first-child {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent2);
+      font-size: 0.82rem;
+    }
+
+    .ref-table tr:hover td {
+      background: rgba(255,255,255,0.02);
+    }
+
+    .badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 3px;
+      margin-right: 0.4rem;
+    }
+
+    .badge-yellow { background: rgba(240,165,0,0.15); color: var(--accent); border: 1px solid rgba(240,165,0,0.3); }
+    .badge-green { background: rgba(0,201,167,0.1); color: var(--accent2); border: 1px solid rgba(0,201,167,0.3); }
+    .badge-red { background: rgba(233,69,96,0.1); color: var(--accent3); border: 1px solid rgba(233,69,96,0.3); }
+    .badge-blue { background: rgba(99,179,237,0.1); color: #63b3ed; border: 1px solid rgba(99,179,237,0.3); }
+
+    /* MVC boxes */
+    .mvc-layer {
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .mvc-view { background: rgba(99,179,237,0.06); border: 1px solid rgba(99,179,237,0.25); }
+    .mvc-controller { background: rgba(240,165,0,0.06); border: 1px solid rgba(240,165,0,0.25); }
+    .mvc-model { background: rgba(0,201,167,0.06); border: 1px solid rgba(0,201,167,0.25); }
+
+    .mvc-layer h4 { font-family: 'Playfair Display', serif; font-size: 1.1rem; margin-bottom: 0.6rem; }
+    .mvc-view h4 { color: #63b3ed; }
+    .mvc-controller h4 { color: var(--accent); }
+    .mvc-model h4 { color: var(--accent2); }
+    .mvc-layer p, .mvc-layer li { color: #b0b4c8; font-size: 0.9rem; }
+    .mvc-layer ul { padding-left: 1.2rem; }
+
+    .flow-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    .flow-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 0.8rem 1rem;
+      background: rgba(255,255,255,0.02);
+      border-radius: 6px;
+      border-left: 3px solid var(--border);
+    }
+    .flow-step:nth-child(1) { border-left-color: #63b3ed; }
+    .flow-step:nth-child(2) { border-left-color: var(--accent); }
+    .flow-step:nth-child(3) { border-left-color: var(--accent2); }
+    .flow-step:nth-child(4) { border-left-color: var(--accent2); }
+    .flow-step:nth-child(5) { border-left-color: var(--accent3); }
+    .flow-num { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: rgba(240,165,0,0.4); min-width: 1.5rem; }
+    .flow-text { font-size: 0.9rem; color: #b0b4c8; }
+    .flow-text strong { color: var(--text); }
+
+    .project-box {
+      background: linear-gradient(135deg, rgba(240,165,0,0.06), rgba(0,201,167,0.04));
+      border: 1px solid rgba(240,165,0,0.25);
+      border-radius: 12px;
+      padding: 3rem;
+      margin-top: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-box::before {
+      content: '⚡';
+      position: absolute;
+      top: -1rem;
+      right: 2rem;
+      font-size: 8rem;
+      opacity: 0.04;
+      pointer-events: none;
+    }
+
+    .project-box h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    .project-box .subtitle {
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+
+    .requirement {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(37,40,54,0.5);
+    }
+
+    .req-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      color: rgba(240,165,0,0.4);
+      min-width: 2rem;
+      line-height: 1.2;
+    }
+
+    .req-content h4 {
+      color: var(--accent);
+      margin-bottom: 0.3rem;
+      font-size: 0.95rem;
+    }
+
+    .req-content p {
+      color: #7a7f94;
+      font-size: 0.88rem;
+    }
+
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82em;
+      background: rgba(240,165,0,0.08);
+      color: var(--accent);
+      padding: 0.1em 0.4em;
+      border-radius: 3px;
+    }
+
+    hr.divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 3rem 0;
+    }
+
+    footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      border-top: 1px solid var(--border);
+      letter-spacing: 0.05em;
+    }
+
+    .highlight-box {
+      background: rgba(233,69,96,0.06);
+      border: 1px solid rgba(233,69,96,0.2);
+      border-radius: 6px;
+      padding: 1rem 1.2rem;
+      margin: 0.8rem 0;
+      font-size: 0.9rem;
+      color: #b0b4c8;
+    }
+    .highlight-box strong { color: var(--accent3); }
+
+    .tip-box {
+      background: rgba(0,201,167,0.05);
+      border: 1px solid rgba(0,201,167,0.2);
+      border-radius: 6px;
+      padding: 1rem 1.2rem;
+      margin: 0.8rem 0;
+      font-size: 0.9rem;
+      color: #b0b4c8;
+    }
+    .tip-box strong { color: var(--accent2); }
+
+    /* ── MOBILE NAV ── */
+    .ham-btn {
+      position: fixed; top: 1.5rem; left: 1.5rem; z-index: 1000;
+      width: 48px; height: 48px; border-radius: 12px;
+      background: rgba(19,21,28,0.8); border: 1px solid var(--border);
+      color: var(--accent); font-size: 1.5rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      backdrop-filter: blur(8px); box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    .sidebar {
+      position: fixed; top: 0; left: -300px; width: 300px; height: 100%;
+      background: var(--surface); border-right: 1px solid var(--border);
+      z-index: 1001; transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      padding: 2rem; display: flex; flex-direction: column;
+    }
+    .sidebar.open { left: 0; }
+    .sidebar-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(4px); z-index: 1000; display: none;
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .sidebar-overlay.show { display: block; }
+    .sidebar-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2.5rem; }
+    .sidebar-logo { font-family: 'Playfair Display', serif; font-weight: 900; color: var(--accent); font-size: 1.25rem; }
+    .close-btn { background: none; border: none; color: var(--muted); font-size: 2rem; cursor: pointer; transition: color 0.2s; }
+    .close-btn:hover { color: var(--accent3); }
+    .sidebar-nav { display: flex; flex-direction: column; gap: 0.5rem; overflow-y: auto; }
+    .sidebar-link {
+      padding: 0.8rem 1.2rem; border-radius: 8px; color: var(--muted);
+      text-decoration: none; font-size: 0.85rem; font-family: 'JetBrains Mono', monospace;
+      transition: all 0.2s; border: 1px solid transparent;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .sidebar-link:hover { background: var(--card); color: var(--accent); border-color: var(--border); }
+    .sidebar-link.home-link { color: var(--text); font-weight: 600; margin-bottom: 1rem; background: rgba(240,165,0,0.05); border-color: rgba(240,165,0,0.15); }
+
+    @media (max-width: 768px) {
+      .hero { padding: 6rem 1.5rem 4rem; }
+      .hero h1 { font-size: clamp(2.2rem, 10vw, 4rem); }
+      .toc { padding: 0 1rem; }
+      .container { padding: 2.2rem 1rem; }
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .section-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+      .section-number { font-size: 3rem; min-width: auto; }
+      .project-box { padding: 2rem 1.5rem; }
+      .code-block { padding: 1.1rem; }
+      .card { padding: 1.1rem; }
+      .card h3 { font-size: 1.05rem; }
+    }
+
+    /* Extra-small phones */
+    @media (max-width: 420px) {
+      .hero { padding: 5rem 1rem 3rem; }
+      .section { margin-bottom: 3.5rem; }
+      .section-number { font-size: 2.4rem; }
+      .section-title { font-size: 1.5rem; }
+
+      /* Off-canvas sidebar should fit small screens */
+      .sidebar { width: min(86vw, 300px); left: calc(-1 * min(86vw, 300px)); }
+      .sidebar.open { left: 0; }
+      .ham-btn { left: 0.9rem; top: 0.9rem; }
+    }
+  </style>
+  <link rel="stylesheet" href="global.css" />
+  <link rel="stylesheet" href="components.css" />
+  <link rel="stylesheet" href="responsive.css" />
+  <script defer src="app.js"></script>
+</head>
+<body>
+
+<!-- ── MOBILE NAV ── -->
+<button class="ham-btn" id="hamBtn" onclick="toggleSidebar()" aria-label="Open Menu">☰</button>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">🎓 HTML Summary</div>
+    <button class="close-btn" onclick="toggleSidebar()" aria-label="Close Menu">×</button>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="index.html" class="sidebar-link home-link"><span>🏠</span> Home Dashboard</a>
+    <a href="#s1" class="sidebar-link" onclick="toggleSidebar()"><span>01</span> Introduction</a>
+    <a href="#s2" class="sidebar-link" onclick="toggleSidebar()"><span>02</span> Anatomy</a>
+    <a href="#s3" class="sidebar-link" onclick="toggleSidebar()"><span>03</span> Elements</a>
+    <a href="#s4" class="sidebar-link" onclick="toggleSidebar()"><span>04</span> Attributes</a>
+    <a href="#s5" class="sidebar-link" onclick="toggleSidebar()"><span>05</span> Links</a>
+    <a href="#s6" class="sidebar-link" onclick="toggleSidebar()"><span>06</span> Images</a>
+    <a href="#s7" class="sidebar-link" onclick="toggleSidebar()"><span>07</span> Lists</a>
+    <a href="#s8" class="sidebar-link" onclick="toggleSidebar()"><span>08</span> Block/Inline</a>
+    <a href="#s9" class="sidebar-link" onclick="toggleSidebar()"><span>09</span> Tables</a>
+    <a href="#s10" class="sidebar-link" onclick="toggleSidebar()"><span>10</span> Forms</a>
+    <a href="#s11" class="sidebar-link" onclick="toggleSidebar()"><span>11</span> Form Attrs</a>
+    <a href="#s12" class="sidebar-link" onclick="toggleSidebar()"><span>12</span> Input Attrs</a>
+    <a href="#s13" class="sidebar-link" onclick="toggleSidebar()"><span>13</span> Multimedia</a>
+    <a href="#s14" class="sidebar-link" onclick="toggleSidebar()"><span>14</span> MVC Model</a>
+    <a href="#final" class="sidebar-link" onclick="toggleSidebar()"><span>🚀</span> Final Project</a>
+  </nav>
+</aside>
+
+<!-- Hero -->
+<section class="hero">
+  <span class="tag">Dr. Mohamed Mostafa · Web Programming</span>
+  <h1>Introduction to <span>HTML</span></h1>
+  <p>A complete lecture summary with code examples and a final project — everything you need to master HTML from scratch.</p>
+  <span class="scroll-hint">↓ SCROLL TO EXPLORE</span>
+</section>
+
+<div class="container">
+
+  <!-- ═══════════ 1. INTRODUCTION ═══════════ -->
+  <section class="section" id="s1">
+    <div class="section-header">
+      <div class="section-number">01</div>
+      <div>
+        <div class="section-title">Introduction to HTML</div>
+        <div class="section-subtitle">What HTML is — and what it isn't</div>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>What is HTML?</h3>
+        <ul>
+          <li>Stands for <strong>HyperText Markup Language</strong></li>
+          <li>Describes the <em>structure</em> of a web page</li>
+          <li>Consists of a series of <strong>elements</strong></li>
+          <li>Elements label pieces of content ("this is a heading", "this is a link")</li>
+          <li>Follows a <strong>"living standard"</strong> — always updated, features are never removed</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Markup vs. Programming</h3>
+        <table class="ref-table">
+          <thead><tr><th>Markup</th><th>Programming</th></tr></thead>
+          <tbody>
+            <tr><td>Presents data</td><td style="color:#b0b4c8">Transforms data</td></tr>
+            <tr><td>No logical ops</td><td style="color:#b0b4c8">Logical operations</td></tr>
+            <tr><td>Parsed by browser</td><td style="color:#b0b4c8">Compiled + interpreted</td></tr>
+            <tr><td>HTML, XML</td><td style="color:#b0b4c8">C++, Java, C#</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <h3>💡 Weird Browser Fact</h3>
+      <p>Browsers <strong>never reject</strong> invalid HTML — they silently try to render it. This is by design: the web grew too big to enforce strict rules.</p>
+    </div>
+  </section>
+
+  <!-- ═══════════ 2. ANATOMY ═══════════ -->
+  <section class="section" id="s2">
+    <div class="section-header">
+      <div class="section-number">02</div>
+      <div>
+        <div class="section-title">Anatomy of an HTML Page</div>
+        <div class="section-subtitle">The skeleton every page is built on</div>
+      </div>
+    </div>
+    <span class="code-label">📄 Basic Page Structure</span>
+    <div class="code-block">
+<pre>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+
+  &lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;Page Title&lt;/title&gt;       &lt;!-- shown in browser tab --&gt;
+  &lt;/head&gt;
+
+  &lt;body&gt;
+    &lt;h1&gt;This is a heading&lt;/h1&gt;
+    &lt;p&gt;This is a paragraph.&lt;/p&gt;
+    &lt;p&gt;Another paragraph.&lt;/p&gt;
+  &lt;/body&gt;
+
+&lt;/html&gt;</pre>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Key Tags Explained</h3>
+        <table class="ref-table">
+          <thead><tr><th>Tag</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr><td>&lt;!DOCTYPE html&gt;</td><td style="color:#b0b4c8">Declares HTML5 document</td></tr>
+            <tr><td>&lt;html&gt;</td><td style="color:#b0b4c8">Root of the page</td></tr>
+            <tr><td>&lt;head&gt;</td><td style="color:#b0b4c8">Metadata, invisible to user</td></tr>
+            <tr><td>&lt;title&gt;</td><td style="color:#b0b4c8">Browser tab text</td></tr>
+            <tr><td>&lt;body&gt;</td><td style="color:#b0b4c8">All visible content</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <h3>Start &amp; End Tags</h3>
+        <p>Most elements have an opening and closing tag:</p>
+        <div class="code-block" style="margin-top:0.8rem">
+<pre>&lt;p&gt; Content here &lt;/p&gt;
+&lt;!-- opening ^^  ^^ closing --&gt;</pre>
+        </div>
+        <p style="margin-top:0.8rem"><span class="badge badge-red">Void Elements</span> have <em>no</em> closing tag:</p>
+        <div class="code-block">
+<pre>&lt;br&gt;   &lt;!-- line break --&gt;
+&lt;hr&gt;   &lt;!-- horizontal rule --&gt;
+&lt;img&gt;  &lt;!-- image --&gt;</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 3. ELEMENTS ═══════════ -->
+  <section class="section" id="s3">
+    <div class="section-header">
+      <div class="section-number">03</div>
+      <div>
+        <div class="section-title">HTML Elements</div>
+        <div class="section-subtitle">Headings, paragraphs, text formatting &amp; more</div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Headings — h1 to h6</h3>
+      <p><code>&lt;h1&gt;</code> is the largest/most important. <code>&lt;h6&gt;</code> is the smallest.</p>
+      <div class="code-block">
+<pre>&lt;h1&gt;Level 1 Heading&lt;/h1&gt;
+&lt;h2&gt;Level 2 Heading&lt;/h2&gt;
+&lt;h3&gt;Level 3 Heading&lt;/h3&gt;
+&lt;h4&gt;Level 4 Heading&lt;/h4&gt;
+&lt;h5&gt;Level 5 Heading&lt;/h5&gt;
+&lt;h6&gt;Level 6 Heading&lt;/h6&gt;</pre>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Paragraphs &amp; Line Breaks</h3>
+        <div class="code-block">
+<pre>&lt;p&gt;Normal paragraph text.&lt;/p&gt;
+
+&lt;p&gt;Line one.&lt;br&gt;
+Line two after break.&lt;/p&gt;
+
+&lt;hr&gt;  &lt;!-- horizontal divider --&gt;
+
+&lt;pre&gt;
+  Preserves
+    spaces and
+      newlines!
+&lt;/pre&gt;</pre>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Text Formatting Tags</h3>
+        <table class="ref-table">
+          <thead><tr><th>Tag</th><th>Effect</th></tr></thead>
+          <tbody>
+            <tr><td>&lt;strong&gt;</td><td style="color:#b0b4c8"><strong>Bold / important</strong></td></tr>
+            <tr><td>&lt;em&gt;</td><td style="color:#b0b4c8"><em>Italic / emphasis</em></td></tr>
+            <tr><td>&lt;mark&gt;</td><td style="color:#b0b4c8">Highlighted text</td></tr>
+            <tr><td>&lt;del&gt;</td><td style="color:#b0b4c8"><del>Deleted text</del></td></tr>
+            <tr><td>&lt;ins&gt;</td><td style="color:#b0b4c8"><ins>Inserted text</ins></td></tr>
+            <tr><td>&lt;sub&gt; / &lt;sup&gt;</td><td style="color:#b0b4c8">H₂O / E=mc²</td></tr>
+            <tr><td>&lt;code&gt;</td><td style="color:#b0b4c8">Inline code snippet</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <h3>HTML Special Characters</h3>
+      <table class="ref-table">
+        <thead><tr><th>Character</th><th>Name Entity</th><th>Number Entity</th></tr></thead>
+        <tbody>
+          <tr><td>©</td><td style="color:#b0b4c8">&amp;copy;</td><td style="color:#b0b4c8">&amp;#169;</td></tr>
+          <tr><td>&amp;</td><td style="color:#b0b4c8">&amp;amp;</td><td style="color:#b0b4c8">&amp;#38;</td></tr>
+          <tr><td>&gt;</td><td style="color:#b0b4c8">&amp;gt;</td><td style="color:#b0b4c8">&amp;#62;</td></tr>
+          <tr><td>&lt;</td><td style="color:#b0b4c8">&amp;lt;</td><td style="color:#b0b4c8">&amp;#60;</td></tr>
+          <tr><td>"</td><td style="color:#b0b4c8">&amp;quot;</td><td style="color:#b0b4c8">&amp;#34;</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══════════ 4. ATTRIBUTES ═══════════ -->
+  <section class="section" id="s4">
+    <div class="section-header">
+      <div class="section-number">04</div>
+      <div>
+        <div class="section-title">HTML Attributes</div>
+        <div class="section-subtitle">Extra information inside start tags</div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Attribute Syntax</h3>
+      <p>Attributes are always in the <strong>start tag</strong>, as <code>name="value"</code> pairs.</p>
+      <div class="code-block">
+<pre>&lt;html lang="en"&gt;
+&lt;p title="I'm a tooltip"&gt;Hover over me!&lt;/p&gt;
+&lt;a href="https://www.google.com"&gt;Go to Google&lt;/a&gt;
+&lt;img src="photo.jpg" alt="A photo" width="400" height="300"&gt;</pre>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Common Attributes</h3>
+        <table class="ref-table">
+          <thead><tr><th>Attribute</th><th>Used on</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr><td>href</td><td style="color:#b0b4c8">&lt;a&gt;</td><td style="color:#b0b4c8">Link destination</td></tr>
+            <tr><td>src</td><td style="color:#b0b4c8">&lt;img&gt;</td><td style="color:#b0b4c8">Image path</td></tr>
+            <tr><td>alt</td><td style="color:#b0b4c8">&lt;img&gt;</td><td style="color:#b0b4c8">Alternate text</td></tr>
+            <tr><td>id</td><td style="color:#b0b4c8">Any</td><td style="color:#b0b4c8">Unique identifier</td></tr>
+            <tr><td>class</td><td style="color:#b0b4c8">Any</td><td style="color:#b0b4c8">CSS class name</td></tr>
+            <tr><td>style</td><td style="color:#b0b4c8">Any</td><td style="color:#b0b4c8">Inline CSS</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <h3>Quotes Rule</h3>
+        <p style="margin-bottom:0.8rem">Use <strong>double quotes</strong>. Single quotes work too. Mix when value contains quotes:</p>
+        <div class="code-block">
+<pre>&lt;a href="https://example.com"&gt;Link&lt;/a&gt;
+&lt;p title='John "ShotGun" Nelson'&gt;&lt;/p&gt;
+&lt;!-- Comments in HTML --&gt;</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 5. LINKS ═══════════ -->
+  <section class="section" id="s5">
+    <div class="section-header">
+      <div class="section-number">05</div>
+      <div>
+        <div class="section-title">HTML Links</div>
+        <div class="section-subtitle">Hyperlinks — the backbone of the web</div>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>External &amp; Email Links</h3>
+        <div class="code-block">
+<pre>&lt;a href="https://www.google.com"&gt;Visit Google&lt;/a&gt;
+&lt;a href="mailto:info@example.com"&gt;Email Us&lt;/a&gt;</pre>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Anchor / Bookmark Links</h3>
+        <div class="code-block">
+<pre>&lt;h2 id="top"&gt;Top of Page&lt;/h2&gt;
+&lt;a href="#top"&gt;Go to Top&lt;/a&gt;
+&lt;a href="#section2"&gt;Jump to Section 2&lt;/a&gt;</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 6. IMAGES ═══════════ -->
+  <section class="section" id="s6">
+    <div class="section-header">
+      <div class="section-number">06</div>
+      <div>
+        <div class="section-title">Images &amp; Favicon</div>
+        <div class="section-subtitle">Embedding visual content</div>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>The &lt;img&gt; Tag</h3>
+        <div class="code-block">
+<pre>&lt;img src="smiley.jpg" alt="A smiley face"
+     width="200" height="200"&gt;</pre>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Why alt Matters</h3>
+        <ul>
+          <li>Read aloud by <strong>screen readers</strong></li>
+          <li>Shown when image <strong>fails to load</strong></li>
+          <li>Helps <strong>search engines</strong> (SEO)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Favicon &amp; Figure</h3>
+      <div class="code-block">
+<pre>&lt;link rel="icon" type="image/x-icon" href="favicon.ico"&gt;
+
+&lt;figure&gt;
+  &lt;img src="campus.jpg" alt="Campus" width="400"&gt;
+  &lt;figcaption&gt;Figure 1: The main campus building.&lt;/figcaption&gt;
+&lt;/figure&gt;</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 7. LISTS ═══════════ -->
+  <section class="section" id="s7">
+    <div class="section-header">
+      <div class="section-number">07</div>
+      <div>
+        <div class="section-title">Lists</div>
+        <div class="section-subtitle">Ordered, unordered, and description lists</div>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Unordered List</h3>
+        <div class="code-block">
+<pre>&lt;ul style="list-style-type: disc;"&gt;
+  &lt;li&gt;HTML&lt;/li&gt;
+  &lt;li&gt;CSS&lt;/li&gt;
+  &lt;li&gt;JavaScript&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- Other markers: circle | square | none --&gt;</pre>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Ordered List</h3>
+        <div class="code-block">
+<pre>&lt;ol type="1"&gt;
+  &lt;li&gt;Plan&lt;/li&gt;
+  &lt;li&gt;Build&lt;/li&gt;
+  &lt;li&gt;Deploy&lt;/li&gt;
+&lt;/ol&gt;
+&lt;!-- Other types: A a I i --&gt;</pre>
+        </div>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Description List</h3>
+        <div class="code-block">
+<pre>&lt;dl&gt;
+  &lt;dt&gt;HTML&lt;/dt&gt;
+  &lt;dd&gt;Markup language for web structure.&lt;/dd&gt;
+  &lt;dt&gt;CSS&lt;/dt&gt;
+  &lt;dd&gt;Language for styling web pages.&lt;/dd&gt;
+&lt;/dl&gt;</pre>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Nested List</h3>
+        <div class="code-block">
+<pre>&lt;ol type="A"&gt;
+  &lt;li&gt;Web Programming
+    &lt;ul&gt;
+      &lt;li&gt;HTML&lt;/li&gt;
+      &lt;li&gt;CSS&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Databases&lt;/li&gt;
+&lt;/ol&gt;</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 8. BLOCK vs INLINE ═══════════ -->
+  <section class="section" id="s8">
+    <div class="section-header">
+      <div class="section-number">08</div>
+      <div>
+        <div class="section-title">Block vs. Inline Elements</div>
+        <div class="section-subtitle">How elements flow in the document</div>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Block-Level Elements</h3>
+        <ul>
+          <li>Always start on a <strong>new line</strong></li>
+          <li>Take full width available (100%)</li>
+          <li>Respect width &amp; height</li>
+          <li>Examples: <code>&lt;p&gt;</code> <code>&lt;div&gt;</code> <code>&lt;h1&gt;..&lt;h6&gt;</code> <code>&lt;ul&gt;</code> <code>&lt;table&gt;</code></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Inline Elements</h3>
+        <ul>
+          <li>Do <strong>not</strong> start on a new line</li>
+          <li>Only take as much width as needed</li>
+          <li>Do NOT respect width &amp; height</li>
+          <li>Examples: <code>&lt;a&gt;</code> <code>&lt;span&gt;</code> <code>&lt;strong&gt;</code> <code>&lt;em&gt;</code></li>
+        </ul>
+      </div>
+    </div>
+    <div class="card">
+      <h3>The &lt;iframe&gt; Element</h3>
+      <div class="code-block">
+<pre>&lt;iframe src="https://www.example.com" width="600" height="400" title="Example"&gt;
+&lt;/iframe&gt;</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 9. TABLES ═══════════ -->
+  <section class="section" id="s9">
+    <div class="section-header">
+      <div class="section-number">09</div>
+      <div>
+        <div class="section-title">Tables</div>
+        <div class="section-subtitle">Organizing data into rows and columns</div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Basic Table Structure</h3>
+      <div class="code-block">
+<pre>&lt;table border="1" style="width:60%; border-collapse:collapse;"&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;&lt;th&gt;Name&lt;/th&gt;&lt;th&gt;Subject&lt;/th&gt;&lt;th&gt;Grade&lt;/th&gt;&lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;&lt;td&gt;Ali&lt;/td&gt;&lt;td&gt;Web Programming&lt;/td&gt;&lt;td&gt;A&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Sara&lt;/td&gt;&lt;td&gt;Databases&lt;/td&gt;&lt;td&gt;B+&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tbody&gt;
+  &lt;tfoot&gt;
+    &lt;tr&gt;&lt;td colspan="2"&gt;Average&lt;/td&gt;&lt;td&gt;A-&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tfoot&gt;
+&lt;/table&gt;</pre>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>colspan &amp; rowspan</h3>
+        <div class="code-block">
+<pre>&lt;th colspan="2"&gt;Spans 2 columns&lt;/th&gt;
+&lt;th rowspan="2"&gt;Spans 2 rows&lt;/th&gt;</pre>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Table Tags Reference</h3>
+        <table class="ref-table">
+          <thead><tr><th>Tag</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>&lt;table&gt;</td><td style="color:#b0b4c8">Container</td></tr>
+            <tr><td>&lt;tr&gt;</td><td style="color:#b0b4c8">Row</td></tr>
+            <tr><td>&lt;th&gt;</td><td style="color:#b0b4c8">Header cell</td></tr>
+            <tr><td>&lt;td&gt;</td><td style="color:#b0b4c8">Data cell</td></tr>
+            <tr><td>&lt;caption&gt;</td><td style="color:#b0b4c8">Table caption</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 10. FORMS BASICS ═══════════ -->
+  <section class="section" id="s10">
+    <div class="section-header">
+      <div class="section-number">10</div>
+      <div>
+        <div class="section-title">HTML Forms — Overview</div>
+        <div class="section-subtitle">Collecting user data — the three core elements</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>What is an HTML Form?</h3>
+      <ul>
+        <li>Used to <strong>collect user input</strong></li>
+        <li>User input is most often <strong>sent to a server</strong> for processing</li>
+        <li>Three core building blocks: <code>&lt;form&gt;</code>, <code>&lt;label&gt;</code>, <code>&lt;input&gt;</code></li>
+      </ul>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>The &lt;form&gt; Element</h3>
+        <p>A container for all types of input elements:</p>
+        <ul>
+          <li>Text fields</li>
+          <li>Checkboxes</li>
+          <li>Radio buttons</li>
+          <li>Submit buttons, etc.</li>
+        </ul>
+        <div class="code-block" style="margin-top:1rem">
+<pre>&lt;form&gt;
+  . form elements .
+&lt;/form&gt;</pre>
+        </div>
+      </div>
+      <div class="card">
+        <h3>The &lt;label&gt; Element</h3>
+        <ul>
+          <li>Defines a label for form elements</li>
+          <li>Essential for <strong>screen-reader</strong> users — reads aloud when input is focused</li>
+          <li>Clicking label <strong>toggles</strong> associated radio/checkbox</li>
+          <li><code>for</code> attribute must equal the input's <code>id</code></li>
+        </ul>
+        <div class="code-block" style="margin-top:1rem">
+<pre>&lt;label for="html"&gt;HTML&lt;/label&gt;
+&lt;input type="radio" id="html" name="fav"&gt;</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Input Types Reference</h3>
+      <table class="ref-table">
+        <thead><tr><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>text</td><td style="color:#b0b4c8">Displays a single-line text input field</td></tr>
+          <tr><td>radio</td><td style="color:#b0b4c8">Displays a radio button (select one of many)</td></tr>
+          <tr><td>checkbox</td><td style="color:#b0b4c8">Displays a checkbox (select zero or more)</td></tr>
+          <tr><td>submit</td><td style="color:#b0b4c8">Displays a submit button</td></tr>
+          <tr><td>button</td><td style="color:#b0b4c8">Displays a clickable button</td></tr>
+          <tr><td>password</td><td style="color:#b0b4c8">Masked text input</td></tr>
+          <tr><td>email</td><td style="color:#b0b4c8">Email with validation</td></tr>
+          <tr><td>number</td><td style="color:#b0b4c8">Numeric spinner</td></tr>
+          <tr><td>date</td><td style="color:#b0b4c8">Date picker</td></tr>
+          <tr><td>color</td><td style="color:#b0b4c8">Color picker</td></tr>
+          <tr><td>file</td><td style="color:#b0b4c8">File upload button</td></tr>
+          <tr><td>range</td><td style="color:#b0b4c8">Slider control</td></tr>
+          <tr><td>reset</td><td style="color:#b0b4c8">Resets all fields</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>Textarea &amp; Select</h3>
+        <div class="code-block">
+<pre>&lt;textarea rows="4" cols="30"
+  placeholder="Your comment..."&gt;
+&lt;/textarea&gt;
+
+&lt;select name="city"&gt;
+  &lt;option value=""&gt;-- Choose --&lt;/option&gt;
+  &lt;option value="cairo"&gt;Cairo&lt;/option&gt;
+  &lt;option value="alex"&gt;Alexandria&lt;/option&gt;
+&lt;/select&gt;</pre>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Radio &amp; Checkbox</h3>
+        <div class="code-block">
+<pre>&lt;fieldset&gt;
+  &lt;legend&gt;Gender:&lt;/legend&gt;
+  &lt;input type="radio" name="g" value="m"&gt; Male
+  &lt;input type="radio" name="g" value="f"&gt; Female
+&lt;/fieldset&gt;
+
+&lt;input type="checkbox" name="html"&gt; HTML
+&lt;input type="checkbox" name="css"&gt; CSS</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="highlight-box">
+      <strong>⚠️ Important:</strong> Each input field <strong>must have a <code>name</code> attribute</strong> to be submitted. If the name attribute is omitted, the value of that field will not be sent at all.
+    </div>
+  </section>
+
+  <!-- ═══════════ 11. FORM ATTRIBUTES ═══════════ -->
+  <section class="section" id="s11">
+    <div class="section-header">
+      <div class="section-number">11</div>
+      <div>
+        <div class="section-title">HTML Form Attributes</div>
+        <div class="section-subtitle">action · target · method</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>action Attribute</h3>
+      <p style="margin-bottom:0.8rem">Defines the <strong>action to be performed when the form is submitted</strong>. Usually the form data is sent to a file on the server when the user clicks the submit button.</p>
+      <div class="code-block">
+<pre>&lt;form action="/action_page.php"&gt;
+  &lt;label for="fname"&gt;First name:&lt;/label&gt;&lt;br&gt;
+  &lt;input type="text" id="fname" name="fname" value="John"&gt;&lt;br&gt;
+  &lt;label for="lname"&gt;Last name:&lt;/label&gt;&lt;br&gt;
+  &lt;input type="text" id="lname" name="lname" value="Doe"&gt;&lt;br&gt;&lt;br&gt;
+  &lt;input type="submit" value="Submit"&gt;
+&lt;/form&gt;</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>target Attribute</h3>
+      <p style="margin-bottom:0.8rem">Specifies <strong>where to display the response</strong> received after submitting the form.</p>
+      <table class="ref-table">
+        <thead><tr><th>Value</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>_blank</td><td style="color:#b0b4c8">Response displayed in a new window or tab</td></tr>
+          <tr><td>_self</td><td style="color:#b0b4c8">Response displayed in the current window (default)</td></tr>
+          <tr><td>_parent</td><td style="color:#b0b4c8">Response displayed in the parent frame</td></tr>
+          <tr><td>_top</td><td style="color:#b0b4c8">Response displayed in the full body of the window</td></tr>
+          <tr><td>framename</td><td style="color:#b0b4c8">Response displayed in a named iframe</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block" style="margin-top:1rem">
+<pre>&lt;form action="/action_page.php" target="_blank"&gt;
+  &lt;!-- Opens result in a new tab --&gt;
+&lt;/form&gt;</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>method Attribute</h3>
+      <p style="margin-bottom:0.8rem">Specifies the <strong>HTTP method</strong> to use when submitting. Default is <code>GET</code>.</p>
+      <div class="grid-2" style="gap:1rem; margin-bottom:1rem">
+        <div style="background:rgba(240,165,0,0.05); border:1px solid rgba(240,165,0,0.2); border-radius:6px; padding:1rem;">
+          <p style="color:var(--accent); font-weight:500; margin-bottom:0.4rem">method="get"</p>
+          <p style="color:#b0b4c8; font-size:0.88rem">Form data appended to URL as variables. Values visible in address bar. Use for non-sensitive data.</p>
+        </div>
+        <div style="background:rgba(0,201,167,0.05); border:1px solid rgba(0,201,167,0.2); border-radius:6px; padding:1rem;">
+          <p style="color:var(--accent2); font-weight:500; margin-bottom:0.4rem">method="post"</p>
+          <p style="color:#b0b4c8; font-size:0.88rem">Form data sent as HTTP transaction body. Values NOT visible in URL. Use for sensitive data.</p>
+        </div>
+      </div>
+      <div class="code-block">
+<pre>&lt;form action="/action_page.php" target="_blank" method="get"&gt;
+  &lt;!-- After submit, values visible in URL bar --&gt;
+&lt;/form&gt;</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 12. INPUT ATTRIBUTES ═══════════ -->
+  <section class="section" id="s12">
+    <div class="section-header">
+      <div class="section-number">12</div>
+      <div>
+        <div class="section-title">HTML Input Attributes</div>
+        <div class="section-subtitle">Fine-tuning input element behavior</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>All Input Attributes Overview</h3>
+      <p style="margin-bottom:1rem; color:var(--muted)">The <code>&lt;input&gt;</code> element is the most-used form element. Its behavior changes based on the <code>type</code> attribute and the following additional attributes:</p>
+      <div style="display:flex; flex-wrap:wrap; gap:0.5rem">
+        <span class="badge badge-yellow">disabled</span>
+        <span class="badge badge-yellow">size</span>
+        <span class="badge badge-yellow">maxlength</span>
+        <span class="badge badge-yellow">min / max</span>
+        <span class="badge badge-yellow">multiple</span>
+        <span class="badge badge-yellow">pattern</span>
+        <span class="badge badge-yellow">placeholder</span>
+        <span class="badge badge-yellow">required</span>
+        <span class="badge badge-yellow">step</span>
+        <span class="badge badge-yellow">autofocus</span>
+        <span class="badge badge-yellow">height / width</span>
+        <span class="badge badge-yellow">list</span>
+        <span class="badge badge-yellow">autocomplete</span>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>disabled</h3>
+        <p>Makes an input field <strong>unusable and unclickable</strong>. Its value will not be submitted.</p>
+        <div class="code-block">
+<pre>&lt;input type="text" name="fname"
+       value="John" disabled&gt;</pre>
+        </div>
+      </div>
+      <div class="card">
+        <h3>size</h3>
+        <p>Specifies the <strong>visible width in characters</strong>. Default is 20. Works with: text, search, tel, url, email, password.</p>
+        <div class="code-block">
+<pre>&lt;input type="text" name="fname" size="50"&gt;
+&lt;input type="text" name="pin" size="4"&gt;</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>maxlength</h3>
+        <p>Specifies the <strong>maximum number of characters</strong> allowed. Does not provide feedback — use JavaScript for alerts.</p>
+        <div class="code-block">
+<pre>&lt;input type="text" name="pin"
+       maxlength="4" size="4"&gt;</pre>
+        </div>
+      </div>
+      <div class="card">
+        <h3>min and max</h3>
+        <p>Specify <strong>minimum and maximum values</strong>. Use together to create a range of legal values. Works with: number, range, date, datetime-local, month, time, week.</p>
+        <div class="code-block">
+<pre>&lt;input type="date" name="bday"
+       max="1979-12-31"&gt;
+&lt;input type="number" name="qty"
+       min="1" max="5"&gt;</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>multiple</h3>
+        <p>Allows user to <strong>enter more than one value</strong>. Works with: email, file.</p>
+        <div class="code-block">
+<pre>&lt;input type="file" name="files"
+       multiple&gt;
+&lt;!-- Hold CTRL/SHIFT to multi-select --&gt;</pre>
+        </div>
+      </div>
+      <div class="card">
+        <h3>pattern</h3>
+        <p>Specifies a <strong>regular expression</strong> the field value is checked against on submit. Works with: text, date, search, url, tel, email, password.</p>
+        <div class="code-block">
+<pre>&lt;input type="text" name="country_code"
+  pattern="[A-Za-z]{3}"
+  title="Three letter country code"&gt;</pre>
+        </div>
+        <div class="tip-box">
+          <strong>Tip:</strong> Use the <code>title</code> attribute to describe the pattern to the user.
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>placeholder</h3>
+        <p>Shows a <strong>short hint</strong> describing the expected input value. Disappears when user starts typing. Works with: text, search, url, number, tel, email, password.</p>
+        <div class="code-block">
+<pre>&lt;input type="tel" name="phone"
+  placeholder="123-45-678"
+  pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"&gt;</pre>
+        </div>
+      </div>
+      <div class="card">
+        <h3>required</h3>
+        <p>Specifies that an input <strong>must be filled out</strong> before submitting. Works with: text, search, url, tel, email, password, date pickers, number, checkbox, radio, file.</p>
+        <div class="code-block">
+<pre>&lt;input type="text" name="username"
+       required&gt;</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>step</h3>
+        <p>Specifies the <strong>legal number intervals</strong>. E.g., step="3" → legal values: -3, 0, 3, 6… Can be combined with min/max. Works with: number, range, date, datetime-local, month, time, week.</p>
+        <div class="code-block">
+<pre>&lt;input type="number" name="points"
+       step="3"&gt;</pre>
+        </div>
+      </div>
+      <div class="card">
+        <h3>autofocus</h3>
+        <p>The input field <strong>automatically gets focus</strong> when the page loads.</p>
+        <div class="code-block">
+<pre>&lt;input type="text" name="fname"
+       autofocus&gt;</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>height and width</h3>
+        <p>Specifies dimensions for <code>&lt;input type="image"&gt;</code>. <strong>Always specify both</strong> so the browser can reserve space during loading.</p>
+        <div class="code-block">
+<pre>&lt;input type="image" src="submit.gif"
+  alt="Submit" width="48" height="48"&gt;</pre>
+        </div>
+      </div>
+      <div class="card">
+        <h3>list</h3>
+        <p>Refers to a <code>&lt;datalist&gt;</code> containing <strong>predefined options</strong> for autocomplete suggestions.</p>
+        <div class="code-block">
+<pre>&lt;input type="text" name="browser"
+       list="browsers"&gt;
+&lt;datalist id="browsers"&gt;
+  &lt;option value="Google Chrome"&gt;
+  &lt;option value="Mozilla Firefox"&gt;
+  &lt;option value="Microsoft Edge"&gt;
+&lt;/datalist&gt;</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>autocomplete</h3>
+      <p style="margin-bottom:0.8rem">Specifies whether the browser should <strong>predict/autocomplete</strong> values based on previously typed entries. Can be set on the whole <code>&lt;form&gt;</code> or individual <code>&lt;input&gt;</code> elements. Works with: text, search, url, tel, email, password, datepickers, range, color.</p>
+      <div class="code-block">
+<pre>&lt;form action="/action_page.php" autocomplete="on"&gt;
+  &lt;input type="text" name="fname"&gt;
+  &lt;!-- Form has autocomplete on... --&gt;
+  &lt;input type="email" name="email" autocomplete="off"&gt;
+  &lt;!-- ...but this specific field has it off --&gt;
+&lt;/form&gt;</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Complete Input Attributes Summary</h3>
+      <table class="ref-table">
+        <thead><tr><th>Attribute</th><th>Purpose</th><th>Works With</th></tr></thead>
+        <tbody>
+          <tr><td>disabled</td><td style="color:#b0b4c8">Makes field unusable, value not submitted</td><td style="color:#b0b4c8">All inputs</td></tr>
+          <tr><td>size</td><td style="color:#b0b4c8">Visible width in characters (default 20)</td><td style="color:#b0b4c8">text, email, password…</td></tr>
+          <tr><td>maxlength</td><td style="color:#b0b4c8">Maximum characters allowed</td><td style="color:#b0b4c8">text inputs</td></tr>
+          <tr><td>min / max</td><td style="color:#b0b4c8">Min/max value constraint</td><td style="color:#b0b4c8">number, date, range…</td></tr>
+          <tr><td>multiple</td><td style="color:#b0b4c8">Allow multiple values</td><td style="color:#b0b4c8">email, file</td></tr>
+          <tr><td>pattern</td><td style="color:#b0b4c8">Regex validation on submit</td><td style="color:#b0b4c8">text, url, tel, email…</td></tr>
+          <tr><td>placeholder</td><td style="color:#b0b4c8">Hint text shown before input</td><td style="color:#b0b4c8">text, email, number…</td></tr>
+          <tr><td>required</td><td style="color:#b0b4c8">Field must be filled before submit</td><td style="color:#b0b4c8">Most input types</td></tr>
+          <tr><td>step</td><td style="color:#b0b4c8">Legal number intervals</td><td style="color:#b0b4c8">number, range, date…</td></tr>
+          <tr><td>autofocus</td><td style="color:#b0b4c8">Auto-focus on page load</td><td style="color:#b0b4c8">All inputs</td></tr>
+          <tr><td>height/width</td><td style="color:#b0b4c8">Dimensions for image input</td><td style="color:#b0b4c8">type="image"</td></tr>
+          <tr><td>list</td><td style="color:#b0b4c8">Links to &lt;datalist&gt; for suggestions</td><td style="color:#b0b4c8">text inputs</td></tr>
+          <tr><td>autocomplete</td><td style="color:#b0b4c8">Enable/disable browser predictions</td><td style="color:#b0b4c8">form, text, email…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══════════ 13. MULTIMEDIA ═══════════ -->
+  <section class="section" id="s13">
+    <div class="section-header">
+      <div class="section-number">13</div>
+      <div>
+        <div class="section-title">Multimedia</div>
+        <div class="section-subtitle">Audio, video, and embedded content</div>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Audio</h3>
+        <div class="code-block">
+<pre>&lt;audio controls&gt;
+  &lt;source src="song.mp3" type="audio/mp3"&gt;
+  Your browser does not support audio.
+&lt;/audio&gt;
+&lt;!-- Options: controls autoplay muted loop --&gt;</pre>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Video</h3>
+        <div class="code-block">
+<pre>&lt;video width="400" height="300" controls&gt;
+  &lt;source src="movie.mp4" type="video/mp4"&gt;
+  &lt;source src="movie.ogg" type="video/ogg"&gt;
+  Your browser does not support video.
+&lt;/video&gt;</pre>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>YouTube Embed</h3>
+      <div class="code-block">
+<pre>&lt;iframe width="560" height="315"
+  src="https://www.youtube.com/embed/VIDEO_ID"&gt;&lt;/iframe&gt;
+
+&lt;!-- Autoplay + muted --&gt;
+&lt;iframe src="https://www.youtube.com/embed/VIDEO_ID?autoplay=1&amp;mute=1"&gt;&lt;/iframe&gt;
+
+&lt;!-- Looping --&gt;
+&lt;iframe src="https://www.youtube.com/embed/VIDEO_ID?playlist=VIDEO_ID&amp;loop=1"&gt;&lt;/iframe&gt;</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 14. MVC ═══════════ -->
+  <section class="section" id="s14">
+    <div class="section-header">
+      <div class="section-number">14</div>
+      <div>
+        <div class="section-title">MVC Development Model</div>
+        <div class="section-subtitle">Model · View · Controller — architectural pattern for web apps</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>What is MVC?</h3>
+      <p>The MVC architecture is a widely used approach for interactive applications that <strong>distributes functionality among application objects</strong> so as to <strong>minimize the degree of coupling between the objects</strong>.</p>
+      <p style="margin-top:0.8rem">It divides an application into <strong>three layers</strong>, each with specific responsibilities:</p>
+      <div style="margin-top:1rem; display:flex; flex-wrap:wrap; gap:0.6rem;">
+        <span class="badge badge-blue">View — Presentation Layer</span>
+        <span class="badge badge-yellow">Controller — Interface Layer</span>
+        <span class="badge badge-green">Model — Data Layer</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>The Three Layers</h3>
+      <div class="mvc-layer mvc-view" style="margin-top:0.8rem">
+        <h4>🖥️ View Layer</h4>
+        <ul>
+          <li>Represents the <strong>presentation layer</strong> (User Interface)</li>
+          <li>Normally represents the UI of the application</li>
+          <li>HTML, CSS, JS etc. are used to create the View</li>
+        </ul>
+      </div>
+      <div class="mvc-layer mvc-controller">
+        <h4>⚙️ Controller Layer</h4>
+        <ul>
+          <li>Acts as an <strong>interface between View and Model</strong></li>
+          <li>Receives requests from the View layer</li>
+          <li>Reads data coming from the presentation layer and forwards it to the Model</li>
+        </ul>
+      </div>
+      <div class="mvc-layer mvc-model">
+        <h4>🗄️ Model Layer</h4>
+        <ul>
+          <li>Is the <strong>data layer</strong> — contains all data of the web application</li>
+          <li>Represents the current state of the application</li>
+          <li>Responsible for connecting with the database and storing data</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Why MVC Reduces Coupling</h3>
+      <p style="margin-bottom:1rem; color:var(--muted)">Each component has a single, clear responsibility:</p>
+      <ul>
+        <li>You can change the <strong>View</strong> (UI design) without changing the Model</li>
+        <li>You can change the <strong>Model</strong> (business rules) without touching the View</li>
+        <li>The <strong>Controller</strong> coordinates without tightly binding components together</li>
+        <li>Each object interacts through <strong>well-defined interfaces</strong>, not internal details</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>MVC Request Flow — Login Example</h3>
+      <p style="margin-bottom:1rem; color:var(--muted)">Trace how a login form flows through the MVC layers:</p>
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="flow-num">1</div>
+          <div class="flow-text"><strong>login.php</strong> — User clicks a link or submits a form <span class="badge badge-blue">View</span></div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">2</div>
+          <div class="flow-text"><strong>Loginphp.php</strong> — A Servlet receives the request <span class="badge badge-yellow">Controller</span></div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">3</div>
+          <div class="flow-text"><strong>User.php</strong> — The Servlet uses this class to get or update data <span class="badge badge-green">Model</span></div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">4</div>
+          <div class="flow-text">If credentials valid → forward to <strong>welcome.php</strong> <span class="badge badge-blue">View</span></div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">5</div>
+          <div class="flow-text">If invalid → redirect to <strong>error.php</strong> <span class="badge badge-red">View</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>MVC Code Example</h3>
+      <div class="grid-2">
+        <div>
+          <span class="code-label">View — login.php</span>
+          <div class="code-block">
+<pre>&lt;form action="LoginServlet" method="post"&gt;
+  Username:
+  &lt;input type="text" name="username"/&gt;
+  Password:
+  &lt;input type="password" name="password"/&gt;
+  &lt;input type="submit" value="Login"/&gt;
+&lt;/form&gt;</pre>
+          </div>
+        </div>
+        <div>
+          <span class="code-label">Model — User.php</span>
+          <div class="code-block">
+<pre>public class User {
+  private String username, password;
+
+  public String getName() {
+    return username;
+  }
+  public boolean isValid() {
+    return username.equals("admin") &amp;&amp;
+           password.equals("1234");
+  }
+}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Advantages of MVC Architecture</h3>
+      <div class="grid-2">
+        <ul>
+          <li>✅ Easy to <strong>maintain</strong></li>
+          <li>✅ Easy to <strong>test</strong></li>
+        </ul>
+        <ul>
+          <li>✅ Easy to <strong>extend</strong></li>
+          <li>✅ Navigation control is <strong>centralized</strong></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ FINAL PROJECT ═══════════ -->
+  <section class="section" id="final">
+    <div class="section-header">
+      <div class="section-number">★</div>
+      <div>
+        <div class="section-title">Final Project</div>
+        <div class="section-subtitle">Apply everything you learned in one complete web page</div>
+      </div>
+    </div>
+
+    <div class="project-box">
+      <h2>🎓 Student Portfolio Page</h2>
+      <p class="subtitle">Build a complete multi-section personal student portfolio using all the HTML topics from this lecture.</p>
+
+      <div style="margin: 2rem 0;">
+        <div class="requirement">
+          <div class="req-num">1</div>
+          <div class="req-content">
+            <h4>Page Structure &amp; Metadata</h4>
+            <p>Use proper <code>&lt;!DOCTYPE&gt;</code>, <code>&lt;html lang&gt;</code>, <code>&lt;head&gt;</code> with charset, title, and a favicon.</p>
+          </div>
+        </div>
+        <div class="requirement">
+          <div class="req-num">2</div>
+          <div class="req-content">
+            <h4>Navigation Menu (Links)</h4>
+            <p>Create a nav bar using <code>&lt;ul&gt;</code> with anchor links jumping to sections via IDs.</p>
+          </div>
+        </div>
+        <div class="requirement">
+          <div class="req-num">3</div>
+          <div class="req-content">
+            <h4>Hero / About Section</h4>
+            <p>Use headings, a bio paragraph, <code>&lt;figure&gt;</code> with photo and figcaption. Use <code>&lt;strong&gt;</code>, <code>&lt;em&gt;</code>, <code>&lt;mark&gt;</code>.</p>
+          </div>
+        </div>
+        <div class="requirement">
+          <div class="req-num">4</div>
+          <div class="req-content">
+            <h4>Skills Section (Lists)</h4>
+            <p>Unordered list for skills. Description list <code>&lt;dl&gt;</code> for 3 key terms. Nested ordered list for a roadmap.</p>
+          </div>
+        </div>
+        <div class="requirement">
+          <div class="req-num">5</div>
+          <div class="req-content">
+            <h4>Courses Table</h4>
+            <p>Full table with <code>&lt;thead&gt;</code>, <code>&lt;tbody&gt;</code>, <code>&lt;tfoot&gt;</code>, grades, credits. Use at least one <code>colspan</code> or <code>rowspan</code>.</p>
+          </div>
+        </div>
+        <div class="requirement">
+          <div class="req-num">6</div>
+          <div class="req-content">
+            <h4>Multimedia Section</h4>
+            <p>Embed a YouTube video. Add an <code>&lt;audio&gt;</code> player. Include a <code>&lt;blockquote&gt;</code>.</p>
+          </div>
+        </div>
+        <div class="requirement">
+          <div class="req-num">7</div>
+          <div class="req-content">
+            <h4>Contact Form — Full Featured</h4>
+            <p>Include: text, email, password, date, gender (radio), interests (checkbox), <code>&lt;textarea&gt;</code>, dropdown, color picker, submit/reset. Use <code>action</code>, <code>method</code>, <code>target</code> on the form. Apply at least 3 input attributes: <code>required</code>, <code>placeholder</code>, <code>maxlength</code>, <code>pattern</code>, <code>autofocus</code>, etc.</p>
+          </div>
+        </div>
+        <div class="requirement">
+          <div class="req-num">8</div>
+          <div class="req-content">
+            <h4>Footer with Special Characters</h4>
+            <p>Email as <code>mailto:</code> link, copyright <code>&amp;copy;</code>, "Back to Top" anchor link.</p>
+          </div>
+        </div>
+      </div>
+
+      <span class="code-label" style="margin-bottom:0.5rem; display:block">📄 Starter Template</span>
+      <div class="code-block">
+<pre>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;Your Name — Portfolio&lt;/title&gt;
+  &lt;link rel="icon" href="favicon.ico"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;nav&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href="#about"&gt;About&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#skills"&gt;Skills&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#courses"&gt;Courses&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#media"&gt;Media&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="#contact"&gt;Contact&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/nav&gt;
+
+  &lt;section id="about"&gt;
+    &lt;h1&gt;Your Full Name&lt;/h1&gt;
+    &lt;figure&gt;
+      &lt;img src="photo.jpg" alt="My photo" width="200"&gt;
+      &lt;figcaption&gt;Me at the campus!&lt;/figcaption&gt;
+    &lt;/figure&gt;
+    &lt;p&gt;I am a &lt;strong&gt;passionate&lt;/strong&gt; &lt;em&gt;Web Programming&lt;/em&gt; student.&lt;/p&gt;
+  &lt;/section&gt;
+
+  &lt;section id="contact"&gt;
+    &lt;h2&gt;Contact Me&lt;/h2&gt;
+    &lt;form action="/submit" method="post" target="_blank"&gt;
+
+      &lt;label for="name"&gt;Name:&lt;/label&gt;
+      &lt;input type="text" id="name" name="name"
+             required autofocus placeholder="Enter full name"&gt;
+
+      &lt;label for="email"&gt;Email:&lt;/label&gt;
+      &lt;input type="email" id="email" name="email"
+             required autocomplete="off"&gt;
+
+      &lt;label for="phone"&gt;Phone:&lt;/label&gt;
+      &lt;input type="tel" id="phone" name="phone"
+             pattern="[0-9]{11}" placeholder="01234567890"
+             maxlength="11"&gt;
+
+      &lt;fieldset&gt;
+        &lt;legend&gt;Gender:&lt;/legend&gt;
+        &lt;input type="radio" name="gender" value="m" id="male"&gt;
+        &lt;label for="male"&gt;Male&lt;/label&gt;
+        &lt;input type="radio" name="gender" value="f" id="female"&gt;
+        &lt;label for="female"&gt;Female&lt;/label&gt;
+      &lt;/fieldset&gt;
+
+      &lt;label&gt;Message:&lt;/label&gt;
+      &lt;textarea rows="5" cols="40" placeholder="Write your message..."&gt;&lt;/textarea&gt;
+
+      &lt;input type="submit" value="Send"&gt;
+      &lt;input type="reset" value="Clear"&gt;
+    &lt;/form&gt;
+  &lt;/section&gt;
+
+  &lt;footer&gt;
+    &lt;p&gt;&amp;copy; 2025 Your Name.
+       &lt;a href="mailto:you@email.com"&gt;Email Me&lt;/a&gt; |
+       &lt;a href="#about"&gt;Back to Top&lt;/a&gt;
+    &lt;/p&gt;
+  &lt;/footer&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <p>Web Programming · HTML Lecture Summary · Dr. Mohamed Mostafa &nbsp;|&nbsp; &copy; 2025 All Rights Reserved</p>
+</footer>
+
+<script src="portal-nav.js"></script>  <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('show');
+      document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
+    }
+  </script>
+</body>
+</html>
+
