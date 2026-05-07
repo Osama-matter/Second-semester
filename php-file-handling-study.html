@@ -129,7 +129,6 @@
   @media (max-width: 900px) {
     header { padding: 0 16px; }
     .header-right .badge { display: none; }
-    .ham-btn { display: flex; }
     .sidebar {
       position: fixed; top: 64px; left: -260px; height: calc(100vh - 64px);
       z-index: 1000; transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -140,6 +139,7 @@
     .grid { grid-template-columns: 1fr; }
     .summary-card { flex-direction: column; align-items: flex-start; gap: 12px; }
     .code-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .logo-text-top { display: none; }
   }
 
   /* ─── LAYOUT ─── */
@@ -216,10 +216,10 @@
     background: linear-gradient(to right, var(--accent), transparent);
   }
   h1.panel-title {
-    font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800;
+    font-family: 'Syne', sans-serif; font-size: 38px; font-weight: 800;
     line-height: 1.2; margin-bottom: 12px;
   }
-  .panel-desc { color: var(--text-muted); font-size: 15px; font-weight: 300; max-width: 600px; }
+  .panel-desc { color: var(--text-muted); font-size: 17px; font-weight: 300; max-width: 700px; }
 
   h2 {
     font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700;
@@ -475,15 +475,10 @@
     .sidebar { width: 220px; }
     main { padding: 24px 24px; }
   }
-  @media (max-width: 700px) {
-    .layout { flex-direction: column; }
-    .sidebar { width: 100%; height: auto; flex-direction: row; overflow-x: auto; padding: 12px; }
-    .sidebar-label, .sidebar-divider { display: none; }
-    .tab-btn { flex-direction: column; gap: 4px; font-size: 11px; min-width: 70px; }
-    .tab-btn.active::before { display: none; }
-    main { padding: 20px 16px; }
+  @media (max-width: 768px) {
+    h1.panel-title { font-size: 26px; }
     .fn-grid, .compare-grid { grid-template-columns: 1fr; }
-    h1.panel-title { font-size: 24px; }
+    main { padding: 20px 16px; }
   }
 </style>
   <link rel="stylesheet" href="global.css" />
@@ -491,16 +486,17 @@
   <link rel="stylesheet" href="responsive.css" />
   <script defer src="app.js"></script>
 </head>
-<body>
+<body class="ss-responsive ss-portal">
 
 <!-- ── SIDEBAR OVERLAY ── -->
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
 <header>
   <div style="display:flex;align-items:center;gap:14px">
+    <div class="ham-btn" onclick="toggleSidebar()" style="display:flex">☰</div>
     <div class="logo">
-      <div class="logo-icon">🗂</div>
-      PHP File Handling
+      <div class="logo-icon" style="background:linear-gradient(135deg,var(--accent),var(--accent2))">🎓</div>
+      <span class="logo-text-top">PHP File Handling</span>
     </div>
     <span class="badge">Exam Prep</span>
   </div>
@@ -508,7 +504,6 @@
     <a href="index.html" class="theme-toggle" style="text-decoration:none">
       <span>🏠</span> <span style="font-size:12px">Home</span>
     </a>
-    <div class="ham-btn" onclick="toggleSidebar()">☰</div>
     <span class="progress-pill" id="progress-pill">Section 1 / 5</span>
     <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1366,6 +1361,7 @@
     btn.classList.add('active');
     document.getElementById('progress-pill').textContent = 'Section ' + (idx + 1) + ' / 6';
     document.getElementById('main-content').scrollTop = 0;
+    if (window.innerWidth <= 900) toggleSidebar();
   }
 
   // ─── Theme toggle

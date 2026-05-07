@@ -1,763 +1,622 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CSS Mastery Dashboard</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
-
-  :root {
-    --bg-primary: #0a0a0f;
-    --bg-secondary: #111118;
-    --bg-card: #16161f;
-    --bg-hover: #1e1e2a;
-    --accent: #6c63ff;
-    --accent-2: #ff6584;
-    --accent-3: #43e97b;
-    --accent-4: #f7971e;
-    --accent-5: #38f9d7;
-    --text-primary: #e8e8f0;
-    --text-secondary: #9090a8;
-    --text-muted: #5a5a72;
-    --border: #222230;
-    --border-active: #6c63ff;
-    --warning-bg: #1a1206;
-    --warning-border: #f7971e;
-    --danger-bg: #150608;
-    --danger-border: #ff6584;
-    --success-bg: #061209;
-    --success-border: #43e97b;
-    --code-bg: #0d0d14;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    font-family: 'Inter', sans-serif;
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    display: flex;
-    height: 100vh;
-    overflow: hidden;
-  }
-
-  /* SIDEBAR */
-  .sidebar {
-    width: 260px;
-    min-width: 260px;
-    background: var(--bg-secondary);
-    border-right: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    padding: 0;
-    overflow-y: auto;
-  }
-
-  .sidebar-header {
-    padding: 24px 20px 16px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .sidebar-logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 4px;
-  }
-
-  .logo-icon {
-    width: 32px;
-    height: 32px;
-    background: linear-gradient(135deg, var(--accent), var(--accent-5));
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    font-weight: 700;
-    color: white;
-  }
-
-  .sidebar-title {
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--text-primary);
-    letter-spacing: -0.3px;
-  }
-
-  .sidebar-subtitle {
-    font-size: 11px;
-    color: var(--text-muted);
-    margin-top: 2px;
-    padding-left: 42px;
-  }
-
-  .search-box {
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .search-input {
-    width: 100%;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 8px 12px 8px 32px;
-    color: var(--text-primary);
-    font-size: 12px;
-    font-family: 'Inter', sans-serif;
-    outline: none;
-    transition: border-color 0.2s;
-    position: relative;
-  }
-
-  .search-wrapper {
-    position: relative;
-  }
-
-  .search-icon {
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-muted);
-    font-size: 12px;
-    pointer-events: none;
-  }
-
-  .search-input:focus {
-    border-color: var(--accent);
-  }
-
-  .search-input::placeholder {
-    color: var(--text-muted);
-  }
-
-  .nav-section {
-    padding: 12px 12px 8px;
-    flex: 1;
-  }
-
-  .nav-label {
-    font-size: 10px;
-    font-weight: 600;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    padding: 0 8px;
-    margin-bottom: 6px;
-  }
-
-  .nav-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 12px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s;
-    margin-bottom: 2px;
-    border: 1px solid transparent;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .nav-item:hover {
-    background: var(--bg-hover);
-    border-color: var(--border);
-  }
-
-  .nav-item.active {
-    background: rgba(108, 99, 255, 0.12);
-    border-color: rgba(108, 99, 255, 0.3);
-  }
-
-  .nav-dot {
-    width: 28px;
-    height: 28px;
-    border-radius: 7px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: 600;
-    flex-shrink: 0;
-  }
-
-  .nav-item.active .nav-dot { color: white; }
-
-  .nav-text { flex: 1; }
-
-  .nav-name {
-    font-size: 12.5px;
-    font-weight: 500;
-    color: var(--text-secondary);
-    line-height: 1.3;
-    transition: color 0.2s;
-  }
-
-  .nav-item.active .nav-name, .nav-item:hover .nav-name {
-    color: var(--text-primary);
-  }
-
-  .nav-sub {
-    font-size: 10px;
-    color: var(--text-muted);
-    margin-top: 1px;
-  }
-
-  .nav-badge {
-    font-size: 9px;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-weight: 600;
-    background: rgba(108, 99, 255, 0.15);
-    color: var(--accent);
-  }
-
-  .progress-bar {
-    height: 2px;
-    background: var(--border);
-    border-radius: 1px;
-    margin: 16px 20px;
-  }
-
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--accent), var(--accent-5));
-    border-radius: 1px;
-    transition: width 0.4s ease;
-  }
-
-  /* MAIN CONTENT */
-  .main {
-    flex: 1;
-    overflow-y: auto;
-    background: var(--bg-primary);
-  }
-
-  .section {
-    display: none;
-    padding: 32px 36px;
-    max-width: 900px;
-    animation: fadeSlide 0.3s ease;
-  }
-
-  .section.active { display: block; }
-
-  @keyframes fadeSlide {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .section-hero {
-    display: flex;
-    align-items: flex-start;
-    gap: 16px;
-    margin-bottom: 28px;
-    padding-bottom: 24px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .hero-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    flex-shrink: 0;
-  }
-
-  .hero-text h1 {
-    font-size: 22px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-    margin-bottom: 6px;
-  }
-
-  .hero-text p {
-    font-size: 13px;
-    color: var(--text-secondary);
-    line-height: 1.6;
-  }
-
-  .tag {
-    display: inline-block;
-    font-size: 10px;
-    font-weight: 600;
-    padding: 2px 8px;
-    border-radius: 4px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-right: 6px;
-    margin-top: 8px;
-  }
-
-  /* CARDS */
-  .grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 16px;
-  }
-
-  .grid-3 {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 16px;
-  }
-
-  .card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px;
-    transition: border-color 0.2s;
-  }
-
-  .card:hover { border-color: rgba(108, 99, 255, 0.3); }
-
-  .card-title {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    color: var(--text-muted);
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .card-title span { font-size: 14px; }
-
-  .card h3 {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 10px;
-  }
-
-  /* KEY CONCEPTS */
-  .concept-list {
-    list-style: none;
-  }
-
-  .concept-list li {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    padding: 7px 0;
-    border-bottom: 1px solid var(--border);
-    font-size: 13px;
-    color: var(--text-secondary);
-    line-height: 1.5;
-  }
-
-  .concept-list li:last-child { border-bottom: none; }
-
-  .concept-list li::before {
-    content: '›';
-    color: var(--accent);
-    font-weight: 700;
-    font-size: 15px;
-    margin-top: -1px;
-    flex-shrink: 0;
-  }
-
-  .concept-list li strong { color: var(--text-primary); }
-
-  /* ALERT BOXES */
-  .alert {
-    border-radius: 10px;
-    padding: 14px 16px;
-    margin-bottom: 16px;
-    font-size: 13px;
-    line-height: 1.6;
-    border-left: 3px solid;
-  }
-
-  .alert-warning {
-    background: var(--warning-bg);
-    border-color: var(--warning-border);
-    color: #d4a84b;
-  }
-
-  .alert-danger {
-    background: var(--danger-bg);
-    border-color: var(--danger-border);
-    color: #e06c75;
-  }
-
-  .alert-success {
-    background: var(--success-bg);
-    border-color: var(--success-border);
-    color: #5bc985;
-  }
-
-  .alert-info {
-    background: rgba(108, 99, 255, 0.06);
-    border-color: var(--accent);
-    color: #9b93ff;
-  }
-
-  .alert-title {
-    font-weight: 700;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 4px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  /* CODE BLOCKS */
-  .code-block {
-    background: var(--code-bg);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    margin-bottom: 16px;
-    overflow: hidden;
-  }
-
-  .code-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 16px;
-    border-bottom: 1px solid var(--border);
-    background: rgba(255,255,255,0.02);
-  }
-
-  .code-lang {
-    font-size: 10px;
-    font-weight: 600;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-  }
-
-  .code-dots {
-    display: flex;
-    gap: 5px;
-  }
-
-  .dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-  }
-
-  pre {
-    padding: 16px;
-    overflow-x: auto;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    line-height: 1.7;
-    color: #abb2bf;
-  }
-
-  .kw { color: #c678dd; }
-  .prop { color: #61afef; }
-  .val { color: #98c379; }
-  .sel { color: #e06c75; }
-  .com { color: #5c6370; font-style: italic; }
-  .num { color: #d19a66; }
-
-  /* TABLES */
-  .table-wrap {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-    margin-bottom: 16px;
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 12.5px;
-  }
-
-  th {
-    background: rgba(255,255,255,0.03);
-    color: var(--text-muted);
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 10px;
-    letter-spacing: 0.8px;
-    padding: 10px 16px;
-    text-align: left;
-    border-bottom: 1px solid var(--border);
-  }
-
-  td {
-    padding: 10px 16px;
-    border-bottom: 1px solid rgba(255,255,255,0.03);
-    color: var(--text-secondary);
-    vertical-align: top;
-    line-height: 1.5;
-  }
-
-  tr:last-child td { border-bottom: none; }
-  tr:hover td { background: rgba(255,255,255,0.015); }
-  td strong { color: var(--text-primary); }
-  td code {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: #61afef;
-    background: rgba(97,175,239,0.08);
-    padding: 1px 5px;
-    border-radius: 3px;
-  }
-
-  .full-width { grid-column: 1 / -1; }
-
-  .section-divider {
-    height: 1px;
-    background: var(--border);
-    margin: 24px 0;
-  }
-
-  .sub-heading {
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .sub-heading::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
-
-  .highlight-box {
-    background: linear-gradient(135deg, rgba(108,99,255,0.08), rgba(56,249,215,0.04));
-    border: 1px solid rgba(108,99,255,0.2);
-    border-radius: 10px;
-    padding: 14px 16px;
-    margin-bottom: 16px;
-    font-size: 13px;
-    color: var(--text-secondary);
-  }
-
-  .highlight-box strong { color: var(--accent); }
-
-  /* SEARCH HIGHLIGHT */
-  .search-highlight { background: rgba(247,151,30,0.25); border-radius: 2px; }
-
-  .no-results {
-    text-align: center;
-    padding: 60px 20px;
-    color: var(--text-muted);
-    font-size: 13px;
-  }
-
-  /* SCROLLBAR */
-  ::-webkit-scrollbar { width: 5px; height: 5px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
-
-  /* RESPONSIVE */
-    .grid-2, .grid-3 { grid-template-columns: 1fr; }
-  }
-
-  /* ── Mobile UI ── */
-  .ham-btn {
-    display: none;
-    position: fixed;
-    top: 15px;
-    right: 15px;
-    z-index: 1000;
-    width: 40px;
-    height: 40px;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--text-primary);
-    cursor: pointer;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-  }
-
-  .sidebar-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.5);
-    backdrop-filter: blur(4px);
-    z-index: 400;
-  }
-
-  @media (max-width: 768px) {
-    .ham-btn { display: flex; }
-    .sidebar {
-      position: fixed;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      transform: translateX(-100%);
-      transition: transform 0.3s ease;
-      z-index: 500;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS Mastery Dashboard</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #111118;
+      --bg-card: #16161f;
+      --bg-hover: #1e1e2a;
+      --accent: #6c63ff;
+      --accent-2: #ff6584;
+      --accent-3: #43e97b;
+      --accent-4: #f7971e;
+      --accent-5: #38f9d7;
+      --text-primary: #e8e8f0;
+      --text-secondary: #9090a8;
+      --text-muted: #5a5a72;
+      --border: #222230;
+      --border-active: #6c63ff;
+      --warning-bg: #1a1206;
+      --warning-border: #f7971e;
+      --danger-bg: #150608;
+      --danger-border: #ff6584;
+      --success-bg: #061209;
+      --success-border: #43e97b;
+      --code-bg: #0d0d14;
     }
-    .sidebar.open { transform: translateX(0); }
-    .sidebar-overlay.show { display: block; }
-    .main { padding-top: 60px; }
-    .section { padding: 20px 15px; }
-  }
-</style>
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      background: var(--bg-primary) !important;
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-primary) !important;
+      color: var(--text-primary);
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 260px;
+      min-width: 260px;
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      overflow-y: auto;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .sidebar-header {
+      padding: 24px 20px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-5));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 800;
+      color: white;
+    }
+
+    .sidebar-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.3px;
+    }
+
+    .sidebar-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+      padding-left: 46px;
+    }
+
+    .search-box {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .search-input {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px 10px 36px;
+      color: var(--text-primary);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-wrapper { position: relative; }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 14px;
+      pointer-events: none;
+    }
+
+    .search-input:focus { border-color: var(--accent); }
+
+    .nav-section {
+      padding: 12px 12px 8px;
+      flex: 1;
+    }
+
+    .nav-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      padding: 0 8px;
+      margin-bottom: 8px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 4px;
+      border: 1px solid transparent;
+      position: relative;
+    }
+
+    .nav-item:hover { background: var(--bg-hover); border-color: var(--border); }
+
+    .nav-item.active {
+      background: rgba(108, 99, 255, 0.12);
+      border-color: rgba(108, 99, 255, 0.3);
+    }
+
+    .nav-dot {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .nav-item.active .nav-dot { color: white; }
+
+    .nav-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+
+    .nav-item.active .nav-name, .nav-item:hover .nav-name { color: var(--text-primary); }
+
+    .nav-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+    .nav-badge {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-weight: 600;
+      background: rgba(108, 99, 255, 0.15);
+      color: var(--accent);
+    }
+
+    /* MAIN CONTENT */
+    .main {
+      flex: 1;
+      overflow-y: auto;
+      background: var(--bg-primary);
+      position: relative;
+    }
+
+    .section {
+      display: none;
+      padding: 40px 48px;
+      max-width: 1000px;
+      margin: 0 auto;
+      animation: fadeSlide 0.3s ease;
+    }
+
+    .section.active { display: block; }
+
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-hero {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      flex-shrink: 0;
+    }
+
+    .hero-text h1 {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+
+    .hero-text p {
+      font-size: 16px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-right: 8px;
+      margin-top: 12px;
+    }
+
+    /* CARDS */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      transition: all 0.2s;
+    }
+
+    .card:hover { border-color: rgba(108, 99, 255, 0.3); transform: translateY(-2px); }
+
+    .card-title {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+    }
+
+    /* KEY CONCEPTS */
+    .concept-list { list-style: none; }
+    .concept-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .concept-list li:last-child { border-bottom: none; }
+    .concept-list li::before {
+      content: '›';
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 18px;
+      margin-top: -2px;
+      flex-shrink: 0;
+    }
+
+    /* ALERT BOXES */
+    .alert {
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      font-size: 15px;
+      line-height: 1.6;
+      border-left: 4px solid;
+    }
+    .alert-warning { background: var(--warning-bg); border-color: var(--warning-border); color: #d4a84b; }
+    .alert-danger { background: var(--danger-bg); border-color: var(--danger-border); color: #e06c75; }
+    .alert-success { background: var(--success-bg); border-color: var(--success-border); color: #5bc985; }
+    .alert-info { background: rgba(108, 99, 255, 0.06); border-color: var(--accent); color: #9b93ff; }
+
+    /* CODE BLOCKS */
+    .code-block {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    .code-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .code-lang { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+    pre {
+      padding: 20px;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      line-height: 1.7;
+      color: #abb2bf;
+    }
+
+    /* TABLES */
+    .table-wrap {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow-x: auto;
+      margin-bottom: 20px;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 500px; }
+    th {
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text-muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 1px;
+      padding: 14px 20px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    td { padding: 14px 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.03); color: var(--text-secondary); vertical-align: top; }
+
+    .sub-heading {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 32px 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .sub-heading::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    /* RESPONSIVE */
+    .ham-btn {
+      display: none;
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      z-index: 1000;
+      width: 44px;
+      height: 44px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-primary);
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 400;
+    }
+
+    @media (max-width: 1024px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .ham-btn { display: flex; }
+      .sidebar {
+        position: fixed;
+        left: 0; top: 0; bottom: 0;
+        width: 280px;
+        transform: translateX(-100%);
+        z-index: 500;
+      }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-overlay.show { display: block; }
+      body { display: block; }
+      .main { padding-top: 70px; width: 100%; margin-left: 0 !important; height: 100vh; }
+      .section { padding: 24px 20px; }
+      .hero-text h1 { font-size: 26px; }
+      .hero-text p { font-size: 15px; }
+      .section-hero { flex-direction: column; gap: 15px; }
+      .card { padding: 20px; }
+    }
+  </style>
   <link rel="stylesheet" href="global.css" />
   <link rel="stylesheet" href="components.css" />
   <link rel="stylesheet" href="responsive.css" />
   <script defer src="app.js"></script>
 </head>
-<body>
-<button class="ham-btn" onclick="toggleSidebar()">☰</button>
-<div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
-<!-- SIDEBAR -->
-<nav class="sidebar" id="sidebar">
-  <div class="sidebar-header">
-    <div class="sidebar-logo">
-      <div class="logo-icon">CSS</div>
-      <span class="sidebar-title">CSS Mastery</span>
-    </div>
-    <div class="sidebar-subtitle">Web Programming · Exam Prep</div>
-  </div>
 
-  <div class="search-box">
-    <div class="search-wrapper">
-      <span class="search-icon">⌕</span>
-      <input type="text" class="search-input" id="searchInput" placeholder="Quick search...">
-    </div>
-  </div>
-
-  <div class="nav-section">
-    <div class="nav-label">Modules</div>
-
-    <div class="nav-item active" onclick="showSection(0)" id="nav-0">
-      <div class="nav-dot" style="background:rgba(108,99,255,0.15);color:#6c63ff;">①</div>
-      <div class="nav-text">
-        <div class="nav-name">Foundations & Selectors</div>
-        <div class="nav-sub">Syntax, Types, Cascade</div>
+<body class="ss-responsive ss-portal">
+  <button class="ham-btn" onclick="toggleSidebar()">☰</button>
+  <div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+  <!-- SIDEBAR -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <div class="logo-icon">CSS</div>
+        <span class="sidebar-title">CSS Mastery</span>
       </div>
-      <span class="nav-badge">Core</span>
+      <div class="sidebar-subtitle">Web Programming · Exam Prep</div>
     </div>
 
-    <div class="nav-item" onclick="showSection(1)" id="nav-1">
-      <div class="nav-dot" style="background:rgba(255,101,132,0.15);color:#ff6584;">②</div>
-      <div class="nav-text">
-        <div class="nav-name">Box Model & Layout</div>
-        <div class="nav-sub">Margin, Padding, Float</div>
+    <div class="search-box">
+      <div class="search-wrapper">
+        <span class="search-icon">⌕</span>
+        <input type="text" class="search-input" id="searchInput" placeholder="Quick search...">
       </div>
     </div>
 
-    <div class="nav-item" onclick="showSection(2)" id="nav-2">
-      <div class="nav-dot" style="background:rgba(67,233,123,0.15);color:#43e97b;">③</div>
-      <div class="nav-text">
-        <div class="nav-name">Positioning & Nav</div>
-        <div class="nav-sub">Position, Pseudo, NavBar</div>
+    <div class="nav-section">
+      <div class="nav-label">Modules</div>
+
+      <div class="nav-item active" onclick="showSection(0)" id="nav-0">
+        <div class="nav-dot" style="background:rgba(108,99,255,0.15);color:#6c63ff;">①</div>
+        <div class="nav-text">
+          <div class="nav-name">Foundations & Selectors</div>
+          <div class="nav-sub">Syntax, Types, Cascade</div>
+        </div>
+        <span class="nav-badge">Core</span>
+      </div>
+
+      <div class="nav-item" onclick="showSection(1)" id="nav-1">
+        <div class="nav-dot" style="background:rgba(255,101,132,0.15);color:#ff6584;">②</div>
+        <div class="nav-text">
+          <div class="nav-name">Box Model & Layout</div>
+          <div class="nav-sub">Margin, Padding, Float</div>
+        </div>
+      </div>
+
+      <div class="nav-item" onclick="showSection(2)" id="nav-2">
+        <div class="nav-dot" style="background:rgba(67,233,123,0.15);color:#43e97b;">③</div>
+        <div class="nav-text">
+          <div class="nav-name">Positioning & Nav</div>
+          <div class="nav-sub">Position, Pseudo, NavBar</div>
+        </div>
+      </div>
+
+      <div class="nav-item" onclick="showSection(3)" id="nav-3">
+        <div class="nav-dot" style="background:rgba(247,151,30,0.15);color:#f7971e;">④</div>
+        <div class="nav-text">
+          <div class="nav-name">Transforms & Animation</div>
+          <div class="nav-sub">Keyframes, Transitions</div>
+        </div>
+      </div>
+
+      <div class="nav-item" onclick="showSection(4)" id="nav-4">
+        <div class="nav-dot" style="background:rgba(56,249,215,0.15);color:#38f9d7;">⑤</div>
+        <div class="nav-text">
+          <div class="nav-name">Flexbox</div>
+          <div class="nav-sub">Container & Item Props</div>
+        </div>
       </div>
     </div>
 
-    <div class="nav-item" onclick="showSection(3)" id="nav-3">
-      <div class="nav-dot" style="background:rgba(247,151,30,0.15);color:#f7971e;">④</div>
-      <div class="nav-text">
-        <div class="nav-name">Transforms & Animation</div>
-        <div class="nav-sub">Keyframes, Transitions</div>
+    <div style="padding: 0 20px 16px;">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill" style="width:20%"></div>
       </div>
+      <div style="font-size:10px;color:var(--text-muted);text-align:center;">Module 1 of 5</div>
     </div>
+  </nav>
 
-    <div class="nav-item" onclick="showSection(4)" id="nav-4">
-      <div class="nav-dot" style="background:rgba(56,249,215,0.15);color:#38f9d7;">⑤</div>
-      <div class="nav-text">
-        <div class="nav-name">Flexbox</div>
-        <div class="nav-sub">Container & Item Props</div>
-      </div>
-    </div>
-  </div>
+  <!-- MAIN -->
+  <main class="main" id="mainContent">
 
-  <div style="padding: 0 20px 16px;">
-    <div class="progress-bar">
-      <div class="progress-fill" id="progressFill" style="width:20%"></div>
-    </div>
-    <div style="font-size:10px;color:var(--text-muted);text-align:center;">Module 1 of 5</div>
-  </div>
-</nav>
-
-<!-- MAIN -->
-<main class="main" id="mainContent">
-
-  <!-- ═══════════════════════════════════════════════════
+    <!-- ═══════════════════════════════════════════════════
        MODULE 1: FOUNDATIONS & SELECTORS
   ═══════════════════════════════════════════════════ -->
-  <div class="section active" id="section-0">
-    <div class="section-hero">
-      <div class="hero-icon" style="background:linear-gradient(135deg,rgba(108,99,255,0.2),rgba(56,249,215,0.1));color:#6c63ff;">⚡</div>
-      <div class="hero-text">
-        <h1 style="background:linear-gradient(135deg,#6c63ff,#38f9d7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Foundations & Selectors</h1>
-        <p>CSS (Cascading Style Sheets) controls presentation of HTML content. A styling language — NOT a programming language. Mastering selectors is the first step to CSS expertise.</p>
-        <span class="tag" style="background:rgba(108,99,255,0.12);color:#6c63ff;">Styling Language</span>
-        <span class="tag" style="background:rgba(56,249,215,0.12);color:#38f9d7;">Selector-Based</span>
-      </div>
-    </div>
-
-    <div class="grid-2">
-      <div class="card">
-        <div class="card-title"><span>📋</span> Key Concepts</div>
-        <ul class="concept-list">
-          <li><strong>CSS</strong> = Cascading Style Sheets — for presentation of HTML content</li>
-          <li><strong>Cascading</strong> = styles on parent elements inherit to all children</li>
-          <li><strong>Rule = Selector + Declaration</strong> (property: value;)</li>
-          <li><strong>3 CSS Types:</strong> Inline → Internal → External</li>
-          <li><strong>Specificity Order:</strong> Inline overrides Internal overrides External overrides Browser</li>
-          <li><strong>4 Selector Types:</strong> Element, Class (.), ID (#), Universal (*)</li>
-        </ul>
-      </div>
-
-      <div class="card">
-        <div class="card-title"><span>🔑</span> Selector Combinations</div>
-        <ul class="concept-list">
-          <li><strong>Multi-selector (no space):</strong> <code style="font-family:monospace;color:#61afef">#id.class</code> — element must have BOTH</li>
-          <li><strong>Ancestor-child (space):</strong> <code style="font-family:monospace;color:#61afef">.parent .child</code> — nested targeting</li>
-          <li><strong>Group (comma):</strong> <code style="font-family:monospace;color:#61afef">.a, .b {}</code> — share same rules</li>
-          <li><strong>Universal (*):</strong> targets every element — use for defaults only</li>
-          <li><strong>Class:</strong> reusable, element can have multiple classes</li>
-          <li><strong>ID:</strong> unique per page, element can only have ONE id</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="alert alert-warning">
-      <div class="alert-title">⚠ Critical Distinction</div>
-      An element can have <strong>multiple classes</strong> but only <strong>ONE ID</strong>. IDs must be unique across the entire webpage. Failing to respect this breaks both CSS specificity and JavaScript targeting.
-    </div>
-
-    <div class="alert alert-danger">
-      <div class="alert-title">🚫 Common Mistake</div>
-      CSS is <strong>NOT a programming language</strong> — it has no variables (vanilla), no loops, no conditionals. It is purely declarative. Confusing this in exam answers costs marks.
-    </div>
-
-    <div class="sub-heading">CSS Syntax & Types Reference</div>
-
-    <div class="grid-2">
-      <div class="code-block">
-        <div class="code-header">
-          <span class="code-lang">CSS Syntax</span>
-          <div class="code-dots"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div></div>
+    <div class="section active" id="section-0">
+      <div class="section-hero">
+        <div class="hero-icon"
+          style="background:linear-gradient(135deg,rgba(108,99,255,0.2),rgba(56,249,215,0.1));color:#6c63ff;">⚡</div>
+        <div class="hero-text">
+          <h1
+            style="background:linear-gradient(135deg,#6c63ff,#38f9d7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">
+            Foundations & Selectors</h1>
+          <p>CSS (Cascading Style Sheets) controls presentation of HTML content. A styling language — NOT a programming
+            language. Mastering selectors is the first step to CSS expertise.</p>
+          <span class="tag" style="background:rgba(108,99,255,0.12);color:#6c63ff;">Styling Language</span>
+          <span class="tag" style="background:rgba(56,249,215,0.12);color:#38f9d7;">Selector-Based</span>
         </div>
-        <pre><span class="com">/* Selector { property: value; } */</span>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title"><span>📋</span> Key Concepts</div>
+          <ul class="concept-list">
+            <li><strong>CSS</strong> = Cascading Style Sheets — for presentation of HTML content</li>
+            <li><strong>Cascading</strong> = styles on parent elements inherit to all children</li>
+            <li><strong>Rule = Selector + Declaration</strong> (property: value;)</li>
+            <li><strong>3 CSS Types:</strong> Inline → Internal → External</li>
+            <li><strong>Specificity Order:</strong> Inline overrides Internal overrides External overrides Browser</li>
+            <li><strong>4 Selector Types:</strong> Element, Class (.), ID (#), Universal (*)</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><span>🔑</span> Selector Combinations</div>
+          <ul class="concept-list">
+            <li><strong>Multi-selector (no space):</strong> <code
+                style="font-family:monospace;color:#61afef">#id.class</code> — element must have BOTH</li>
+            <li><strong>Ancestor-child (space):</strong> <code
+                style="font-family:monospace;color:#61afef">.parent .child</code> — nested targeting</li>
+            <li><strong>Group (comma):</strong> <code style="font-family:monospace;color:#61afef">.a, .b {}</code> —
+              share same rules</li>
+            <li><strong>Universal (*):</strong> targets every element — use for defaults only</li>
+            <li><strong>Class:</strong> reusable, element can have multiple classes</li>
+            <li><strong>ID:</strong> unique per page, element can only have ONE id</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="alert alert-warning">
+        <div class="alert-title">⚠ Critical Distinction</div>
+        An element can have <strong>multiple classes</strong> but only <strong>ONE ID</strong>. IDs must be unique
+        across the entire webpage. Failing to respect this breaks both CSS specificity and JavaScript targeting.
+      </div>
+
+      <div class="alert alert-danger">
+        <div class="alert-title">🚫 Common Mistake</div>
+        CSS is <strong>NOT a programming language</strong> — it has no variables (vanilla), no loops, no conditionals.
+        It is purely declarative. Confusing this in exam answers costs marks.
+      </div>
+
+      <div class="sub-heading">CSS Syntax & Types Reference</div>
+
+      <div class="grid-2">
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">CSS Syntax</span>
+            <div class="code-dots">
+              <div class="dot" style="background:#ff5f57"></div>
+              <div class="dot" style="background:#febc2e"></div>
+              <div class="dot" style="background:#28c840"></div>
+            </div>
+          </div>
+          <pre><span class="com">/* Selector { property: value; } */</span>
 
 <span class="sel">h1</span> {
   <span class="prop">color</span>: <span class="val">blue</span>;
@@ -772,14 +631,18 @@
 
 <span class="com">/* Universal Selector */</span>
 <span class="sel">*</span> { <span class="prop">font-family</span>: <span class="val">Arial</span>; }</pre>
-      </div>
-
-      <div class="code-block">
-        <div class="code-header">
-          <span class="code-lang">3 Ways to Apply CSS</span>
-          <div class="code-dots"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div></div>
         </div>
-        <pre><span class="com">/* 1. INLINE (highest priority) */</span>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">3 Ways to Apply CSS</span>
+            <div class="code-dots">
+              <div class="dot" style="background:#ff5f57"></div>
+              <div class="dot" style="background:#febc2e"></div>
+              <div class="dot" style="background:#28c840"></div>
+            </div>
+          </div>
+          <pre><span class="com">/* 1. INLINE (highest priority) */</span>
 <span class="kw">&lt;h1</span> <span class="prop">style</span>=<span class="val">"color:blue;"</span><span class="kw">&gt;</span>Title<span class="kw">&lt;/h1&gt;</span>
 
 <span class="com">/* 2. INTERNAL (in &lt;head&gt;) */</span>
@@ -790,83 +653,120 @@
 <span class="com">/* 3. EXTERNAL (separate .css file) */</span>
 <span class="kw">&lt;link</span> <span class="prop">rel</span>=<span class="val">"stylesheet"</span> 
       <span class="prop">href</span>=<span class="val">"style.css"</span><span class="kw">&gt;</span></pre>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>CSS Type</th>
+              <th>Location</th>
+              <th>Scope</th>
+              <th>Priority</th>
+              <th>Best For</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Inline</strong></td>
+              <td>Inside HTML tag <code>style=""</code></td>
+              <td>Single element</td>
+              <td><span style="color:#43e97b">HIGHEST</span></td>
+              <td>Quick one-off fixes</td>
+            </tr>
+            <tr>
+              <td><strong>Internal</strong></td>
+              <td><code>&lt;style&gt;</code> in <code>&lt;head&gt;</code></td>
+              <td>One page</td>
+              <td>Medium</td>
+              <td>Single-page styles</td>
+            </tr>
+            <tr>
+              <td><strong>External</strong></td>
+              <td>Separate <code>.css</code> file</td>
+              <td>Entire site</td>
+              <td>Lowest</td>
+              <td>⭐ Recommended always</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="alert alert-success">
+        <div class="alert-title">✓ Advantages of CSS</div>
+        <strong>Saves Time</strong> (write once, apply everywhere) · <strong>Faster Page Loads</strong> · <strong>Easy
+          Maintenance</strong> (change one file, update whole site) · <strong>Mobile Device Compatibility</strong> ·
+        <strong>Superior Styles</strong> vs HTML attributes
       </div>
     </div>
 
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>CSS Type</th><th>Location</th><th>Scope</th><th>Priority</th><th>Best For</th></tr></thead>
-        <tbody>
-          <tr><td><strong>Inline</strong></td><td>Inside HTML tag <code>style=""</code></td><td>Single element</td><td><span style="color:#43e97b">HIGHEST</span></td><td>Quick one-off fixes</td></tr>
-          <tr><td><strong>Internal</strong></td><td><code>&lt;style&gt;</code> in <code>&lt;head&gt;</code></td><td>One page</td><td>Medium</td><td>Single-page styles</td></tr>
-          <tr><td><strong>External</strong></td><td>Separate <code>.css</code> file</td><td>Entire site</td><td>Lowest</td><td>⭐ Recommended always</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="alert alert-success">
-      <div class="alert-title">✓ Advantages of CSS</div>
-      <strong>Saves Time</strong> (write once, apply everywhere) · <strong>Faster Page Loads</strong> · <strong>Easy Maintenance</strong> (change one file, update whole site) · <strong>Mobile Device Compatibility</strong> · <strong>Superior Styles</strong> vs HTML attributes
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════════════
+    <!-- ═══════════════════════════════════════════════════
        MODULE 2: BOX MODEL & LAYOUT
   ═══════════════════════════════════════════════════ -->
-  <div class="section" id="section-1">
-    <div class="section-hero">
-      <div class="hero-icon" style="background:rgba(255,101,132,0.12);color:#ff6584;">📦</div>
-      <div class="hero-text">
-        <h1 style="background:linear-gradient(135deg,#ff6584,#f7971e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Box Model & Layout Properties</h1>
-        <p>Every HTML element is a box. Mastering the box model — margins, padding, borders, and sizing — is fundamental to all CSS layout work.</p>
-        <span class="tag" style="background:rgba(255,101,132,0.12);color:#ff6584;">Box Model</span>
-        <span class="tag" style="background:rgba(247,151,30,0.12);color:#f7971e;">Text Formatting</span>
-        <span class="tag" style="background:rgba(67,233,123,0.12);color:#43e97b;">Background</span>
-      </div>
-    </div>
-
-    <div class="grid-2">
-      <div class="card">
-        <div class="card-title"><span>📋</span> Key Box Model Concepts</div>
-        <ul class="concept-list">
-          <li><strong>Content:</strong> the actual text/image inside the element</li>
-          <li><strong>Padding:</strong> space BETWEEN content and border (inside)</li>
-          <li><strong>Border:</strong> surrounds padding and content</li>
-          <li><strong>Margin:</strong> space OUTSIDE the border (between elements)</li>
-          <li><strong>border-radius:</strong> rounds the corners of the border box</li>
-          <li><strong>border-collapse:</strong> collapse | separate — for tables</li>
-        </ul>
-      </div>
-
-      <div class="card">
-        <div class="card-title"><span>🎨</span> Text & Font Properties</div>
-        <ul class="concept-list">
-          <li><strong>font-weight:</strong> lighter | normal | bold | bolder | 100–900</li>
-          <li><strong>font-style:</strong> normal | italic | oblique</li>
-          <li><strong>font-variant:</strong> normal | small-caps</li>
-          <li><strong>text-indent:</strong> indents first line (negative values push left)</li>
-          <li><strong>letter-spacing:</strong> space between characters</li>
-          <li><strong>line-height:</strong> space between lines (no negative values)</li>
-          <li><strong>word-spacing:</strong> space between words (negative allowed)</li>
-          <li><strong>white-space:</strong> nowrap | pre | pre-line | pre-wrap</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="alert alert-warning">
-      <div class="alert-title">⚠ Padding vs Margin — Know the Difference!</div>
-      <strong>Padding</strong> = space INSIDE the border (affects element's background area). <strong>Margin</strong> = space OUTSIDE the border (transparent, between elements). Both can be set individually: <code style="font-family:monospace">padding-top</code>, <code style="font-family:monospace">margin-left</code>, etc.
-    </div>
-
-    <div class="sub-heading">Box Model Code Reference</div>
-
-    <div class="grid-2">
-      <div class="code-block">
-        <div class="code-header">
-          <span class="code-lang">Border Properties</span>
-          <div class="code-dots"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div></div>
+    <div class="section" id="section-1">
+      <div class="section-hero">
+        <div class="hero-icon" style="background:rgba(255,101,132,0.12);color:#ff6584;">📦</div>
+        <div class="hero-text">
+          <h1
+            style="background:linear-gradient(135deg,#ff6584,#f7971e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">
+            Box Model & Layout Properties</h1>
+          <p>Every HTML element is a box. Mastering the box model — margins, padding, borders, and sizing — is
+            fundamental to all CSS layout work.</p>
+          <span class="tag" style="background:rgba(255,101,132,0.12);color:#ff6584;">Box Model</span>
+          <span class="tag" style="background:rgba(247,151,30,0.12);color:#f7971e;">Text Formatting</span>
+          <span class="tag" style="background:rgba(67,233,123,0.12);color:#43e97b;">Background</span>
         </div>
-        <pre><span class="sel">p</span> {
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title"><span>📋</span> Key Box Model Concepts</div>
+          <ul class="concept-list">
+            <li><strong>Content:</strong> the actual text/image inside the element</li>
+            <li><strong>Padding:</strong> space BETWEEN content and border (inside)</li>
+            <li><strong>Border:</strong> surrounds padding and content</li>
+            <li><strong>Margin:</strong> space OUTSIDE the border (between elements)</li>
+            <li><strong>border-radius:</strong> rounds the corners of the border box</li>
+            <li><strong>border-collapse:</strong> collapse | separate — for tables</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><span>🎨</span> Text & Font Properties</div>
+          <ul class="concept-list">
+            <li><strong>font-weight:</strong> lighter | normal | bold | bolder | 100–900</li>
+            <li><strong>font-style:</strong> normal | italic | oblique</li>
+            <li><strong>font-variant:</strong> normal | small-caps</li>
+            <li><strong>text-indent:</strong> indents first line (negative values push left)</li>
+            <li><strong>letter-spacing:</strong> space between characters</li>
+            <li><strong>line-height:</strong> space between lines (no negative values)</li>
+            <li><strong>word-spacing:</strong> space between words (negative allowed)</li>
+            <li><strong>white-space:</strong> nowrap | pre | pre-line | pre-wrap</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="alert alert-warning">
+        <div class="alert-title">⚠ Padding vs Margin — Know the Difference!</div>
+        <strong>Padding</strong> = space INSIDE the border (affects element's background area). <strong>Margin</strong>
+        = space OUTSIDE the border (transparent, between elements). Both can be set individually: <code
+          style="font-family:monospace">padding-top</code>, <code style="font-family:monospace">margin-left</code>, etc.
+      </div>
+
+      <div class="sub-heading">Box Model Code Reference</div>
+
+      <div class="grid-2">
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">Border Properties</span>
+            <div class="code-dots">
+              <div class="dot" style="background:#ff5f57"></div>
+              <div class="dot" style="background:#febc2e"></div>
+              <div class="dot" style="background:#28c840"></div>
+            </div>
+          </div>
+          <pre><span class="sel">p</span> {
   <span class="prop">border</span>: <span class="num">2px</span> <span class="val">solid</span> <span class="val">powderblue</span>;
   <span class="prop">border-radius</span>: <span class="num">10px</span>;
   <span class="prop">border-top-style</span>: <span class="val">dotted</span>;
@@ -875,14 +775,18 @@
   <span class="prop">border-left-width</span>: <span class="num">10px</span>;
   <span class="prop">border-left-color</span>: <span class="val">silver</span>;
 }</pre>
-      </div>
-
-      <div class="code-block">
-        <div class="code-header">
-          <span class="code-lang">Padding & Margin</span>
-          <div class="code-dots"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div></div>
         </div>
-        <pre><span class="sel">div</span> {
+
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">Padding & Margin</span>
+            <div class="code-dots">
+              <div class="dot" style="background:#ff5f57"></div>
+              <div class="dot" style="background:#febc2e"></div>
+              <div class="dot" style="background:#28c840"></div>
+            </div>
+          </div>
+          <pre><span class="sel">div</span> {
   <span class="prop">padding</span>: <span class="num">30px</span>;          <span class="com">/* all sides */</span>
   <span class="prop">padding-top</span>: <span class="num">10px</span>;    <span class="com">/* top only */</span>
   <span class="prop">margin</span>: <span class="num">50px</span>;           <span class="com">/* all sides */</span>
@@ -891,17 +795,21 @@
   <span class="com">/* Shorthand: top right bottom left */</span>
   <span class="prop">margin</span>: <span class="num">10px 20px 10px 20px</span>;
 }</pre>
+        </div>
       </div>
-    </div>
 
-    <div class="sub-heading">Background Properties</div>
+      <div class="sub-heading">Background Properties</div>
 
-    <div class="code-block">
-      <div class="code-header">
-        <span class="code-lang">Background Styling</span>
-        <div class="code-dots"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div></div>
-      </div>
-      <pre><span class="sel">body</span> {
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang">Background Styling</span>
+          <div class="code-dots">
+            <div class="dot" style="background:#ff5f57"></div>
+            <div class="dot" style="background:#febc2e"></div>
+            <div class="dot" style="background:#28c840"></div>
+          </div>
+        </div>
+        <pre><span class="sel">body</span> {
   <span class="prop">background-image</span>: <span class="val">url("myBackground.jpg")</span>;
   <span class="prop">background-repeat</span>: <span class="val">no-repeat</span>;        <span class="com">/* no-repeat | repeat | repeat-x | repeat-y */</span>
   <span class="prop">background-attachment</span>: <span class="val">fixed</span>;          <span class="com">/* fixed | scroll */</span>
@@ -912,83 +820,126 @@
   <span class="prop">background</span>: <span class="val">linear-gradient(skyblue, lightgreen)</span>;
   <span class="prop">background</span>: <span class="val">linear-gradient(to right, skyblue, lightgreen)</span>;
 }</pre>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Property</th>
+              <th>Key Values</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>font-weight</code></td>
+              <td>lighter | normal | <strong>bold</strong> | bolder | 100-900</td>
+              <td>Not all browsers support numeric</td>
+            </tr>
+            <tr>
+              <td><code>line-height</code></td>
+              <td>normal | number | length | initial</td>
+              <td>❌ Negative values NOT allowed</td>
+            </tr>
+            <tr>
+              <td><code>word-spacing</code></td>
+              <td>normal | length | initial</td>
+              <td>✅ Negative values allowed</td>
+            </tr>
+            <tr>
+              <td><code>text-indent</code></td>
+              <td>px | em | % (positive or negative)</td>
+              <td>Negative = indent left (outdent)</td>
+            </tr>
+            <tr>
+              <td><code>white-space</code></td>
+              <td>normal | nowrap | pre | pre-line | pre-wrap</td>
+              <td>nowrap prevents text wrapping</td>
+            </tr>
+            <tr>
+              <td><code>float</code></td>
+              <td>left | right | none</td>
+              <td>Use <code>clear: both</code> to stop float</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="alert alert-info">
+        <div class="alert-title">💡 Float Property</div>
+        <code style="font-family:monospace">float</code> positions an element left or right of its container. Popular
+        for wrapping text around images. Use <code
+          style="font-family:monospace">clear: none | left | right | both | initial | inherit</code> on subsequent
+        elements to prevent wrapping interference.
+      </div>
     </div>
 
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Property</th><th>Key Values</th><th>Notes</th></tr></thead>
-        <tbody>
-          <tr><td><code>font-weight</code></td><td>lighter | normal | <strong>bold</strong> | bolder | 100-900</td><td>Not all browsers support numeric</td></tr>
-          <tr><td><code>line-height</code></td><td>normal | number | length | initial</td><td>❌ Negative values NOT allowed</td></tr>
-          <tr><td><code>word-spacing</code></td><td>normal | length | initial</td><td>✅ Negative values allowed</td></tr>
-          <tr><td><code>text-indent</code></td><td>px | em | % (positive or negative)</td><td>Negative = indent left (outdent)</td></tr>
-          <tr><td><code>white-space</code></td><td>normal | nowrap | pre | pre-line | pre-wrap</td><td>nowrap prevents text wrapping</td></tr>
-          <tr><td><code>float</code></td><td>left | right | none</td><td>Use <code>clear: both</code> to stop float</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="alert alert-info">
-      <div class="alert-title">💡 Float Property</div>
-      <code style="font-family:monospace">float</code> positions an element left or right of its container. Popular for wrapping text around images. Use <code style="font-family:monospace">clear: none | left | right | both | initial | inherit</code> on subsequent elements to prevent wrapping interference.
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════════════
+    <!-- ═══════════════════════════════════════════════════
        MODULE 3: POSITIONING & NAVIGATION
   ═══════════════════════════════════════════════════ -->
-  <div class="section" id="section-2">
-    <div class="section-hero">
-      <div class="hero-icon" style="background:rgba(67,233,123,0.12);color:#43e97b;">🧭</div>
-      <div class="hero-text">
-        <h1 style="background:linear-gradient(135deg,#43e97b,#38f9d7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Positioning, Pseudo-Elements & Navigation</h1>
-        <p>CSS positioning controls exact element placement. Pseudo-elements style specific parts of elements. Together with navigation bars, these form the backbone of web page structure.</p>
-        <span class="tag" style="background:rgba(67,233,123,0.12);color:#43e97b;">CSS Position</span>
-        <span class="tag" style="background:rgba(56,249,215,0.12);color:#38f9d7;">Pseudo-Elements</span>
-        <span class="tag" style="background:rgba(247,151,30,0.12);color:#f7971e;">NavBar</span>
-      </div>
-    </div>
-
-    <div class="grid-2">
-      <div class="card">
-        <div class="card-title"><span>📍</span> CSS Position Values</div>
-        <ul class="concept-list">
-          <li><strong>static</strong> — default, normal document flow, top/left have no effect</li>
-          <li><strong>relative</strong> — offset from its OWN normal position</li>
-          <li><strong>absolute</strong> — positioned relative to nearest POSITIONED ancestor</li>
-          <li><strong>fixed</strong> — positioned relative to the VIEWPORT (stays on scroll)</li>
-          <li><strong>sticky</strong> — switches between relative and fixed based on scroll</li>
-        </ul>
-      </div>
-
-      <div class="card">
-        <div class="card-title"><span>✨</span> Pseudo-Elements Reference</div>
-        <ul class="concept-list">
-          <li><strong>::first-line</strong> — styles first line of block-level text</li>
-          <li><strong>::first-letter</strong> — styles first character of block-level text</li>
-          <li><strong>::before</strong> — inserts content BEFORE element content</li>
-          <li><strong>::after</strong> — inserts content AFTER element content</li>
-          <li><strong>::marker</strong> — styles list item markers/bullets</li>
-          <li><strong>::selection</strong> — styles user-selected/highlighted text</li>
-          <li><strong>::placeholder</strong> — styles input placeholder text</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="alert alert-warning">
-      <div class="alert-title">⚠ Position: Absolute — Key Rule</div>
-      <code style="font-family:monospace">position: absolute</code> positions an element relative to its <strong>nearest positioned ancestor</strong> (any ancestor with position ≠ static). If no such ancestor exists, it positions relative to the <code style="font-family:monospace">&lt;html&gt;</code> element. The parent MUST have a position set!
-    </div>
-
-    <div class="sub-heading">Positioning Code Examples</div>
-
-    <div class="grid-2">
-      <div class="code-block">
-        <div class="code-header">
-          <span class="code-lang">Position Property</span>
-          <div class="code-dots"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div></div>
+    <div class="section" id="section-2">
+      <div class="section-hero">
+        <div class="hero-icon" style="background:rgba(67,233,123,0.12);color:#43e97b;">🧭</div>
+        <div class="hero-text">
+          <h1
+            style="background:linear-gradient(135deg,#43e97b,#38f9d7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">
+            Positioning, Pseudo-Elements & Navigation</h1>
+          <p>CSS positioning controls exact element placement. Pseudo-elements style specific parts of elements.
+            Together with navigation bars, these form the backbone of web page structure.</p>
+          <span class="tag" style="background:rgba(67,233,123,0.12);color:#43e97b;">CSS Position</span>
+          <span class="tag" style="background:rgba(56,249,215,0.12);color:#38f9d7;">Pseudo-Elements</span>
+          <span class="tag" style="background:rgba(247,151,30,0.12);color:#f7971e;">NavBar</span>
         </div>
-        <pre><span class="com">/* Relative - offset from self */</span>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title"><span>📍</span> CSS Position Values</div>
+          <ul class="concept-list">
+            <li><strong>static</strong> — default, normal document flow, top/left have no effect</li>
+            <li><strong>relative</strong> — offset from its OWN normal position</li>
+            <li><strong>absolute</strong> — positioned relative to nearest POSITIONED ancestor</li>
+            <li><strong>fixed</strong> — positioned relative to the VIEWPORT (stays on scroll)</li>
+            <li><strong>sticky</strong> — switches between relative and fixed based on scroll</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><span>✨</span> Pseudo-Elements Reference</div>
+          <ul class="concept-list">
+            <li><strong>::first-line</strong> — styles first line of block-level text</li>
+            <li><strong>::first-letter</strong> — styles first character of block-level text</li>
+            <li><strong>::before</strong> — inserts content BEFORE element content</li>
+            <li><strong>::after</strong> — inserts content AFTER element content</li>
+            <li><strong>::marker</strong> — styles list item markers/bullets</li>
+            <li><strong>::selection</strong> — styles user-selected/highlighted text</li>
+            <li><strong>::placeholder</strong> — styles input placeholder text</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="alert alert-warning">
+        <div class="alert-title">⚠ Position: Absolute — Key Rule</div>
+        <code style="font-family:monospace">position: absolute</code> positions an element relative to its
+        <strong>nearest positioned ancestor</strong> (any ancestor with position ≠ static). If no such ancestor exists,
+        it positions relative to the <code style="font-family:monospace">&lt;html&gt;</code> element. The parent MUST
+        have a position set!
+      </div>
+
+      <div class="sub-heading">Positioning Code Examples</div>
+
+      <div class="grid-2">
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">Position Property</span>
+            <div class="code-dots">
+              <div class="dot" style="background:#ff5f57"></div>
+              <div class="dot" style="background:#febc2e"></div>
+              <div class="dot" style="background:#28c840"></div>
+            </div>
+          </div>
+          <pre><span class="com">/* Relative - offset from self */</span>
 <span class="sel">#box1</span> {
   <span class="prop">position</span>: <span class="val">relative</span>;
   <span class="prop">left</span>: <span class="num">100px</span>;
@@ -1001,14 +952,18 @@
   <span class="prop">top</span>: <span class="num">100px</span>;
   <span class="prop">left</span>: <span class="num">100px</span>;
 }</pre>
-      </div>
-
-      <div class="code-block">
-        <div class="code-header">
-          <span class="code-lang">Pseudo-Elements</span>
-          <div class="code-dots"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div></div>
         </div>
-        <pre><span class="com">/* Syntax: selector::pseudo-element {} */</span>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">Pseudo-Elements</span>
+            <div class="code-dots">
+              <div class="dot" style="background:#ff5f57"></div>
+              <div class="dot" style="background:#febc2e"></div>
+              <div class="dot" style="background:#28c840"></div>
+            </div>
+          </div>
+          <pre><span class="com">/* Syntax: selector::pseudo-element {} */</span>
 
 <span class="sel">p::first-line</span> {
   <span class="prop">color</span>: <span class="val">#ff0000</span>;
@@ -1022,17 +977,21 @@
 
 <span class="sel">p::before</span> { <span class="prop">content</span>: <span class="val">'★ '</span>; }
 <span class="sel">p::after</span>  { <span class="prop">content</span>: <span class="val">' ★'</span>; }</pre>
+        </div>
       </div>
-    </div>
 
-    <div class="sub-heading">Navigation Bar Patterns</div>
+      <div class="sub-heading">Navigation Bar Patterns</div>
 
-    <div class="code-block">
-      <div class="code-header">
-        <span class="code-lang">Horizontal NavBar (Floating Method)</span>
-        <div class="code-dots"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div></div>
-      </div>
-      <pre><span class="sel">ul</span> { <span class="prop">list-style-type</span>: <span class="val">none</span>; <span class="prop">margin</span>: <span class="num">0</span>; <span class="prop">padding</span>: <span class="num">0</span>; 
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang">Horizontal NavBar (Floating Method)</span>
+          <div class="code-dots">
+            <div class="dot" style="background:#ff5f57"></div>
+            <div class="dot" style="background:#febc2e"></div>
+            <div class="dot" style="background:#28c840"></div>
+          </div>
+        </div>
+        <pre><span class="sel">ul</span> { <span class="prop">list-style-type</span>: <span class="val">none</span>; <span class="prop">margin</span>: <span class="num">0</span>; <span class="prop">padding</span>: <span class="num">0</span>; 
      <span class="prop">overflow</span>: <span class="val">hidden</span>; <span class="prop">background-color</span>: <span class="val">#333</span>; }
 
 <span class="sel">li</span> { <span class="prop">float</span>: <span class="val">left</span>; }            <span class="com">/* horizontal layout */</span>
@@ -1045,84 +1004,123 @@
 
 <span class="com">/* Right-align a link */</span>
 <span class="kw">&lt;li</span> <span class="prop">style</span>=<span class="val">"float:right"</span><span class="kw">&gt;&lt;a href="#about"&gt;</span>About<span class="kw">&lt;/a&gt;&lt;/li&gt;</span></pre>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>NavBar Type</th>
+              <th>Key CSS Used</th>
+              <th>Notable Feature</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Vertical</strong></td>
+              <td><code>display: block</code> on <code>li a</code></td>
+              <td>Each link fills full width</td>
+            </tr>
+            <tr>
+              <td><strong>Horizontal (inline)</strong></td>
+              <td><code>display: inline</code> on <code>li</code></td>
+              <td>No height/width control</td>
+            </tr>
+            <tr>
+              <td><strong>Horizontal (float)</strong></td>
+              <td><code>float: left</code> on <code>li</code></td>
+              <td>⭐ Allows padding/height/width</td>
+            </tr>
+            <tr>
+              <td><strong>Fixed Top/Bottom</strong></td>
+              <td><code>position: fixed; top: 0</code></td>
+              <td>Stays visible on scroll</td>
+            </tr>
+            <tr>
+              <td><strong>Full-height Sidebar</strong></td>
+              <td><code>position: fixed; height: 100%</code></td>
+              <td>Use <code>overflow: auto</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="alert alert-info">
+        <div class="alert-title">💡 CSS Pseudo-Classes for Links</div>
+        <code style="font-family:monospace">a:link</code> (unvisited) · <code
+          style="font-family:monospace">a:visited</code> · <code style="font-family:monospace">a:hover</code> (mouse
+        over) · <code style="font-family:monospace">a:active</code> (being clicked). Use <code
+          style="font-family:monospace">:not(.active)</code> to apply hover only to non-active links. Always keep this
+        order: LVHA!
+      </div>
     </div>
 
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>NavBar Type</th><th>Key CSS Used</th><th>Notable Feature</th></tr></thead>
-        <tbody>
-          <tr><td><strong>Vertical</strong></td><td><code>display: block</code> on <code>li a</code></td><td>Each link fills full width</td></tr>
-          <tr><td><strong>Horizontal (inline)</strong></td><td><code>display: inline</code> on <code>li</code></td><td>No height/width control</td></tr>
-          <tr><td><strong>Horizontal (float)</strong></td><td><code>float: left</code> on <code>li</code></td><td>⭐ Allows padding/height/width</td></tr>
-          <tr><td><strong>Fixed Top/Bottom</strong></td><td><code>position: fixed; top: 0</code></td><td>Stays visible on scroll</td></tr>
-          <tr><td><strong>Full-height Sidebar</strong></td><td><code>position: fixed; height: 100%</code></td><td>Use <code>overflow: auto</code></td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="alert alert-info">
-      <div class="alert-title">💡 CSS Pseudo-Classes for Links</div>
-      <code style="font-family:monospace">a:link</code> (unvisited) · <code style="font-family:monospace">a:visited</code> · <code style="font-family:monospace">a:hover</code> (mouse over) · <code style="font-family:monospace">a:active</code> (being clicked). Use <code style="font-family:monospace">:not(.active)</code> to apply hover only to non-active links. Always keep this order: LVHA!
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════════════
+    <!-- ═══════════════════════════════════════════════════
        MODULE 4: TRANSFORMS & ANIMATION
   ═══════════════════════════════════════════════════ -->
-  <div class="section" id="section-3">
-    <div class="section-hero">
-      <div class="hero-icon" style="background:rgba(247,151,30,0.12);color:#f7971e;">🎬</div>
-      <div class="hero-text">
-        <h1 style="background:linear-gradient(135deg,#f7971e,#ff6584);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Transforms & Animation</h1>
-        <p>CSS Transforms let you move, rotate, scale, and skew elements. CSS Animations let elements gradually change styles over time using keyframes — no JavaScript required.</p>
-        <span class="tag" style="background:rgba(247,151,30,0.12);color:#f7971e;">Transform</span>
-        <span class="tag" style="background:rgba(255,101,132,0.12);color:#ff6584;">@keyframes</span>
-        <span class="tag" style="background:rgba(108,99,255,0.12);color:#6c63ff;">Animation</span>
-      </div>
-    </div>
-
-    <div class="grid-2">
-      <div class="card">
-        <div class="card-title"><span>🔄</span> Transform Functions</div>
-        <ul class="concept-list">
-          <li><strong>translate(x,y)</strong> — moves element from current position</li>
-          <li><strong>rotate(deg)</strong> — rotates clockwise (+) or counter-clockwise (-)</li>
-          <li><strong>scale(n)</strong> — resizes element (0.5 = 50%, -1 = flip)</li>
-          <li><strong>scaleX(n)</strong> / <strong>scaleY(n)</strong> — scale one axis only</li>
-          <li><strong>skew(xdeg, ydeg)</strong> — skews on X and Y axes</li>
-          <li><strong>skewX(deg)</strong> / <strong>skewY(deg)</strong> — skew one axis only</li>
-          <li><strong>matrix()</strong> — combines all transforms in one function</li>
-        </ul>
-      </div>
-
-      <div class="card">
-        <div class="card-title"><span>⏱</span> Animation Properties</div>
-        <ul class="concept-list">
-          <li><strong>animation-name</strong> — references @keyframes name</li>
-          <li><strong>animation-duration</strong> — time in seconds (default: 0s)</li>
-          <li><strong>animation-delay</strong> — delay before start (negative = starts mid)</li>
-          <li><strong>animation-iteration-count</strong> — number | <code>infinite</code></li>
-          <li><strong>animation-direction</strong> — normal | reverse | alternate</li>
-          <li><strong>animation-timing-function</strong> — ease | linear | ease-in | ease-out</li>
-          <li><strong>animation-fill-mode</strong> — none | forwards | backwards | both</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="alert alert-danger">
-      <div class="alert-title">🚫 Animation Default Behavior</div>
-      By default, when an animation finishes it <strong>returns to its original style</strong>. To keep the final state, set <code style="font-family:monospace">animation-fill-mode: forwards</code>. Default duration is <strong>0s</strong> — always set animation-duration or nothing will play!
-    </div>
-
-    <div class="sub-heading">Transform Code Examples</div>
-
-    <div class="grid-2">
-      <div class="code-block">
-        <div class="code-header">
-          <span class="code-lang">CSS Transforms</span>
-          <div class="code-dots"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div></div>
+    <div class="section" id="section-3">
+      <div class="section-hero">
+        <div class="hero-icon" style="background:rgba(247,151,30,0.12);color:#f7971e;">🎬</div>
+        <div class="hero-text">
+          <h1
+            style="background:linear-gradient(135deg,#f7971e,#ff6584);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">
+            Transforms & Animation</h1>
+          <p>CSS Transforms let you move, rotate, scale, and skew elements. CSS Animations let elements gradually change
+            styles over time using keyframes — no JavaScript required.</p>
+          <span class="tag" style="background:rgba(247,151,30,0.12);color:#f7971e;">Transform</span>
+          <span class="tag" style="background:rgba(255,101,132,0.12);color:#ff6584;">@keyframes</span>
+          <span class="tag" style="background:rgba(108,99,255,0.12);color:#6c63ff;">Animation</span>
         </div>
-        <pre><span class="com">/* translate: move 50px right, 20px down */</span>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title"><span>🔄</span> Transform Functions</div>
+          <ul class="concept-list">
+            <li><strong>translate(x,y)</strong> — moves element from current position</li>
+            <li><strong>rotate(deg)</strong> — rotates clockwise (+) or counter-clockwise (-)</li>
+            <li><strong>scale(n)</strong> — resizes element (0.5 = 50%, -1 = flip)</li>
+            <li><strong>scaleX(n)</strong> / <strong>scaleY(n)</strong> — scale one axis only</li>
+            <li><strong>skew(xdeg, ydeg)</strong> — skews on X and Y axes</li>
+            <li><strong>skewX(deg)</strong> / <strong>skewY(deg)</strong> — skew one axis only</li>
+            <li><strong>matrix()</strong> — combines all transforms in one function</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><span>⏱</span> Animation Properties</div>
+          <ul class="concept-list">
+            <li><strong>animation-name</strong> — references @keyframes name</li>
+            <li><strong>animation-duration</strong> — time in seconds (default: 0s)</li>
+            <li><strong>animation-delay</strong> — delay before start (negative = starts mid)</li>
+            <li><strong>animation-iteration-count</strong> — number | <code>infinite</code></li>
+            <li><strong>animation-direction</strong> — normal | reverse | alternate</li>
+            <li><strong>animation-timing-function</strong> — ease | linear | ease-in | ease-out</li>
+            <li><strong>animation-fill-mode</strong> — none | forwards | backwards | both</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="alert alert-danger">
+        <div class="alert-title">🚫 Animation Default Behavior</div>
+        By default, when an animation finishes it <strong>returns to its original style</strong>. To keep the final
+        state, set <code style="font-family:monospace">animation-fill-mode: forwards</code>. Default duration is
+        <strong>0s</strong> — always set animation-duration or nothing will play!
+      </div>
+
+      <div class="sub-heading">Transform Code Examples</div>
+
+      <div class="grid-2">
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">CSS Transforms</span>
+            <div class="code-dots">
+              <div class="dot" style="background:#ff5f57"></div>
+              <div class="dot" style="background:#febc2e"></div>
+              <div class="dot" style="background:#28c840"></div>
+            </div>
+          </div>
+          <pre><span class="com">/* translate: move 50px right, 20px down */</span>
 <span class="sel">div</span> { <span class="prop">transform</span>: <span class="val">translate(50px, 20px)</span>; }
 
 <span class="com">/* rotate: 20 degrees clockwise */</span>
@@ -1140,14 +1138,18 @@
 <span class="sel">div</span> { <span class="prop">translate</span>: <span class="val">25px 25px</span>; }
 <span class="sel">div</span> { <span class="prop">rotate</span>: <span class="val">20deg</span>; }
 <span class="sel">div</span> { <span class="prop">scale</span>: <span class="val">0.5</span>; }</pre>
-      </div>
-
-      <div class="code-block">
-        <div class="code-header">
-          <span class="code-lang">CSS Animation</span>
-          <div class="code-dots"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div></div>
         </div>
-        <pre><span class="sel">div</span> {
+
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">CSS Animation</span>
+            <div class="code-dots">
+              <div class="dot" style="background:#ff5f57"></div>
+              <div class="dot" style="background:#febc2e"></div>
+              <div class="dot" style="background:#28c840"></div>
+            </div>
+          </div>
+          <pre><span class="sel">div</span> {
   <span class="prop">animation-name</span>: <span class="val">example</span>;
   <span class="prop">animation-duration</span>: <span class="num">4s</span>;
   <span class="prop">animation-delay</span>: <span class="num">2s</span>;
@@ -1162,109 +1164,187 @@
   <span class="num">50%</span>  { <span class="prop">background-color</span>: <span class="val">blue</span>;  }
   <span class="num">100%</span> { <span class="prop">background-color</span>: <span class="val">green</span>; }
 }</pre>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Property</th>
+              <th>Values</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>animation-direction</code></td>
+              <td>normal | reverse | <strong>alternate</strong> | alternate-reverse</td>
+              <td><code>alternate</code> = forward then backward</td>
+            </tr>
+            <tr>
+              <td><code>animation-timing-function</code></td>
+              <td><strong>ease</strong> | linear | ease-in | ease-out | ease-in-out</td>
+              <td><code>ease</code> is default (slow-fast-slow)</td>
+            </tr>
+            <tr>
+              <td><code>animation-fill-mode</code></td>
+              <td><strong>none</strong> | forwards | backwards | both</td>
+              <td><code>forwards</code> = keep last frame style</td>
+            </tr>
+            <tr>
+              <td><code>animation-iteration-count</code></td>
+              <td>number | <strong>infinite</strong></td>
+              <td><code>infinite</code> loops forever</td>
+            </tr>
+            <tr>
+              <td><code>animation-delay</code></td>
+              <td>time in seconds</td>
+              <td>Negative value = animation already started</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="alert alert-success">
+        <div class="alert-title">✓ Pro Tip: from/to vs Percentages</div>
+        Use <code style="font-family:monospace">from {} to {}</code> for simple 2-state animations. Use <code
+          style="font-family:monospace">0% {} 25% {} 50% {} 100% {}</code> for multi-step animations. You can animate
+        multiple CSS properties simultaneously within the same keyframe step.
       </div>
     </div>
 
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Property</th><th>Values</th><th>Notes</th></tr></thead>
-        <tbody>
-          <tr><td><code>animation-direction</code></td><td>normal | reverse | <strong>alternate</strong> | alternate-reverse</td><td><code>alternate</code> = forward then backward</td></tr>
-          <tr><td><code>animation-timing-function</code></td><td><strong>ease</strong> | linear | ease-in | ease-out | ease-in-out</td><td><code>ease</code> is default (slow-fast-slow)</td></tr>
-          <tr><td><code>animation-fill-mode</code></td><td><strong>none</strong> | forwards | backwards | both</td><td><code>forwards</code> = keep last frame style</td></tr>
-          <tr><td><code>animation-iteration-count</code></td><td>number | <strong>infinite</strong></td><td><code>infinite</code> loops forever</td></tr>
-          <tr><td><code>animation-delay</code></td><td>time in seconds</td><td>Negative value = animation already started</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="alert alert-success">
-      <div class="alert-title">✓ Pro Tip: from/to vs Percentages</div>
-      Use <code style="font-family:monospace">from {} to {}</code> for simple 2-state animations. Use <code style="font-family:monospace">0% {} 25% {} 50% {} 100% {}</code> for multi-step animations. You can animate multiple CSS properties simultaneously within the same keyframe step.
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════════════
+    <!-- ═══════════════════════════════════════════════════
        MODULE 5: FLEXBOX
   ═══════════════════════════════════════════════════ -->
-  <div class="section" id="section-4">
-    <div class="section-hero">
-      <div class="hero-icon" style="background:rgba(56,249,215,0.12);color:#38f9d7;">⬛</div>
-      <div class="hero-text">
-        <h1 style="background:linear-gradient(135deg,#38f9d7,#6c63ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">CSS Flexbox Layout</h1>
-        <p>Flexbox (Flexible Box Layout) provides an efficient way to lay out, align and distribute space among items in a container. The container alters items' width/height to fill available space.</p>
-        <span class="tag" style="background:rgba(56,249,215,0.12);color:#38f9d7;">Container Props</span>
-        <span class="tag" style="background:rgba(108,99,255,0.12);color:#6c63ff;">Item Props</span>
-        <span class="tag" style="background:rgba(67,233,123,0.12);color:#43e97b;">Alignment</span>
-      </div>
-    </div>
-
-    <div class="highlight-box">
-      🔑 <strong>The Golden Rule:</strong> Set <code style="font-family:monospace">display: flex</code> on the <strong>container (parent)</strong>. Child elements automatically become flex items. All flexbox properties then apply to control their layout behavior.
-    </div>
-
-    <div class="grid-2">
-      <div class="card">
-        <div class="card-title"><span>📋</span> Container Properties</div>
-        <ul class="concept-list">
-          <li><strong>display: flex</strong> — activates flexbox on the container</li>
-          <li><strong>flex-direction</strong> — row | row-reverse | column | column-reverse</li>
-          <li><strong>flex-wrap</strong> — nowrap | wrap | wrap-reverse</li>
-          <li><strong>flex-flow</strong> — shorthand for direction + wrap</li>
-          <li><strong>justify-content</strong> — aligns items on MAIN AXIS (horizontal)</li>
-          <li><strong>align-items</strong> — aligns items on CROSS AXIS (vertical)</li>
-          <li><strong>align-content</strong> — aligns multiple FLEX LINES</li>
-          <li><strong>gap / row-gap / column-gap</strong> — space between items</li>
-        </ul>
-      </div>
-
-      <div class="card">
-        <div class="card-title"><span>📦</span> display Values Reminder</div>
-        <ul class="concept-list">
-          <li><strong>block</strong> — takes full width, starts on new line</li>
-          <li><strong>inline</strong> — no width/height control, flows in text</li>
-          <li><strong>inline-block</strong> — inline but supports width/height</li>
-          <li><strong>flex</strong> — ⭐ activates flexbox container</li>
-          <li><strong>none</strong> — hides element completely (removed from flow)</li>
-        </ul>
-        <div style="margin-top:12px;padding:10px;background:var(--code-bg);border-radius:8px;">
-          <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px;">FLEX AXES</div>
-          <div style="font-size:12px;color:var(--text-secondary);">📐 <strong style="color:var(--accent-5)">Main Axis</strong> = set by flex-direction (default: horizontal)</div>
-          <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">📐 <strong style="color:var(--accent-4)">Cross Axis</strong> = perpendicular to main axis</div>
+    <div class="section" id="section-4">
+      <div class="section-hero">
+        <div class="hero-icon" style="background:rgba(56,249,215,0.12);color:#38f9d7;">⬛</div>
+        <div class="hero-text">
+          <h1
+            style="background:linear-gradient(135deg,#38f9d7,#6c63ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">
+            CSS Flexbox Layout</h1>
+          <p>Flexbox (Flexible Box Layout) provides an efficient way to lay out, align and distribute space among items
+            in a container. The container alters items' width/height to fill available space.</p>
+          <span class="tag" style="background:rgba(56,249,215,0.12);color:#38f9d7;">Container Props</span>
+          <span class="tag" style="background:rgba(108,99,255,0.12);color:#6c63ff;">Item Props</span>
+          <span class="tag" style="background:rgba(67,233,123,0.12);color:#43e97b;">Alignment</span>
         </div>
       </div>
-    </div>
 
-    <div class="alert alert-warning">
-      <div class="alert-title">⚠ align-items vs align-content</div>
-      <strong>align-items</strong> aligns individual flex items on the cross axis within a single line. <strong>align-content</strong> aligns the flex LINES themselves — it has no effect when there is only one line (needs <code style="font-family:monospace">flex-wrap: wrap</code> to have multiple lines).
-    </div>
+      <div class="highlight-box">
+        🔑 <strong>The Golden Rule:</strong> Set <code style="font-family:monospace">display: flex</code> on the
+        <strong>container (parent)</strong>. Child elements automatically become flex items. All flexbox properties then
+        apply to control their layout behavior.
+      </div>
 
-    <div class="sub-heading">Flexbox Quick Reference</div>
-
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Property</th><th>Values</th><th>Axis</th><th>Applied To</th></tr></thead>
-        <tbody>
-          <tr><td><code>flex-direction</code></td><td><strong>row</strong> | row-reverse | column | column-reverse</td><td>Sets main axis</td><td>Container</td></tr>
-          <tr><td><code>flex-wrap</code></td><td><strong>nowrap</strong> | wrap | wrap-reverse</td><td>—</td><td>Container</td></tr>
-          <tr><td><code>justify-content</code></td><td>flex-start | <strong>flex-end</strong> | center | space-between | space-around | space-evenly</td><td>Main axis</td><td>Container</td></tr>
-          <tr><td><code>align-items</code></td><td><strong>stretch</strong> | flex-start | flex-end | center | baseline | normal</td><td>Cross axis</td><td>Container</td></tr>
-          <tr><td><code>align-content</code></td><td>stretch | center | flex-start | flex-end | space-between | space-around</td><td>Cross axis</td><td>Container (multi-line)</td></tr>
-          <tr><td><code>gap</code></td><td>length | <code>row-gap column-gap</code></td><td>Both</td><td>Container</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="sub-heading">Flexbox Code</div>
-
-    <div class="grid-2">
-      <div class="code-block">
-        <div class="code-header">
-          <span class="code-lang">Container Setup</span>
-          <div class="code-dots"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div></div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title"><span>📋</span> Container Properties</div>
+          <ul class="concept-list">
+            <li><strong>display: flex</strong> — activates flexbox on the container</li>
+            <li><strong>flex-direction</strong> — row | row-reverse | column | column-reverse</li>
+            <li><strong>flex-wrap</strong> — nowrap | wrap | wrap-reverse</li>
+            <li><strong>flex-flow</strong> — shorthand for direction + wrap</li>
+            <li><strong>justify-content</strong> — aligns items on MAIN AXIS (horizontal)</li>
+            <li><strong>align-items</strong> — aligns items on CROSS AXIS (vertical)</li>
+            <li><strong>align-content</strong> — aligns multiple FLEX LINES</li>
+            <li><strong>gap / row-gap / column-gap</strong> — space between items</li>
+          </ul>
         </div>
-        <pre><span class="sel">.flex-container</span> {
+
+        <div class="card">
+          <div class="card-title"><span>📦</span> display Values Reminder</div>
+          <ul class="concept-list">
+            <li><strong>block</strong> — takes full width, starts on new line</li>
+            <li><strong>inline</strong> — no width/height control, flows in text</li>
+            <li><strong>inline-block</strong> — inline but supports width/height</li>
+            <li><strong>flex</strong> — ⭐ activates flexbox container</li>
+            <li><strong>none</strong> — hides element completely (removed from flow)</li>
+          </ul>
+          <div style="margin-top:12px;padding:10px;background:var(--code-bg);border-radius:8px;">
+            <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px;">FLEX AXES</div>
+            <div style="font-size:12px;color:var(--text-secondary);">📐 <strong style="color:var(--accent-5)">Main
+                Axis</strong> = set by flex-direction (default: horizontal)</div>
+            <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">📐 <strong
+                style="color:var(--accent-4)">Cross Axis</strong> = perpendicular to main axis</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-warning">
+        <div class="alert-title">⚠ align-items vs align-content</div>
+        <strong>align-items</strong> aligns individual flex items on the cross axis within a single line.
+        <strong>align-content</strong> aligns the flex LINES themselves — it has no effect when there is only one line
+        (needs <code style="font-family:monospace">flex-wrap: wrap</code> to have multiple lines).
+      </div>
+
+      <div class="sub-heading">Flexbox Quick Reference</div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Property</th>
+              <th>Values</th>
+              <th>Axis</th>
+              <th>Applied To</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>flex-direction</code></td>
+              <td><strong>row</strong> | row-reverse | column | column-reverse</td>
+              <td>Sets main axis</td>
+              <td>Container</td>
+            </tr>
+            <tr>
+              <td><code>flex-wrap</code></td>
+              <td><strong>nowrap</strong> | wrap | wrap-reverse</td>
+              <td>—</td>
+              <td>Container</td>
+            </tr>
+            <tr>
+              <td><code>justify-content</code></td>
+              <td>flex-start | <strong>flex-end</strong> | center | space-between | space-around | space-evenly</td>
+              <td>Main axis</td>
+              <td>Container</td>
+            </tr>
+            <tr>
+              <td><code>align-items</code></td>
+              <td><strong>stretch</strong> | flex-start | flex-end | center | baseline | normal</td>
+              <td>Cross axis</td>
+              <td>Container</td>
+            </tr>
+            <tr>
+              <td><code>align-content</code></td>
+              <td>stretch | center | flex-start | flex-end | space-between | space-around</td>
+              <td>Cross axis</td>
+              <td>Container (multi-line)</td>
+            </tr>
+            <tr>
+              <td><code>gap</code></td>
+              <td>length | <code>row-gap column-gap</code></td>
+              <td>Both</td>
+              <td>Container</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sub-heading">Flexbox Code</div>
+
+      <div class="grid-2">
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">Container Setup</span>
+            <div class="code-dots">
+              <div class="dot" style="background:#ff5f57"></div>
+              <div class="dot" style="background:#febc2e"></div>
+              <div class="dot" style="background:#28c840"></div>
+            </div>
+          </div>
+          <pre><span class="sel">.flex-container</span> {
   <span class="prop">display</span>: <span class="val">flex</span>;
   <span class="prop">flex-direction</span>: <span class="val">row</span>;         <span class="com">/* or column */</span>
   <span class="prop">flex-wrap</span>: <span class="val">wrap</span>;
@@ -1278,14 +1358,18 @@
 <span class="sel">.flex-container</span> {
   <span class="prop">flex-flow</span>: <span class="val">row wrap</span>;
 }</pre>
-      </div>
-
-      <div class="code-block">
-        <div class="code-header">
-          <span class="code-lang">justify-content Values</span>
-          <div class="code-dots"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div></div>
         </div>
-        <pre><span class="com">/* center: items at center */</span>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">justify-content Values</span>
+            <div class="code-dots">
+              <div class="dot" style="background:#ff5f57"></div>
+              <div class="dot" style="background:#febc2e"></div>
+              <div class="dot" style="background:#28c840"></div>
+            </div>
+          </div>
+          <pre><span class="com">/* center: items at center */</span>
 <span class="prop">justify-content</span>: <span class="val">center</span>;
 
 <span class="com">/* flex-start: items at start (default) */</span>
@@ -1302,131 +1386,138 @@
 
 <span class="com">/* space-evenly: equal space all around */</span>
 <span class="prop">justify-content</span>: <span class="val">space-evenly</span>;</pre>
+        </div>
+      </div>
+
+      <div class="alert alert-success">
+        <div class="alert-title">✓ Perfect Centering with Flexbox</div>
+        To center an element both horizontally and vertically: set the container to <code
+          style="font-family:monospace">display: flex; justify-content: center; align-items: center;</code> — This is
+        the modern, clean solution that replaced the old table/position hacks.
+      </div>
+
+      <div class="alert alert-info">
+        <div class="alert-title">💡 Exam Quick Summary</div>
+        Flexbox works with a <strong>parent container</strong> and its <strong>child items</strong>. Container
+        properties control the overall layout direction and alignment. The <code
+          style="font-family:monospace">overflow: scroll/auto/hidden</code> property also works alongside flexbox when
+        content exceeds container dimensions.
       </div>
     </div>
 
-    <div class="alert alert-success">
-      <div class="alert-title">✓ Perfect Centering with Flexbox</div>
-      To center an element both horizontally and vertically: set the container to <code style="font-family:monospace">display: flex; justify-content: center; align-items: center;</code> — This is the modern, clean solution that replaced the old table/position hacks.
-    </div>
+  </main>
 
-    <div class="alert alert-info">
-      <div class="alert-title">💡 Exam Quick Summary</div>
-      Flexbox works with a <strong>parent container</strong> and its <strong>child items</strong>. Container properties control the overall layout direction and alignment. The <code style="font-family:monospace">overflow: scroll/auto/hidden</code> property also works alongside flexbox when content exceeds container dimensions.
-    </div>
-  </div>
+  <script>
+    const sections = 5;
+    let activeSection = 0;
+    const progressSteps = [20, 40, 60, 80, 100];
 
-</main>
+    function showSection(index) {
+      // Hide all sections
+      document.querySelectorAll('.section').forEach((s, i) => {
+        s.classList.remove('active');
+      });
+      document.querySelectorAll('.nav-item').forEach((n, i) => {
+        n.classList.remove('active');
+      });
 
-<script>
-  const sections = 5;
-  let activeSection = 0;
-  const progressSteps = [20, 40, 60, 80, 100];
+      // Show selected
+      document.getElementById(`section-${index}`).classList.add('active');
+      document.getElementById(`nav-${index}`).classList.add('active');
 
-  function showSection(index) {
-    // Hide all sections
-    document.querySelectorAll('.section').forEach((s, i) => {
-      s.classList.remove('active');
-    });
-    document.querySelectorAll('.nav-item').forEach((n, i) => {
-      n.classList.remove('active');
-    });
+      // Update progress
+      document.getElementById('progressFill').style.width = progressSteps[index] + '%';
+      document.querySelector('.progress-bar').nextElementSibling.textContent = `Module ${index + 1} of 5`;
 
-    // Show selected
-    document.getElementById(`section-${index}`).classList.add('active');
-    document.getElementById(`nav-${index}`).classList.add('active');
+      activeSection = index;
 
-    // Update progress
-    document.getElementById('progressFill').style.width = progressSteps[index] + '%';
-    document.querySelector('.progress-bar').nextElementSibling.textContent = `Module ${index + 1} of 5`;
+      // Scroll to top of main content
+      document.getElementById('mainContent').scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
-    activeSection = index;
+    // Search functionality
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('input', function () {
+      const query = this.value.trim().toLowerCase();
 
-    // Scroll to top of main content
-    document.getElementById('mainContent').scrollTo({ top: 0, behavior: 'smooth' });
-  }
+      if (!query) {
+        clearHighlights();
+        return;
+      }
 
-  // Search functionality
-  const searchInput = document.getElementById('searchInput');
-  searchInput.addEventListener('input', function() {
-    const query = this.value.trim().toLowerCase();
-
-    if (!query) {
       clearHighlights();
-      return;
+      searchInSections(query);
+    });
+
+    function clearHighlights() {
+      document.querySelectorAll('.search-highlight').forEach(el => {
+        const parent = el.parentNode;
+        parent.replaceChild(document.createTextNode(el.textContent), el);
+        parent.normalize();
+      });
     }
 
-    clearHighlights();
-    searchInSections(query);
-  });
+    function searchInSections(query) {
+      let found = false;
+      let firstFoundSection = -1;
 
-  function clearHighlights() {
-    document.querySelectorAll('.search-highlight').forEach(el => {
-      const parent = el.parentNode;
-      parent.replaceChild(document.createTextNode(el.textContent), el);
-      parent.normalize();
-    });
-  }
+      for (let i = 0; i < sections; i++) {
+        const section = document.getElementById(`section-${i}`);
+        const text = section.innerText.toLowerCase();
+        if (text.includes(query)) {
+          if (firstFoundSection === -1) firstFoundSection = i;
+          found = true;
+          highlightInSection(section, query);
+        }
+      }
 
-  function searchInSections(query) {
-    let found = false;
-    let firstFoundSection = -1;
-
-    for (let i = 0; i < sections; i++) {
-      const section = document.getElementById(`section-${i}`);
-      const text = section.innerText.toLowerCase();
-      if (text.includes(query)) {
-        if (firstFoundSection === -1) firstFoundSection = i;
-        found = true;
-        highlightInSection(section, query);
+      if (found && firstFoundSection !== -1) {
+        showSection(firstFoundSection);
+        // Scroll to first highlight
+        setTimeout(() => {
+          const firstHL = document.querySelector('.search-highlight');
+          if (firstHL) firstHL.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
       }
     }
 
-    if (found && firstFoundSection !== -1) {
-      showSection(firstFoundSection);
-      // Scroll to first highlight
-      setTimeout(() => {
-        const firstHL = document.querySelector('.search-highlight');
-        if (firstHL) firstHL.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 100);
+    function highlightInSection(section, query) {
+      const walker = document.createTreeWalker(section, NodeFilter.SHOW_TEXT, null, false);
+      const nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+
+      nodes.forEach(node => {
+        const val = node.nodeValue;
+        const idx = val.toLowerCase().indexOf(query);
+        if (idx !== -1 && node.parentNode.tagName !== 'SCRIPT' && node.parentNode.tagName !== 'STYLE') {
+          const span = document.createElement('span');
+          span.innerHTML = val.substring(0, idx) +
+            `<mark class="search-highlight">${val.substring(idx, idx + query.length)}</mark>` +
+            val.substring(idx + query.length);
+          node.parentNode.replaceChild(span, node);
+        }
+      });
     }
-  }
 
-  function highlightInSection(section, query) {
-    const walker = document.createTreeWalker(section, NodeFilter.SHOW_TEXT, null, false);
-    const nodes = [];
-    while (walker.nextNode()) nodes.push(walker.currentNode);
-
-    nodes.forEach(node => {
-      const val = node.nodeValue;
-      const idx = val.toLowerCase().indexOf(query);
-      if (idx !== -1 && node.parentNode.tagName !== 'SCRIPT' && node.parentNode.tagName !== 'STYLE') {
-        const span = document.createElement('span');
-        span.innerHTML = val.substring(0, idx) +
-          `<mark class="search-highlight">${val.substring(idx, idx + query.length)}</mark>` +
-          val.substring(idx + query.length);
-        node.parentNode.replaceChild(span, node);
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.target === searchInput) return;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        if (activeSection < sections - 1) showSection(activeSection + 1);
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        if (activeSection > 0) showSection(activeSection - 1);
+      } else if (e.key === '/') {
+        e.preventDefault();
+        searchInput.focus();
       }
     });
-  }
 
-  // Keyboard navigation
-  document.addEventListener('keydown', (e) => {
-    if (e.target === searchInput) return;
-    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-      if (activeSection < sections - 1) showSection(activeSection + 1);
-    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-      if (activeSection > 0) showSection(activeSection - 1);
-    } else if (e.key === '/') {
-      e.preventDefault();
-      searchInput.focus();
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('overlay').classList.toggle('show');
     }
-  });
+  </script>
+  <script src="portal-nav.js"></script>
+</body>
 
-  function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('open');
-    document.getElementById('overlay').classList.toggle('show');
-  }
-</script>
-<script src="portal-nav.js"></script></body>
 </html>

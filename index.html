@@ -12,12 +12,13 @@
     /* Hero Banner */
     .hero {
       background: linear-gradient(135deg, #0f0f1a 0%, #1a1a3e 40%, #0f2a4a 100%);
-      padding: 36px 28px 32px;
-      border-radius: 16px;
-      margin-bottom: 26px;
+      padding: 48px 32px;
+      border-radius: 20px;
+      margin-bottom: 30px;
       position: relative;
       overflow: hidden;
-      border: 1px solid var(--bd)
+      border: 1px solid var(--bd);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
     }
 
     .hero::before {
@@ -44,11 +45,12 @@
 
     .hero h1 {
       font-family: var(--f2);
-      font-size: 28px;
+      font-size: 34px;
       font-weight: 800;
       color: #fff;
-      margin-bottom: 8px;
-      position: relative
+      margin-bottom: 12px;
+      position: relative;
+      letter-spacing: -0.02em;
     }
 
     .hero h1 span {
@@ -59,11 +61,12 @@
     }
 
     .hero p {
-      color: rgba(255, 255, 255, .65);
-      font-size: 14px;
-      max-width: 500px;
-      margin-bottom: 20px;
-      position: relative
+      color: rgba(255, 255, 255, .7);
+      font-size: 16px;
+      max-width: 600px;
+      margin-bottom: 24px;
+      position: relative;
+      line-height: 1.6;
     }
 
     .hero-btns {
@@ -181,8 +184,9 @@
 
     .cs-header h2 {
       font-family: var(--f2);
-      font-size: 17px;
-      font-weight: 700
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--tx);
     }
 
     .cs-header .cs-count {
@@ -278,6 +282,24 @@
       font-size: 12.5px;
       color: var(--tx3)
     }
+
+    @media (max-width: 480px) {
+      .logo-text-top {
+        display: none;
+      }
+
+      .hero h1 {
+        font-size: 26px;
+      }
+
+      .hero p {
+        font-size: 14px;
+      }
+
+      .tb-search input {
+        font-size: 14px !important;
+      }
+    }
   </style>
   <link rel="stylesheet" href="global.css" />
   <link rel="stylesheet" href="components.css" />
@@ -285,7 +307,7 @@
   <script defer src="app.js"></script>
 </head>
 
-<body>
+<body class="ss-responsive ss-portal">
 
   <!-- Spinner -->
   <div class="spin-wrap" id="spinner">
@@ -351,17 +373,19 @@
     <div class="main">
       <!-- Topbar -->
       <header class="topbar">
-        <button class="ham" onclick="openSidebar()" aria-label="Menu">☰</button>
-        <div class="tb-search">
-          <span class="sico">🔍</span>
-          <input type="text" id="globalSearch" placeholder="Search lectures, topics..." autocomplete="off"
-            oninput="globalSearchFn(this.value)" onfocus="showDrop()" onblur="setTimeout(hideDrop,200)" />
-          <div class="sdrop" id="sdrop"></div>
-        </div>
-        <div class="tb-right">
-          <button class="bico" onclick="toggleTheme()" id="themeBtn" title="Toggle Theme">🌙</button>
-          <a href="missing-topics.html" class="bico" title="Missing Topics">⚠️</a>
-        </div>
+        <div style="display:flex;align-items:center;gap:14px">
+          <button class="ham" onclick="openSidebar()" aria-label="Menu">☰</button>
+          <div style="display:flex;align-items:center;gap:10px;font-family:var(--f2);font-weight:800;font-size:18px">
+            <div
+              style="width:32px;height:32px;background:linear-gradient(135deg,var(--p),var(--ac));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px">
+              🎓</div>
+            <span class="logo-text-top">StudyPortal</span>
+          </div>
+          <div class="tb-right">
+            <button class="bico" onclick="toggleTheme()" id="themeBtn" title="Toggle Theme">🌙</button>
+            <a href="missing-topics.html" class="bico" title="Missing Topics">⚠️</a>
+          </div>
+
       </header>
 
       <!-- Page Content -->
@@ -372,6 +396,15 @@
           <span>🏠</span><span class="bc-sep">/</span>
           <span style="color:var(--pl)">Dashboard</span>
         </nav>
+
+        <!-- Search Box -->
+        <div class="tb-search" style="max-width:100%; margin-bottom:24px">
+          <span class="sico">🔍</span>
+          <input type="text" id="globalSearch" placeholder="Search lectures, topics, categories..." autocomplete="off"
+            oninput="globalSearchFn(this.value)" onfocus="showDrop()" onblur="setTimeout(hideDrop,200)"
+            style="border-radius:12px; padding:12px 14px 12px 42px; font-size:15px" />
+          <div class="sdrop" id="sdrop" style="top:calc(100% + 4px)"></div>
+        </div>
 
         <!-- Hero -->
         <div class="hero">
@@ -411,17 +444,7 @@
 
         </div>
 
-        <!-- Missing banner -->
-        <div class="missing-banner">
-          <div class="mb-ico">🔴</div>
-          <div style="flex:1">
-            <h3>Data Structures (D.S) — Content Missing</h3>
-            <p>No lecture files found for Data Structures. See the full missing topics report for details and
-              suggestions.</p>
-          </div>
-          <a href="missing-topics.html" class="btn btn-sm"
-            style="background:rgba(239,68,68,.2);color:#f87171;border:1px solid rgba(239,68,68,.4)">View Report →</a>
-        </div>
+
 
         <!-- Search Filters -->
         <div class="filter-row">

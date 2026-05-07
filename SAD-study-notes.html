@@ -1,1019 +1,1534 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>System Analysis & Design — Clean Study Notes</title>
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>System Analysis & Design — Clean Study Notes</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  body {
-    font-family: Georgia, 'Times New Roman', serif;
-    font-size: 16px;
-    line-height: 1.75;
-    color: #1a1a1a;
-    background: #fafaf8;
-    padding: 40px 20px;
-    max-width: 820px;
-    margin: 0 auto;
-  }
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 16px;
+      line-height: 1.75;
+      color: #1a1a1a;
+      background: #fafaf8;
+      padding: 40px 20px;
+      max-width: 820px;
+      margin: 0 auto;
+    }
 
-  /* ── HEADINGS ── */
-  h1 { font-size: 2rem; border-bottom: 3px solid #1a1a1a; padding-bottom: 10px; margin-bottom: 6px; }
-  h2 { font-size: 1.45rem; margin-top: 52px; margin-bottom: 6px; border-bottom: 2px solid #ccc; padding-bottom: 6px; }
-  h3 { font-size: 1.15rem; margin-top: 32px; margin-bottom: 6px; }
-  h4 { font-size: 1rem; margin-top: 20px; margin-bottom: 4px; font-family: Arial, sans-serif; }
+    /* ── HEADINGS ── */
+    h1 {
+      font-size: 2rem;
+      border-bottom: 3px solid #1a1a1a;
+      padding-bottom: 10px;
+      margin-bottom: 6px;
+    }
 
-  /* ── TEXT ── */
-  p { margin-bottom: 12px; font-family: Arial, sans-serif; font-size: 0.95rem; }
-  strong { color: #000; }
+    h2 {
+      font-size: 1.45rem;
+      margin-top: 52px;
+      margin-bottom: 6px;
+      border-bottom: 2px solid #ccc;
+      padding-bottom: 6px;
+    }
 
-  /* ── LISTS ── */
-  ul, ol { padding-left: 22px; margin-bottom: 12px; font-family: Arial, sans-serif; font-size: 0.95rem; }
-  li { margin-bottom: 5px; }
+    h3 {
+      font-size: 1.15rem;
+      margin-top: 32px;
+      margin-bottom: 6px;
+    }
 
-  /* ── SPECIAL BOXES ── */
-  .exam-focus {
-    background: #fff8e1;
-    border-left: 4px solid #f59e0b;
-    padding: 12px 16px;
-    margin: 16px 0;
-    border-radius: 0 6px 6px 0;
-    font-family: Arial, sans-serif;
-    font-size: 0.92rem;
-  }
-  .exam-focus strong { color: #92400e; }
+    h4 {
+      font-size: 1rem;
+      margin-top: 20px;
+      margin-bottom: 4px;
+      font-family: Arial, sans-serif;
+    }
 
-  .mistake {
-    background: #fff1f1;
-    border-left: 4px solid #ef4444;
-    padding: 12px 16px;
-    margin: 16px 0;
-    border-radius: 0 6px 6px 0;
-    font-family: Arial, sans-serif;
-    font-size: 0.92rem;
-  }
+    /* ── TEXT ── */
+    p {
+      margin-bottom: 12px;
+      font-family: Arial, sans-serif;
+      font-size: 0.95rem;
+    }
 
-  .qa-block {
-    background: #f0f4ff;
-    border: 1px solid #c7d2fe;
-    border-radius: 6px;
-    padding: 14px 18px;
-    margin: 14px 0;
-    font-family: Arial, sans-serif;
-    font-size: 0.93rem;
-  }
-  .qa-block .q { font-weight: bold; color: #1e3a8a; margin-bottom: 6px; }
-  .qa-block .a { color: #1f2937; }
+    strong {
+      color: #000;
+    }
 
-  .definition {
-    background: #f0fdf4;
-    border-left: 4px solid #22c55e;
-    padding: 12px 16px;
-    margin: 12px 0;
-    border-radius: 0 6px 6px 0;
-    font-family: Arial, sans-serif;
-    font-size: 0.93rem;
-  }
+    /* ── LISTS ── */
+    ul,
+    ol {
+      padding-left: 22px;
+      margin-bottom: 12px;
+      font-family: Arial, sans-serif;
+      font-size: 0.95rem;
+    }
 
-  /* ── MARKERS ── */
-  .must   { color: #dc2626; font-weight: bold; }
-  .understand { color: #d97706; font-weight: bold; }
-  .extra  { color: #16a34a; font-weight: bold; }
+    li {
+      margin-bottom: 5px;
+    }
 
-  /* ── TABLE ── */
-  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-family: Arial, sans-serif; font-size: 0.88rem; }
-  th { background: #1a1a1a; color: #fff; padding: 8px 10px; text-align: left; }
-  td { padding: 7px 10px; border-bottom: 1px solid #ddd; vertical-align: top; }
-  tr:nth-child(even) td { background: #f5f5f5; }
+    /* ── SPECIAL BOXES ── */
+    .exam-focus {
+      background: #fff8e1;
+      border-left: 4px solid #f59e0b;
+      padding: 12px 16px;
+      margin: 16px 0;
+      border-radius: 0 6px 6px 0;
+      font-family: Arial, sans-serif;
+      font-size: 0.92rem;
+    }
 
-  /* ── DIVIDERS ── */
-  .section-divider {
-    border: none;
-    border-top: 3px double #ccc;
-    margin-bottom: 24px;
-  }
+    .exam-focus strong {
+      color: #92400e;
+    }
 
-  }
+    .mistake {
+      background: #fff1f1;
+      border-left: 4px solid #ef4444;
+      padding: 12px 16px;
+      margin: 16px 0;
+      border-radius: 0 6px 6px 0;
+      font-family: Arial, sans-serif;
+      font-size: 0.92rem;
+    }
+
+    .qa-block {
+      background: #f0f4ff;
+      border: 1px solid #c7d2fe;
+      border-radius: 6px;
+      padding: 14px 18px;
+      margin: 14px 0;
+      font-family: Arial, sans-serif;
+      font-size: 0.93rem;
+    }
+
+    .qa-block .q {
+      font-weight: bold;
+      color: #1e3a8a;
+      margin-bottom: 6px;
+    }
+
+    .qa-block .a {
+      color: #1f2937;
+    }
+
+    .definition {
+      background: #f0fdf4;
+      border-left: 4px solid #22c55e;
+      padding: 12px 16px;
+      margin: 12px 0;
+      border-radius: 0 6px 6px 0;
+      font-family: Arial, sans-serif;
+      font-size: 0.93rem;
+    }
+
+    /* ── MARKERS ── */
+    .must {
+      color: #dc2626;
+      font-weight: bold;
+    }
+
+    .understand {
+      color: #d97706;
+      font-weight: bold;
+    }
+
+    .extra {
+      color: #16a34a;
+      font-weight: bold;
+    }
+
+    /* ── TABLE ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-family: Arial, sans-serif;
+      font-size: 0.88rem;
+    }
+
+    th {
+      background: #1a1a1a;
+      color: #fff;
+      padding: 8px 10px;
+      text-align: left;
+    }
+
+    td {
+      padding: 7px 10px;
+      border-bottom: 1px solid #ddd;
+      vertical-align: top;
+    }
+
+    tr:nth-child(even) td {
+      background: #f5f5f5;
+    }
+
+    /* ── DIVIDERS ── */
+    .section-divider {
+      border: none;
+      border-top: 3px double #ccc;
+      margin-bottom: 24px;
+    }
 
 
-  /* ── SUBTITLE UNDER H1 ── */
-  .subtitle { color: #555; font-family: Arial, sans-serif; font-size: 0.9rem; margin-bottom: 24px; }
 
-  @media (max-width: 600px) {
-    body { padding: 80px 15px 20px; }
-    h1 { font-size: 1.5rem; }
-    h2 { font-size: 1.25rem; margin-top: 30px; }
-  }
 
-  /* ── MOBILE NAV ── */
-  .ham-btn {
-    position: fixed; top: 15px; left: 15px; z-index: 1000;
-    width: 44px; height: 44px; border-radius: 8px;
-    background: #1a1a1a; border: 1px solid #333;
-    color: #fff; font-size: 1.2rem; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  }
-  .sidebar {
-    position: fixed; top: 0; left: -280px; width: 280px; height: 100%;
-    background: #fff; border-right: 1px solid #ddd;
-    z-index: 1001; transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    padding: 24px; display: flex; flex-direction: column;
-  }
-  .sidebar.open { left: 0; }
-  .sidebar-overlay {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.5);
-    backdrop-filter: blur(4px); z-index: 1000; display: none;
-  }
-  .sidebar-overlay.show { display: block; }
-  .sidebar-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-  .sidebar-logo { font-family: Arial, sans-serif; font-weight: 700; color: #1a1a1a; font-size: 1rem; }
-  .close-btn { background: none; border: none; color: #666; font-size: 1.8rem; cursor: pointer; }
-  .sidebar-nav { display: flex; flex-direction: column; gap: 4px; overflow-y: auto; }
-  .sidebar-link {
-    padding: 10px 14px; border-radius: 6px; color: #444;
-    text-decoration: none; font-size: 0.9rem; font-family: Arial, sans-serif;
-    transition: all 0.2s; border: 1px solid transparent;
-  }
-  .sidebar-link:hover { background: #f0f4ff; color: #1d4ed8; }
-  .sidebar-link.home-link { color: #1a1a1a; font-weight: 700; margin-bottom: 10px; background: #f5f5f5; }
+    /* ── SUBTITLE UNDER H1 ── */
+    .subtitle {
+      color: #555;
+      font-family: Arial, sans-serif;
+      font-size: 0.9rem;
+      margin-bottom: 24px;
+    }
 
-  /* ── RESPONSIVE LAYOUT (page-specific) ── */
-  body{padding: 32px 24px 56px; max-width: 980px; margin: 0 auto;}
-  .ham-btn{display:none}
-  .sidebar, .sidebar-overlay{display:none}
+    @media (max-width: 600px) {
+      body {
+        padding: 80px 15px 20px;
+      }
 
-  @media (max-width: 900px){
-    body{padding: 80px 16px 36px; max-width: 100%;}
-    .ham-btn{display:flex}
-    .sidebar{display:flex}
-    /* keep overlay hidden unless .show is applied by JS */
-    .sidebar-overlay{display:none}
-    .sidebar-overlay.show{display:block}
-  }
-  @media (max-width: 420px){
-    body{padding: 76px 12px 28px}
-    .sidebar{width:min(86vw,280px); left:calc(-1 * min(86vw,280px))}
-    .sidebar.open{left:0}
-    .ham-btn{top:12px; left:12px}
-  }
-</style>
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      h2 {
+        font-size: 1.25rem;
+        margin-top: 30px;
+      }
+    }
+
+    /* ── MOBILE NAV ── */
+    .ham-btn {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      z-index: 1000;
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      color: #fff;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: -280px;
+      width: 280px;
+      height: 100%;
+      background: #fff;
+      border-right: 1px solid #ddd;
+      z-index: 1001;
+      transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar.open {
+      left: 0;
+    }
+
+    .sidebar-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: none;
+    }
+
+    .sidebar-overlay.show {
+      display: block;
+    }
+
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .sidebar-logo {
+      font-family: Arial, sans-serif;
+      font-weight: 700;
+      color: #1a1a1a;
+      font-size: 1rem;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: #666;
+      font-size: 1.8rem;
+      cursor: pointer;
+    }
+
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      overflow-y: auto;
+    }
+
+    .sidebar-link {
+      padding: 10px 14px;
+      border-radius: 6px;
+      color: #444;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-family: Arial, sans-serif;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+    }
+
+    .sidebar-link:hover {
+      background: #f0f4ff;
+      color: #1d4ed8;
+    }
+
+    .sidebar-link.home-link {
+      color: #1a1a1a;
+      font-weight: 700;
+      margin-bottom: 10px;
+      background: #f5f5f5;
+    }
+
+    /* ── RESPONSIVE LAYOUT (page-specific) ── */
+    body {
+      padding: 32px 24px 56px;
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .ham-btn {
+      display: none
+    }
+
+    .sidebar,
+    .sidebar-overlay {
+      display: none
+    }
+
+    @media (max-width: 900px) {
+      body {
+        padding: 80px 16px 36px;
+        max-width: 100%;
+      }
+
+      .ham-btn {
+        display: flex
+      }
+
+      .sidebar {
+        display: flex
+      }
+
+      /* keep overlay hidden unless .show is applied by JS */
+      .sidebar-overlay {
+        display: none
+      }
+
+      .sidebar-overlay.show {
+        display: block
+      }
+    }
+
+    @media (max-width: 420px) {
+      body {
+        padding: 76px 12px 28px
+      }
+
+      .sidebar {
+        width: min(86vw, 280px);
+        left: calc(-1 * min(86vw, 280px))
+      }
+
+      .sidebar.open {
+        left: 0
+      }
+
+      .ham-btn {
+        top: 12px;
+        left: 12px
+      }
+    }
+  </style>
   <link rel="stylesheet" href="global.css" />
   <link rel="stylesheet" href="components.css" />
   <link rel="stylesheet" href="responsive.css" />
   <script defer src="app.js"></script>
 </head>
+
 <body>
 
-<button class="ham-btn" id="hamBtn" onclick="toggleSidebar()" aria-label="Open Menu">☰</button>
-<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
-<aside class="sidebar" id="sidebar">
-  <div class="sidebar-header">
-    <div class="sidebar-logo">🎓 SAD Study Notes</div>
-    <button class="close-btn" onclick="toggleSidebar()" aria-label="Close Menu">×</button>
+  <button class="ham-btn" id="hamBtn" onclick="toggleSidebar()" aria-label="Open Menu">☰</button>
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">🎓 SAD Study Notes</div>
+      <button class="close-btn" onclick="toggleSidebar()" aria-label="Close Menu">×</button>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="index.html" class="sidebar-link home-link">🏠 Home Dashboard</a>
+      <a href="#fundamentals" class="sidebar-link" onclick="toggleSidebar()">1. Fundamentals</a>
+      <a href="#sdlc" class="sidebar-link" onclick="toggleSidebar()">2. SDLC & Methodologies</a>
+      <a href="#analysis-phases" class="sidebar-link" onclick="toggleSidebar()">3. Analysis Phases</a>
+      <a href="#fft" class="sidebar-link" onclick="toggleSidebar()">4. Fact-Finding</a>
+      <a href="#modeling" class="sidebar-link" onclick="toggleSidebar()">5. System Modeling</a>
+      <a href="#architecture" class="sidebar-link" onclick="toggleSidebar()">6. Architecture</a>
+      <a href="#io-design" class="sidebar-link" onclick="toggleSidebar()">7. I/O Design</a>
+      <a href="#database" class="sidebar-link" onclick="toggleSidebar()">8. Database Design</a>
+      <a href="#program-design" class="sidebar-link" onclick="toggleSidebar()">9. Program Design</a>
+    </nav>
+  </aside>
+
+  <h1>System Analysis &amp; Design</h1>
+  <p class="subtitle">Final Exam Study Notes · El-Shorouk Academy · 2023/2024 · Dr. Magdy El-Hennawy<br>
+    <span class="must">🔴 Must Memorize</span> &nbsp;
+    <span class="understand">🟡 Understand Concept</span> &nbsp;
+    <span class="extra">🟢 Extra Info</span>
+  </p>
+
+
+  <!-- ═══════════════════════════════════════════ -->
+  <hr class="section-divider">
+  <h2 id="fundamentals">1 · Fundamentals &amp; IS Approaches</h2>
+  <p><em>Lectures 1–2 · Exam Q1</em></p>
+
+  <!-- 1.1 -->
+  <h3>1.1 Key Definitions <span class="must">🔴</span></h3>
+
+  <div class="definition">
+    <strong>Information Technology (IT):</strong> Use of hardware, software, services, and supporting infrastructure to
+    manage and deliver information (voice, data, video).
   </div>
-  <nav class="sidebar-nav">
-    <a href="index.html" class="sidebar-link home-link">🏠 Home Dashboard</a>
-    <a href="#fundamentals" class="sidebar-link" onclick="toggleSidebar()">1. Fundamentals</a>
-    <a href="#sdlc" class="sidebar-link" onclick="toggleSidebar()">2. SDLC & Methodologies</a>
-    <a href="#analysis-phases" class="sidebar-link" onclick="toggleSidebar()">3. Analysis Phases</a>
-    <a href="#fft" class="sidebar-link" onclick="toggleSidebar()">4. Fact-Finding</a>
-    <a href="#modeling" class="sidebar-link" onclick="toggleSidebar()">5. System Modeling</a>
-    <a href="#architecture" class="sidebar-link" onclick="toggleSidebar()">6. Architecture</a>
-    <a href="#io-design" class="sidebar-link" onclick="toggleSidebar()">7. I/O Design</a>
-    <a href="#database" class="sidebar-link" onclick="toggleSidebar()">8. Database Design</a>
-    <a href="#program-design" class="sidebar-link" onclick="toggleSidebar()">9. Program Design</a>
-  </nav>
-</aside>
-
-<h1>System Analysis &amp; Design</h1>
-<p class="subtitle">Final Exam Study Notes · El-Shorouk Academy · 2023/2024 · Dr. Magdy El-Hennawy<br>
-<span class="must">🔴 Must Memorize</span> &nbsp;
-<span class="understand">🟡 Understand Concept</span> &nbsp;
-<span class="extra">🟢 Extra Info</span>
-</p>
-
-
-<!-- ═══════════════════════════════════════════ -->
-<hr class="section-divider">
-<h2 id="fundamentals">1 · Fundamentals &amp; IS Approaches</h2>
-<p><em>Lectures 1–2 · Exam Q1</em></p>
-
-<!-- 1.1 -->
-<h3>1.1 Key Definitions <span class="must">🔴</span></h3>
-
-<div class="definition">
-  <strong>Information Technology (IT):</strong> Use of hardware, software, services, and supporting infrastructure to manage and deliver information (voice, data, video).
-</div>
-
-<div class="definition">
-  <strong>System:</strong> A set of interrelated components that work together to accomplish a common goal.
-</div>
-
-<div class="definition">
-  <strong>Information System (IS):</strong> An arrangement of people, data, processes, and technology that collects, processes, stores, and outputs the information an organization needs.
-</div>
-
-<h4>IS has 4 components:</h4>
-<ul>
-  <li><strong>People</strong> — users, IT staff, managers</li>
-  <li><strong>Data</strong> — raw facts collected and processed</li>
-  <li><strong>Processes</strong> — activities that transform data into information</li>
-  <li><strong>Technology</strong> — hardware, software, networks</li>
-</ul>
-
-<div class="qa-block">
-  <div class="q">Q: What is the PRIMARY objective of SA&amp;D?</div>
-  <div class="a">A: <strong>NOT</strong> to create a wonderful system — it is to <strong>create VALUE for the organization</strong> (increase profits, improve processes, serve users better, integrate with other IS).</div>
-</div>
-
-<div class="mistake">
-  ⚠️ <strong>Common Mistake:</strong> Students say "the goal is to build a great system." Wrong. The goal is to <strong>create business value</strong>. Many projects fail because they focus on the system, not the business.
-</div>
-
-<!-- 1.2 -->
-<h3>1.2 IS Types <span class="understand">🟡</span></h3>
-
-<table>
-  <thead><tr><th>Abbreviation</th><th>Full Name</th><th>What it does</th><th>Level</th></tr></thead>
-  <tbody>
-    <tr><td><strong>TPS</strong></td><td>Transaction Processing System</td><td>Handles day-to-day repetitive transactions (sales, payroll)</td><td>Operational</td></tr>
-    <tr><td><strong>MIS</strong></td><td>Management Information System</td><td>Generates summary reports from TPS data</td><td>Middle Management</td></tr>
-    <tr><td><strong>DSS</strong></td><td>Decision Support System</td><td>Supports semi-structured decisions using models</td><td>Senior Management</td></tr>
-    <tr><td><strong>ES</strong></td><td>Expert System</td><td>Emulates human expert knowledge; gives recommendations</td><td>Specialist</td></tr>
-  </tbody>
-</table>
-
-<!-- 1.3 -->
-<h3>1.3 Roles of the System Analyst <span class="must">🔴</span></h3>
-<p><em>Exam Q1-B asks for 4 of the 6 roles. Know all 6.</em></p>
-
-<ol>
-  <li><strong>System Analyst</strong> — Studies org. problems and designs IS solutions</li>
-  <li><strong>Business Analyst</strong> — Focuses on business problems, independent of technology</li>
-  <li><strong>Systems Architect</strong> — Designs the overall technical architecture</li>
-  <li><strong>Infrastructure Analyst</strong> — Focuses on networks, hardware, OS</li>
-  <li><strong>Change Management Analyst</strong> — Helps people adapt to the new system</li>
-  <li><strong>Project Manager</strong> — Plans, executes, and controls the development project</li>
-</ol>
-
-<div class="exam-focus">
-  <strong>📌 Exam Focus:</strong> Know all 6 roles by name and be able to describe any one in 2–3 lines.
-</div>
-
-<!-- 1.4 -->
-<h3>1.4 Project Sponsor <span class="must">🔴</span></h3>
-
-<div class="definition">
-  <strong>Project Sponsor:</strong> The person who <em>initiates</em> the project. They identify the business need, define requirements, and prepare the <strong>System Request</strong>.
-</div>
-
-<h4>System Request has 5 elements:</h4>
-<ol>
-  <li>Project Sponsor</li>
-  <li>Business Need</li>
-  <li>Business Requirements</li>
-  <li>Business Value</li>
-  <li>Special Issues and Constraints</li>
-</ol>
-
-<div class="qa-block">
-  <div class="q">Q: Who is the Project Sponsor and what do they do?</div>
-  <div class="a">A: The person who starts the project. They identify business needs and expected value, then formally prepare the System Request.</div>
-</div>
-
-
-<!-- ═══════════════════════════════════════════ -->
-<hr class="section-divider">
-<h2 id="sdlc">2 · SDLC &amp; Methodologies</h2>
-<p><em>Lectures 3–4 · Exam Q2</em></p>
-
-<!-- 2.1 -->
-<h3>2.1 SDLC Definition <span class="must">🔴</span></h3>
-
-<div class="definition">
-  <strong>SDLC (System Development Lifecycle):</strong> A logical process by which analysts, engineers, programmers, and users build IS to solve business problems. It is a <em>project management tool</em> used to plan, execute, and control development.
-</div>
-
-<h4>SDLC provides:</h4>
-<ul>
-  <li>High-quality, low-cost software</li>
-  <li>Shortest possible production time</li>
-  <li>Minimizes project risks</li>
-  <li>Complete and consistent documentation</li>
-</ul>
-
-<div class="mistake">
-  ⚠️ <strong>Common Mistake:</strong> "SDLC is a methodology." <strong>Wrong.</strong> SDLC describes the <em>phases</em>. A <strong>methodology</strong> is how you execute those phases. (Fact: 70% of IT projects fail due to lack of SDLC implementation.)
-</div>
-
-<div class="qa-block">
-  <div class="q">Q: Is SDLC a methodology? Explain.</div>
-  <div class="a">A: No. SDLC describes <strong>what phases</strong> to go through. A Methodology describes <strong>how</strong> to execute them.</div>
-</div>
-
-<!-- 2.2 -->
-<h3>2.2 The 7 SDLC Phases <span class="must">🔴</span></h3>
-
-<ol>
-  <li><strong>Planning</strong> — Identify project, feasibility analysis, steering committee approval</li>
-  <li><strong>Analysis</strong> — Three sub-phases: Survey → Detailed Study → Definition</li>
-  <li><strong>Design &amp; Prototyping</strong> — Design architecture, inputs, outputs, interfaces, data storage, programs</li>
-  <li><strong>Implementation</strong> — Code, test, and integrate the software</li>
-  <li><strong>Configuration &amp; Procurement</strong> — Define and acquire hardware/software/networks</li>
-  <li><strong>Deployment &amp; Operations</strong> — Go-live, user training, acceptance testing</li>
-  <li><strong>Maintenance</strong> — Ongoing repair, updates, improvements</li>
-</ol>
-
-<div class="exam-focus">
-  <strong>📌 Exam Focus:</strong> Memorize all 7 phases <em>in order</em>. Know that the Analysis phase has 3 sub-phases.
-</div>
-
-<!-- 2.3 -->
-<h3>2.3 Project Payments Milestones <span class="understand">🟡</span></h3>
-
-<div class="definition">
-  <strong>Project Payments Milestones:</strong> Checkpoints in a project timeline, each linked to a deliverable. Payment is released <em>only after</em> the deliverable is accepted. Ensures the client pays based on actual progress, not just time.
-</div>
-
-<!-- 2.4 -->
-<h3>2.4 Methodologies Compared <span class="understand">🟡</span></h3>
-
-<table>
-  <thead><tr><th>Methodology</th><th>Key Idea</th><th>Best For</th></tr></thead>
-  <tbody>
-    <tr><td><strong>Waterfall</strong></td><td>Sequential, phase-by-phase, no going back</td><td>Stable, well-defined requirements</td></tr>
-    <tr><td><strong>Prototyping</strong></td><td>Build a working model to verify requirements</td><td>Unclear requirements</td></tr>
-    <tr><td><strong>Iterative / Incremental</strong></td><td>Deliver in pieces, each adds functionality</td><td>Large systems with phased delivery</td></tr>
-    <tr><td><strong>Spiral</strong></td><td>Iterative + risk analysis at each loop</td><td>High-risk, complex projects</td></tr>
-    <tr><td><strong>Agile</strong></td><td>Flexible, short sprints (≈2 weeks), collaborative</td><td>Rapidly changing requirements</td></tr>
-    <tr><td><strong>OOAD</strong></td><td>Object-oriented analysis and design</td><td>OO-based systems</td></tr>
-  </tbody>
-</table>
-
-<!-- 2.5 -->
-<h3>2.5 Feasibility Analysis (3 Types) <span class="must">🔴</span></h3>
-<ul>
-  <li><strong>Technical feasibility</strong> — Can we build it with available technology?</li>
-  <li><strong>Economic feasibility</strong> — Will it provide enough business value to justify cost?</li>
-  <li><strong>Organizational feasibility</strong> — If we build it, will people actually use it?</li>
-</ul>
-
-<!-- 2.6 -->
-<h3>2.6 Eight Underlying Principles of System Development <span class="extra">🟢</span></h3>
-<ol>
-  <li>Get owners and users involved</li>
-  <li>Use a problem-solving approach</li>
-  <li>Establish phases and activities</li>
-  <li>Establish standards</li>
-  <li>Justify system as a capital investment (ROI)</li>
-  <li>Do not be afraid to cancel or revise scope</li>
-  <li>Divide and conquer</li>
-  <li>Design for growth and change</li>
-</ol>
-
-
-<!-- ═══════════════════════════════════════════ -->
-<hr class="section-divider">
-<h2 id="analysis-phases">3 · Analysis Phases</h2>
-<p><em>Exam Q5 — 30 marks (highest weight question)</em></p>
-
-<p>The Analysis phase has <strong>3 sub-phases</strong>:<br>
-<strong>1. Survey Phase → 2. Detailed Study Phase → 3. Definition Phase</strong></p>
-
-<!-- 3.1 -->
-<h3>3.1 Survey Phase <span class="must">🔴</span></h3>
-
-<div class="definition">
-  <strong>Survey Phase:</strong> The first sub-phase. Its goal is to quickly understand the current system's problems, opportunities, and constraints — and to plan the project.
-</div>
-
-<h4>4 Activities in Survey Phase:</h4>
-<ol>
-  <li>Survey Problems and Opportunities</li>
-  <li>Negotiate Project Scope</li>
-  <li>Plan the Project</li>
-  <li>Present Project (to management for approval)</li>
-</ol>
-
-<div class="qa-block">
-  <div class="q">Q: What are the objectives of "Plan the Project" in Survey Phase? (Exam Q5-A)</div>
-  <div class="a">A: (1) Select a project methodology, (2) Create a detailed work plan, (3) Identify staffing requirements, (4) Prepare to manage and control the project.<br>
-  <em>Deliverables: work plan, staffing plan, standards list, project charter, risk assessment plan.</em></div>
-</div>
-
-<div class="qa-block">
-  <div class="q">Q: Why assign a Planner in the Survey Phase? (Exam Q5-B)</div>
-  <div class="a">A: Because this phase requires creating a comprehensive project work plan, estimating costs/resources, scheduling activities, and identifying risks — specialist planning skills needed before committing full resources.</div>
-</div>
-
-<!-- 3.2 -->
-<h3>3.2 Detailed Study Phase <span class="must">🔴</span></h3>
-
-<div class="definition">
-  <strong>Detailed Study Phase:</strong> The second sub-phase. Analysts deeply investigate the existing system, gathering detailed information to understand all business processes, problems, and requirements.
-</div>
-
-<h4>6 Activities:</h4>
-<ol>
-  <li>Model the Current System (using DFDs)</li>
-  <li>Analyze the Business Processes</li>
-  <li>Analyze Problems and Opportunities</li>
-  <li>Establish Systems Improvement Objectives and Constraints</li>
-  <li>Modify Project Scope and Plan</li>
-  <li>Present Findings and Recommendations</li>
-</ol>
-
-<div class="qa-block">
-  <div class="q">Q: What is Prototyping? Name 3 characteristics. (Exam Q5-D)</div>
-  <div class="a">A: Building a working model of user requirements to discover and verify them before the full system is built.<br>
-  <strong>Characteristics:</strong> (1) Iterative — build → evaluate → refine cycle, (2) User-centric — users actively provide feedback, (3) Preliminary — it is NOT the final system.</div>
-</div>
-
-<div class="qa-block">
-  <div class="q">Q: Why should the PM prioritize business requirements? (Exam Q5-E)</div>
-  <div class="a">A: Resources (time, budget, staff) are always limited. Prioritization ensures the most critical, high-value requirements are done first, allows incremental delivery, and reduces project risk.</div>
-</div>
-
-<!-- 3.3 -->
-<h3>3.3 Definition Phase <span class="must">🔴</span></h3>
-
-<div class="definition">
-  <strong>Definition Phase:</strong> The final sub-phase. The analyst defines requirements for the proposed new system and documents the system proposal.
-</div>
-
-<h4>4 Activities:</h4>
-<ol>
-  <li>Define proposed system requirements (functional and non-functional)</li>
-  <li>Develop alternative solution approaches</li>
-  <li>Evaluate and recommend the best alternative</li>
-  <li>Transition to the Design Phase</li>
-</ol>
-
-<div class="qa-block">
-  <div class="q">Q: Why assign a Modeler in the Definition Phase? (Exam Q5-F)</div>
-  <div class="a">A: This phase requires creating formal system models (DFDs, use cases, data models). Modeling specialists ensure models accurately communicate the proposed system to all stakeholders before design begins.</div>
-</div>
-
-<!-- 3.4 -->
-<h3>3.4 Types of Requirements <span class="understand">🟡</span></h3>
-
-<table>
-  <thead><tr><th>Type</th><th>What it covers</th><th>Example</th></tr></thead>
-  <tbody>
-    <tr><td><strong>Business Requirements</strong></td><td>Overall goals; contributions to org. success</td><td>"Produce performance reports"</td></tr>
-    <tr><td><strong>User Requirements</strong></td><td>Usability, UI expectations of end users</td><td>Easy navigation</td></tr>
-    <tr><td><strong>Functional Requirements</strong></td><td>What the system must <em>do</em></td><td>"User authentication", "Reporting"</td></tr>
-    <tr><td><strong>Non-Functional Requirements</strong></td><td>Characteristics the system must <em>have</em></td><td>"Response time &lt; 2 seconds"</td></tr>
-  </tbody>
-</table>
-
-
-<!-- ═══════════════════════════════════════════ -->
-<hr class="section-divider">
-<h2 id="fft">4 · Fact-Finding Techniques (FFT)</h2>
-<p><em>Lecture 7 · Exam Q3</em></p>
-
-<p>Before starting, prepare an <strong>Investigation Plan</strong> (includes Terms of Reference + timetable). Must be approved by top management.</p>
-
-<!-- 4.1 -->
-<h3>4.1 The 5 FFTs <span class="must">🔴</span></h3>
-<ol>
-  <li>Interviewing</li>
-  <li>Questionnaires</li>
-  <li>Observation</li>
-  <li>Sampling &amp; Record Inspection</li>
-  <li>Joint Application Development (JAD)</li>
-</ol>
-
-<!-- 4.2 -->
-<h3>4.2 Interviewing <span class="understand">🟡</span></h3>
-
-<div class="definition">
-  <strong>Interviewing:</strong> The most productive FFT. A structured conversation between the analyst and staff to gather information about the current system.
-</div>
-
-<h4>3 Steps: Plan → Conduct → Terminate</h4>
-<ul>
-  <li><strong>Planning:</strong> Define objectives, prepare questions, identify interviewees</li>
-  <li><strong>Conducting:</strong> Ask questions, distinguish facts from opinions, use simple language</li>
-  <li><strong>Terminating:</strong> Summarize information, allow follow-up if needed</li>
-</ul>
-
-<p><strong>Rule:</strong> Always use <strong>two interviewers</strong> — one to ask, one to record.</p>
-
-<table>
-  <thead><tr><th>Ask Top Management about…</th><th>Ask Operational Staff about…</th></tr></thead>
-  <tbody>
-    <tr>
-      <td>Policies, strategies, future direction, constraints (budget, manpower, time)</td>
-      <td>Functions performed, forms used, communication lines, work volumes, improvement suggestions</td>
-    </tr>
-  </tbody>
-</table>
-
-<!-- 4.3 -->
-<h3>4.3 Questionnaires <span class="must">🔴</span></h3>
-
-<div class="definition">
-  <strong>Questionnaire:</strong> A set of written questions distributed to many people simultaneously to gather information efficiently.
-</div>
-
-<h4>When to use questionnaires (5 conditions):</h4>
-<ol>
-  <li>Large number of people must be surveyed</li>
-  <li>Respondents are geographically dispersed</li>
-  <li>Quantitative data is needed (statistics, frequencies)</li>
-  <li>Anonymity is required for honest answers</li>
-  <li>Opinions need to be validated from a wide group</li>
-</ol>
-
-<table>
-  <thead><tr><th>Advantages ✅</th><th>Disadvantages ❌</th></tr></thead>
-  <tbody>
-    <tr>
-      <td>Reaches many people quickly · Low cost · Anonymity encourages honesty · Easy to tabulate</td>
-      <td>Low response rate · No follow-up questions · May be misunderstood · Shallow depth</td>
-    </tr>
-  </tbody>
-</table>
-
-<!-- 4.4 -->
-<h3>4.4 Observation <span class="understand">🟡</span></h3>
-
-<div class="definition">
-  <strong>Observation:</strong> The analyst directly watches how work is performed to understand actual (vs. stated) procedures.
-</div>
-
-<ul>
-  <li>✅ Reveals actual vs. documented procedures · Firsthand data · Good for timing/volumes</li>
-  <li>❌ <strong>Hawthorne Effect</strong> — people change behavior when watched · Time-consuming</li>
-</ul>
-
-<div class="qa-block">
-  <div class="q">Q: What is the Hawthorne Effect?</div>
-  <div class="a">A: People change their behavior when they know they are being observed, making observations less accurate.</div>
-</div>
-
-<!-- 4.5 -->
-<h3>4.5 Sampling &amp; Record Inspection <span class="extra">🟢</span></h3>
-<p>Analyzing a representative subset of existing documents (forms, reports, procedure manuals, organization charts, transaction logs) to understand data volumes and current processes.</p>
-
-
-<!-- ═══════════════════════════════════════════ -->
-<hr class="section-divider">
-<h2 id="modeling">5 · System Modeling &amp; DFDs</h2>
-<p><em>Lecture 9 · Exam Q4 — 20 marks</em></p>
-
-<!-- 5.1 -->
-<h3>5.1 What is System Modeling? <span class="must">🔴</span></h3>
-
-<div class="definition">
-  <strong>System Modeling:</strong> Developing and presenting an abstract blueprint of a system using graphical notation. It emphasizes the <em>flow of information</em> between modules.
-</div>
-
-<div class="qa-block">
-  <div class="q">Q: What are the 2 purposes of modeling techniques? (Exam Q4-A)</div>
-  <div class="a">A: (1) <strong>Understand the current system</strong> — identify strengths and weaknesses. (2) <strong>Communicate with stakeholders</strong> — provide a clear visual for non-technical people.</div>
-</div>
-
-<!-- 5.2 -->
-<h3>5.2 DFD Symbols <span class="must">🔴</span></h3>
-
-<table>
-  <thead><tr><th>Symbol</th><th>Shape</th><th>Meaning</th><th>Example</th></tr></thead>
-  <tbody>
-    <tr><td><strong>External Entity</strong></td><td>Rectangle / Square</td><td>Source or destination outside the system</td><td>Customer, HQ</td></tr>
-    <tr><td><strong>Process</strong></td><td>Circle / Oval</td><td>Transforms data</td><td>Validate Order</td></tr>
-    <tr><td><strong>Data Store</strong></td><td>Open-ended rectangle</td><td>Data at rest (stored data)</td><td>Archive, Customer DB</td></tr>
-    <tr><td><strong>Data Flow</strong></td><td>Labeled Arrow →</td><td>Movement of data between components</td><td>Requested Order</td></tr>
-  </tbody>
-</table>
-
-<!-- 5.3 -->
-<h3>5.3 DFD Levels <span class="must">🔴</span></h3>
-
-<h4>Context-Level DFD (Exam Q4-B)</h4>
-<p>The <strong>highest-level</strong> view. Shows the <strong>entire system as ONE single process</strong> surrounded by all external entities. Shows only what goes in and out. <em>No data stores, no internal processes shown.</em></p>
-
-<div class="exam-focus">
-  <strong>📌 Rules for Context-Level DFD:</strong> One process bubble · All external entities around it · All data flows in/out shown · No data stores.
-</div>
-
-<h4>Level-0 DFD (Exam Q4-C)</h4>
-<p>Expands the single process into the <strong>major sub-processes</strong> (e.g., departments). Shows main processes, data flows between them, major data stores, and external entities. Processes numbered <strong>1.0, 2.0, 3.0…</strong></p>
-
-<h4>Level-1 DFD (Exam Q4-D)</h4>
-<p>Explodes each Level-0 process into its <strong>sub-processes</strong> (child diagrams). Each department gets its own Level-1 diagram. Sub-processes numbered <strong>1.1, 1.2, 1.3…</strong></p>
-
-<h4>Level-2 DFD</h4>
-<p>Explodes each Level-1 process further. Only created when a Level-1 process is still too complex to implement directly.</p>
-
-<div class="qa-block">
-  <div class="q">Q: What is the DFD Balancing Rule?</div>
-  <div class="a">A: Data flows going into and out of a <strong>parent process</strong> must exactly match the data flows in the <strong>child diagram</strong> of that process.</div>
-</div>
-
-<!-- 5.4 -->
-<h3>5.4 Common DFD Errors <span class="must">🔴</span></h3>
-<ul>
-  <li><strong>Black Hole</strong> — Process has input but <em>no output</em></li>
-  <li><strong>Miracle</strong> — Process has output but <em>no input</em></li>
-  <li><strong>Store-to-Store flow</strong> — Direct flow between two data stores (must go through a process)</li>
-  <li><strong>Entity-to-Entity flow</strong> — Direct flow between two external entities</li>
-  <li><strong>Unbalanced DFD</strong> — Child flows don't match parent flows</li>
-</ul>
-
-<div class="exam-focus">
-  <strong>📌 Exam Focus:</strong> Q4 = 20 marks. Practice drawing Context, Level-0, Level-1 DFDs for the RRG Restaurant example. Know the 5 DFD errors.
-</div>
-
-
-<!-- ═══════════════════════════════════════════ -->
-<hr class="section-divider">
-<h2 id="architecture">6 · Technical Architecture (STA)</h2>
-<p><em>Lecture 5 · Exam Q2</em></p>
-
-<!-- 6.1 -->
-<h3>6.1 STA Definition <span class="must">🔴</span></h3>
-
-<div class="definition">
-  <strong>System Technical Architecture (STA):</strong> The fundamental functional organization of a system — its components, their relationships, and the principles guiding design. Defines technologies used for <em>data, processes, interfaces, and networks</em>.
-</div>
-
-<h4>4 Software Functions (know these):</h4>
-<ol>
-  <li><strong>Presentation Logic</strong> — User interface display and input</li>
-  <li><strong>Application Logic</strong> — Business rules, processes</li>
-  <li><strong>Data Access Logic</strong> — How data is accessed</li>
-  <li><strong>Data Storage</strong> — Where data is stored</li>
-</ol>
-
-<!-- 6.2 -->
-<h3>6.2 Architecture Types <span class="must">🔴</span></h3>
-
-<h4>Client-Server Architecture</h4>
-<p>Processing is <strong>split</strong> between client and server. Client handles presentation; server handles data. Three tier types:</p>
-<ul>
-  <li><strong>2-Tier:</strong> Client (presentation + business logic) ↔ Server (data storage + DB logic)</li>
-  <li><strong>3-Tier:</strong> Client (presentation) ↔ App Server (business logic) ↔ DB Server (data)</li>
-  <li><strong>n-Tier:</strong> Client ↔ Web Server ↔ App Server ↔ DB Server</li>
-</ul>
-
-<p><strong>Thick/Fat Client:</strong> Client has most of the application logic (less server-dependent).<br>
-<strong>Thin Client:</strong> Client has minimal logic (e.g., browser); server does most work.</p>
-
-<h4>Server-Based Architecture</h4>
-<p>The server performs <strong>ALL FOUR</strong> functions. Clients are "dumb terminals" that only display output. Simple but not scalable.</p>
-
-<div class="qa-block">
-  <div class="q">Q: What is the key difference between Client-Server and Server-Based?</div>
-  <div class="a">A: In Client-Server, processing is split. In Server-Based, the <strong>server does everything</strong> and clients are just display screens.</div>
-</div>
-
-<!-- 6.3 -->
-<h3>6.3 System Acquisition Strategies (3) <span class="must">🔴</span></h3>
-<ol>
-  <li><strong>Custom Development (Build)</strong> — Build from scratch. Full control. Most expensive and time-consuming.</li>
-  <li><strong>Commercial Off-the-Shelf (Buy / COTS)</strong> — Purchase existing software. Faster and cheaper. Less customizable.</li>
-  <li><strong>Outsourcing</strong> — Hire an external company. Reduces internal workload. Organization loses some control.</li>
-</ol>
-
-
-<!-- ═══════════════════════════════════════════ -->
-<hr class="section-divider">
-<h2 id="io-design">7 · Input / Output / Interface Design</h2>
-<p><em>Exam Q3, Q4, Q5</em></p>
-
-<!-- 7.1 -->
-<h3>7.1 Input Design Objectives (2 Objectives) <span class="must">🔴</span></h3>
-<ol>
-  <li><strong>Ease of Use</strong> — Make input completion easy and efficient</li>
-  <li><strong>Accuracy</strong> — Assure accurate completion through controls and validation</li>
-</ol>
-
-<h4>How to achieve Ease of Use:</h4>
-<ul>
-  <li>Capture only <strong>variable data</strong> (data that changes each transaction)</li>
-  <li>Capture only <strong>base data</strong> (not data that can be calculated/derived)</li>
-  <li>Use checkboxes, dropdowns — minimize handwriting</li>
-  <li>Include instructions on forms</li>
-  <li>Sequence data top-to-bottom, left-to-right</li>
-</ul>
-
-<h4>Input Controls:</h4>
-<table>
-  <thead><tr><th>External Controls (UI controls)</th><th>Internal Controls (Validation)</th></tr></thead>
-  <tbody>
-    <tr>
-      <td>Text boxes · Radio buttons · Checkboxes · List boxes · Combo boxes · Spin boxes</td>
-      <td>Completeness check · Range/Limit check · Combination checks · Self-checking digits (checksum, NID) · Picture checks (format)</td>
-    </tr>
-  </tbody>
-</table>
-
-<!-- 7.2 -->
-<h3>7.2 Output Design Objectives (4 Objectives) <span class="must">🔴</span></h3>
-<ol>
-  <li><strong>Deliver appropriate quantity</strong> — Give each user exactly what they need</li>
-  <li><strong>Output reaches the right person</strong> — Design a distribution plan</li>
-  <li><strong>Output provided on time</strong> — A delayed decision support report is useless</li>
-  <li><strong>Choose the right output method</strong> — Print, screen, web, audio, etc.</li>
-</ol>
-
-<!-- 7.3 -->
-<h3>7.3 Interface Design — Standard Options &amp; Consistency <span class="must">🔴</span></h3>
-
-<div class="qa-block">
-  <div class="q">Q: What does "Standard Options &amp; Consistency" mean and why is it required? (Exam Q5-A)</div>
-  <div class="a">A: All screens in the system should look and behave the same way. Required because: (1) Users learn faster, (2) Reduces errors, (3) Reduces training time and costs, (4) Makes the system feel professional.</div>
-</div>
-
-<!-- 7.4 -->
-<h3>7.4 Interface Types (7) <span class="understand">🟡</span></h3>
-<table>
-  <thead><tr><th>Type</th><th>Description</th><th>Example</th></tr></thead>
-  <tbody>
-    <tr><td>Natural Language</td><td>User types/speaks naturally</td><td>AI chatbots</td></tr>
-    <tr><td>Question-and-Answer</td><td>System asks, user answers</td><td>Wizard setup</td></tr>
-    <tr><td>Menu Interface</td><td>User selects from options</td><td>Main menu, dropdowns</td></tr>
-    <tr><td>Form-fill Interface</td><td>User fills in fields</td><td>Registration forms</td></tr>
-    <tr><td>Command-Language</td><td>User types commands</td><td>Command prompt, SQL</td></tr>
-    <tr><td>GUI</td><td>Icons, windows, mouse-driven</td><td>Windows, macOS apps</td></tr>
-    <tr><td>Other (Touch, Voice)</td><td>Alternative input methods</td><td>Touchscreens</td></tr>
-  </tbody>
-</table>
-
-<!-- 7.5 -->
-<h3>7.5 Caption Types <span class="extra">🟢</span></h3>
-<p>A <strong>caption</strong> is a label for a field in a form. Types: Line · Above-line · Below-line · Boxed · Vertical check-off · Horizontal check-off · Table caption.</p>
-<div class="mistake">
-  ⚠️ <strong>Consistency Rule:</strong> Never mix caption types within the same form.
-</div>
-
-
-<!-- ═══════════════════════════════════════════ -->
-<hr class="section-divider">
-<h2 id="database">8 · Database Design</h2>
-<p><em>Lecture 9 (DB) · Exam Q6</em></p>
-
-<!-- 8.1 -->
-<h3>8.1 Data Storage Objectives (3) <span class="must">🔴</span></h3>
-<ol>
-  <li><strong>Making data available</strong> — Data must be accessible when the user needs it</li>
-  <li><strong>Assuring data integrity</strong> — Data must be <em>accurate and consistent</em></li>
-  <li><strong>Supporting efficient storage, retrieval, and update</strong> — Data must be quickly and easily accessible for decisions</li>
-</ol>
-
-<!-- 8.2 -->
-<h3>8.2 Flat File vs. Database Approach <span class="must">🔴</span></h3>
-
-<table>
-  <thead><tr><th>Feature</th><th>Flat File</th><th>Database Approach</th></tr></thead>
-  <tbody>
-    <tr><td>Storage</td><td>Simple 2D tables, each app has its own files</td><td>Centralized, shared by many applications</td></tr>
-    <tr><td>Managed by</td><td>Operating system</td><td>DBMS (managed by DBA)</td></tr>
-    <tr><td>Data independence</td><td>No — changing file structure breaks programs</td><td>Yes — programs independent of structure</td></tr>
-  </tbody>
-</table>
-
-<h4>Flat File Disadvantages (know all 5):</h4>
-<ol>
-  <li><strong>Data Separation and Isolation</strong> — Difficult to merge data across files</li>
-  <li><strong>Data Duplication</strong> — Same data stored multiple times → inconsistency</li>
-  <li><strong>Data Dependence</strong> — Programs break if file structure changes</li>
-  <li><strong>Poor Data Security</strong> — Hard to control access at field level</li>
-  <li><strong>Concurrency Problems</strong> — Multiple users updating same file causes conflicts</li>
-</ol>
-
-<!-- 8.3 -->
-<h3>8.3 Database Approach Advantages (5) <span class="must">🔴</span></h3>
-<ol>
-  <li><strong>Eliminates Data Redundancy</strong> — Each fact stored once; all apps share it</li>
-  <li><strong>Data Independence</strong> — Changing the database structure doesn't break programs</li>
-  <li><strong>Improved Data Integrity</strong> — Rules enforced uniformly across all applications</li>
-  <li><strong>Better Data Security</strong> — Fine-grained access control by DBA</li>
-  <li><strong>Data Sharing</strong> — Multiple users/apps access same data simultaneously</li>
-</ol>
-
-<!-- 8.4 -->
-<h3>8.4 DBA — Roles &amp; Risks <span class="must">🔴</span></h3>
-
-<div class="definition">
-  <strong>DBA (Database Administrator):</strong> Specialist responsible for designing, implementing, maintaining, and securing the database.
-</div>
-
-<h4>2 Key Roles of the DBA:</h4>
-<ol>
-  <li><strong>Database Design &amp; Implementation</strong> — Creates tables, indexes, relationships</li>
-  <li><strong>Security Administration</strong> — Controls who can access what data</li>
-</ol>
-
-<div class="mistake">
-  ⚠️ <strong>Potential Harm a DBA Can Cause:</strong> (1) Delete/corrupt critical data, (2) Leak confidential information, (3) Create unauthorized backdoor accounts, (4) Deny access to legitimate users.
-</div>
-
-<!-- 8.5 -->
-<h3>8.5 File Organization Methods <span class="understand">🟡</span></h3>
-<table>
-  <thead><tr><th>Organization</th><th>Best When…</th></tr></thead>
-  <tbody>
-    <tr><td><strong>Sequential</strong></td><td>Hit rate is very high (process most records each time)</td></tr>
-    <tr><td><strong>Indexed</strong></td><td>Hit rate is not high; need to find specific records</td></tr>
-    <tr><td><strong>Indexed Sequential (ISAM)</strong></td><td>Hit rate is medium</td></tr>
-    <tr><td><strong>Direct / Hashed</strong></td><td>Hit rate medium or low; need fast random access</td></tr>
-  </tbody>
-</table>
-
-<div class="qa-block">
-  <div class="q">Q: What file organization is best when hit rate is very high?</div>
-  <div class="a">A: <strong>Sequential</strong> — when you process most records each run, sequential is most efficient.</div>
-</div>
-
-
-<!-- ═══════════════════════════════════════════ -->
-<hr class="section-divider">
-<h2 id="program-design">9 · Program Design</h2>
-<p><em>Lecture 10 · Exam Q7</em></p>
-
-<!-- 9.1 -->
-<h3>9.1 Modular Programming <span class="must">🔴</span></h3>
-
-<div class="definition">
-  <strong>Modular Programming:</strong> A design technique that separates program functionality into independent, interchangeable modules. Each module executes <em>only one aspect</em> of the functionality.
-</div>
-
-<h4>Advantages (know at least 3):</h4>
-<ol>
-  <li>Critical interfaces are tested first</li>
-  <li>Multiple programmers can work simultaneously</li>
-  <li>Code reuse — a module written once can be used many times</li>
-  <li>More control over development — problems isolated to specific modules</li>
-  <li>Makes identifying structure easier (through the structure chart)</li>
-</ol>
-
-<!-- 9.2 -->
-<h3>9.2 Top-Down vs. Bottom-Up Strategy <span class="understand">🟡</span></h3>
-
-<table>
-  <thead><tr><th></th><th>Top-Down</th><th>Bottom-Up</th></tr></thead>
-  <tbody>
-    <tr><td><strong>Starts from</strong></td><td>Highest-level (main) module</td><td>Lowest-level modules</td></tr>
-    <tr><td><strong>Direction</strong></td><td>Decomposes downward into sub-modules</td><td>Groups basic modules upward</td></tr>
-    <tr><td><strong>Best for</strong></td><td>New system design</td><td>Reusing existing components</td></tr>
-  </tbody>
-</table>
-
-<div class="definition">
-  <strong>Structure Chart:</strong> A hierarchical diagram showing all program modules, their parent-child relationships, and the data that passes between them (data-in, data-out). Derived from structured design.
-</div>
-
-<!-- 9.3 -->
-<h3>9.3 Cohesion &amp; Coupling <span class="must">🔴</span></h3>
-
-<div class="qa-block">
-  <div class="q">Q: Define Cohesion and state the goal.</div>
-  <div class="a">A: Cohesion = how <strong>focused</strong> a module is on a single task. Goal: <strong>MAXIMIZE cohesion</strong> (HIGH cohesion = module does one thing well = better quality).</div>
-</div>
-
-<div class="qa-block">
-  <div class="q">Q: Define Coupling and state the goal.</div>
-  <div class="a">A: Coupling = how much modules <strong>depend on each other</strong>. Goal: <strong>MINIMIZE coupling</strong> (LOOSE coupling = modules nearly independent = better quality).</div>
-</div>
-
-<table>
-  <thead><tr><th></th><th>Definition</th><th>Goal</th><th>Good = ?</th></tr></thead>
-  <tbody>
-    <tr><td><strong>Cohesion</strong></td><td>How focused a module is on one task</td><td>MAXIMIZE</td><td>HIGH Cohesion</td></tr>
-    <tr><td><strong>Coupling</strong></td><td>How much modules depend on each other</td><td>MINIMIZE</td><td>LOOSE Coupling</td></tr>
-  </tbody>
-</table>
-
-<div class="exam-focus">
-  <strong>📌 Memory trick:</strong> HIGH Cohesion + LOOSE Coupling = Good Quality Program Design.
-</div>
-
-
-<!-- ═══════════════════════════════════════════ -->
-<hr class="section-divider">
-<h2 id="flashcards">10 · Quick Flashcard Review</h2>
-<p><em>Read the question, cover the answer, then check. Do this 2–3 times.</em></p>
-
-<div class="qa-block">
-  <div class="q">Q: What is SDLC and is it a methodology?</div>
-  <div class="a">A: A logical process to build IS. NOT a methodology — it describes phases; methodologies execute them.</div>
-</div>
-
-<div class="qa-block">
-  <div class="q">Q: Name the 7 SDLC phases in order.</div>
-  <div class="a">A: Planning → Analysis → Design &amp; Prototyping → Implementation → Configuration &amp; Procurement → Deployment &amp; Operations → Maintenance.</div>
-</div>
-
-<div class="qa-block">
-  <div class="q">Q: Name the 6 roles of the System Analyst.</div>
-  <div class="a">A: System Analyst · Business Analyst · Systems Architect · Infrastructure Analyst · Change Management Analyst · Project Manager.</div>
-</div>
-
-<div class="qa-block">
-  <div class="q">Q: Name the 3 sub-phases of the Analysis phase.</div>
-  <div class="a">A: Survey → Detailed Study → Definition.</div>
-</div>
-
-<div class="qa-block">
-  <div class="q">Q: What are the 5 Fact-Finding Techniques?</div>
-  <div class="a">A: Interviewing · Questionnaires · Observation · Sampling &amp; Record Inspection · JAD.</div>
-</div>
-
-<div class="qa-block">
-  <div class="q">Q: Name the 4 DFD symbols and their shapes.</div>
-  <div class="a">A: External Entity (rectangle) · Process (circle/oval) · Data Store (open rectangle) · Data Flow (labeled arrow).</div>
-</div>
-
-<div class="qa-block">
-  <div class="q">Q: What is a Context-Level DFD?</div>
-  <div class="a">A: The entire system as ONE process, surrounded by external entities. No data stores, no internal processes shown.</div>
-</div>
-
-<div class="qa-block">
-  <div class="q">Q: What is the DFD Balancing Rule?</div>
-  <div class="a">A: Flows in/out of a parent process must match flows in/out of its child diagram.</div>
-</div>
-
-<div class="qa-block">
-  <div class="q">Q: What is a Black Hole in a DFD?</div>
-  <div class="a">A: A process with input but no output.</div>
-</div>
-
-<div class="qa-block">
-  <div class="q">Q: What is the difference between Client-Server and Server-Based architecture?</div>
-  <div class="a">A: Client-Server splits processing between client and server. Server-Based = server does ALL FOUR functions; client is a dumb terminal.</div>
-</div>
-
-<div class="qa-block">
-  <div class="q">Q: Name the 3 data storage objectives.</div>
-  <div class="a">A: (1) Making data available, (2) Assuring data integrity, (3) Supporting efficient storage, retrieval, and update.</div>
-</div>
-
-<div class="qa-block">
-  <div class="q">Q: Name 3 advantages of the database approach.</div>
-  <div class="a">A: Any 3 of: Eliminates redundancy · Data independence · Improved integrity · Better security · Data sharing.</div>
-</div>
-
-<div class="qa-block">
-  <div class="q">Q: Name 3 disadvantages of the flat file approach.</div>
-  <div class="a">A: Any 3 of: Data separation &amp; isolation · Data duplication · Data dependence · Poor security · Concurrency problems.</div>
-</div>
-
-<div class="qa-block">
-  <div class="q">Q: What are the 2 roles of the DBA?</div>
-  <div class="a">A: (1) Database design &amp; implementation, (2) Security administration.</div>
-</div>
-
-<div class="qa-block">
-  <div class="q">Q: What are the 2 input design objectives?</div>
-  <div class="a">A: (1) Ease of use — make input efficient, (2) Accuracy — assure correct completion through controls.</div>
-</div>
-
-<div class="qa-block">
-  <div class="q">Q: Define Cohesion and Coupling. What should you maximize/minimize?</div>
-  <div class="a">A: Cohesion = focus of one module on one task → MAXIMIZE (HIGH). Coupling = dependency between modules → MINIMIZE (LOOSE).</div>
-</div>
-
-<div class="qa-block">
-  <div class="q">Q: Define Modular Programming.</div>
-  <div class="a">A: Separating program functionality into independent, interchangeable modules, each executing only ONE aspect of functionality.</div>
-</div>
-
-<div class="qa-block">
-  <div class="q">Q: What is Prototyping and what are its 3 characteristics?</div>
-  <div class="a">A: Building a working model to verify requirements. Characteristics: Iterative · User-centric · Preliminary.</div>
-</div>
-
-<div class="qa-block">
-  <div class="q">Q: What is the PRIMARY objective of SA&amp;D?</div>
-  <div class="a">A: To <strong>create VALUE for the organization</strong> — NOT to create a wonderful system.</div>
-</div>
-
-<div class="qa-block">
-  <div class="q">Q: What file organization is best for a very high hit rate?</div>
-  <div class="a">A: Sequential.</div>
-</div>
-
-<hr style="margin-top:50px; border-top:2px solid #ccc;">
-<p style="text-align:center; color:#888; font-family:Arial,sans-serif; font-size:0.85rem; margin-top:16px;">
-  System Analysis &amp; Design — Clean Study Notes · El-Shorouk Academy 2023/2024
-</p>
-
-<script>
-  function toggleSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('sidebarOverlay');
-    sidebar.classList.toggle('open');
-    overlay.classList.toggle('show');
-    document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
-  }
-</script>
+
+  <div class="definition">
+    <strong>System:</strong> A set of interrelated components that work together to accomplish a common goal.
+  </div>
+
+  <div class="definition">
+    <strong>Information System (IS):</strong> An arrangement of people, data, processes, and technology that collects,
+    processes, stores, and outputs the information an organization needs.
+  </div>
+
+  <h4>IS has 4 components:</h4>
+  <ul>
+    <li><strong>People</strong> — users, IT staff, managers</li>
+    <li><strong>Data</strong> — raw facts collected and processed</li>
+    <li><strong>Processes</strong> — activities that transform data into information</li>
+    <li><strong>Technology</strong> — hardware, software, networks</li>
+  </ul>
+
+  <div class="qa-block">
+    <div class="q">Q: What is the PRIMARY objective of SA&amp;D?</div>
+    <div class="a">A: <strong>NOT</strong> to create a wonderful system — it is to <strong>create VALUE for the
+        organization</strong> (increase profits, improve processes, serve users better, integrate with other IS).</div>
+  </div>
+
+  <div class="mistake">
+    ⚠️ <strong>Common Mistake:</strong> Students say "the goal is to build a great system." Wrong. The goal is to
+    <strong>create business value</strong>. Many projects fail because they focus on the system, not the business.
+  </div>
+
+  <!-- 1.2 -->
+  <h3>1.2 IS Types <span class="understand">🟡</span></h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Abbreviation</th>
+        <th>Full Name</th>
+        <th>What it does</th>
+        <th>Level</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>TPS</strong></td>
+        <td>Transaction Processing System</td>
+        <td>Handles day-to-day repetitive transactions (sales, payroll)</td>
+        <td>Operational</td>
+      </tr>
+      <tr>
+        <td><strong>MIS</strong></td>
+        <td>Management Information System</td>
+        <td>Generates summary reports from TPS data</td>
+        <td>Middle Management</td>
+      </tr>
+      <tr>
+        <td><strong>DSS</strong></td>
+        <td>Decision Support System</td>
+        <td>Supports semi-structured decisions using models</td>
+        <td>Senior Management</td>
+      </tr>
+      <tr>
+        <td><strong>ES</strong></td>
+        <td>Expert System</td>
+        <td>Emulates human expert knowledge; gives recommendations</td>
+        <td>Specialist</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 1.3 -->
+  <h3>1.3 Roles of the System Analyst <span class="must">🔴</span></h3>
+  <p><em>Exam Q1-B asks for 4 of the 6 roles. Know all 6.</em></p>
+
+  <ol>
+    <li><strong>System Analyst</strong> — Studies org. problems and designs IS solutions</li>
+    <li><strong>Business Analyst</strong> — Focuses on business problems, independent of technology</li>
+    <li><strong>Systems Architect</strong> — Designs the overall technical architecture</li>
+    <li><strong>Infrastructure Analyst</strong> — Focuses on networks, hardware, OS</li>
+    <li><strong>Change Management Analyst</strong> — Helps people adapt to the new system</li>
+    <li><strong>Project Manager</strong> — Plans, executes, and controls the development project</li>
+  </ol>
+
+  <div class="exam-focus">
+    <strong>📌 Exam Focus:</strong> Know all 6 roles by name and be able to describe any one in 2–3 lines.
+  </div>
+
+  <!-- 1.4 -->
+  <h3>1.4 Project Sponsor <span class="must">🔴</span></h3>
+
+  <div class="definition">
+    <strong>Project Sponsor:</strong> The person who <em>initiates</em> the project. They identify the business need,
+    define requirements, and prepare the <strong>System Request</strong>.
+  </div>
+
+  <h4>System Request has 5 elements:</h4>
+  <ol>
+    <li>Project Sponsor</li>
+    <li>Business Need</li>
+    <li>Business Requirements</li>
+    <li>Business Value</li>
+    <li>Special Issues and Constraints</li>
+  </ol>
+
+  <div class="qa-block">
+    <div class="q">Q: Who is the Project Sponsor and what do they do?</div>
+    <div class="a">A: The person who starts the project. They identify business needs and expected value, then formally
+      prepare the System Request.</div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════ -->
+  <hr class="section-divider">
+  <h2 id="sdlc">2 · SDLC &amp; Methodologies</h2>
+  <p><em>Lectures 3–4 · Exam Q2</em></p>
+
+  <!-- 2.1 -->
+  <h3>2.1 SDLC Definition <span class="must">🔴</span></h3>
+
+  <div class="definition">
+    <strong>SDLC (System Development Lifecycle):</strong> A logical process by which analysts, engineers, programmers,
+    and users build IS to solve business problems. It is a <em>project management tool</em> used to plan, execute, and
+    control development.
+  </div>
+
+  <h4>SDLC provides:</h4>
+  <ul>
+    <li>High-quality, low-cost software</li>
+    <li>Shortest possible production time</li>
+    <li>Minimizes project risks</li>
+    <li>Complete and consistent documentation</li>
+  </ul>
+
+  <div class="mistake">
+    ⚠️ <strong>Common Mistake:</strong> "SDLC is a methodology." <strong>Wrong.</strong> SDLC describes the
+    <em>phases</em>. A <strong>methodology</strong> is how you execute those phases. (Fact: 70% of IT projects fail due
+    to lack of SDLC implementation.)
+  </div>
+
+  <div class="qa-block">
+    <div class="q">Q: Is SDLC a methodology? Explain.</div>
+    <div class="a">A: No. SDLC describes <strong>what phases</strong> to go through. A Methodology describes
+      <strong>how</strong> to execute them.</div>
+  </div>
+
+  <!-- 2.2 -->
+  <h3>2.2 The 7 SDLC Phases <span class="must">🔴</span></h3>
+
+  <ol>
+    <li><strong>Planning</strong> — Identify project, feasibility analysis, steering committee approval</li>
+    <li><strong>Analysis</strong> — Three sub-phases: Survey → Detailed Study → Definition</li>
+    <li><strong>Design &amp; Prototyping</strong> — Design architecture, inputs, outputs, interfaces, data storage,
+      programs</li>
+    <li><strong>Implementation</strong> — Code, test, and integrate the software</li>
+    <li><strong>Configuration &amp; Procurement</strong> — Define and acquire hardware/software/networks</li>
+    <li><strong>Deployment &amp; Operations</strong> — Go-live, user training, acceptance testing</li>
+    <li><strong>Maintenance</strong> — Ongoing repair, updates, improvements</li>
+  </ol>
+
+  <div class="exam-focus">
+    <strong>📌 Exam Focus:</strong> Memorize all 7 phases <em>in order</em>. Know that the Analysis phase has 3
+    sub-phases.
+  </div>
+
+  <!-- 2.3 -->
+  <h3>2.3 Project Payments Milestones <span class="understand">🟡</span></h3>
+
+  <div class="definition">
+    <strong>Project Payments Milestones:</strong> Checkpoints in a project timeline, each linked to a deliverable.
+    Payment is released <em>only after</em> the deliverable is accepted. Ensures the client pays based on actual
+    progress, not just time.
+  </div>
+
+  <!-- 2.4 -->
+  <h3>2.4 Methodologies Compared <span class="understand">🟡</span></h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Methodology</th>
+        <th>Key Idea</th>
+        <th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Waterfall</strong></td>
+        <td>Sequential, phase-by-phase, no going back</td>
+        <td>Stable, well-defined requirements</td>
+      </tr>
+      <tr>
+        <td><strong>Prototyping</strong></td>
+        <td>Build a working model to verify requirements</td>
+        <td>Unclear requirements</td>
+      </tr>
+      <tr>
+        <td><strong>Iterative / Incremental</strong></td>
+        <td>Deliver in pieces, each adds functionality</td>
+        <td>Large systems with phased delivery</td>
+      </tr>
+      <tr>
+        <td><strong>Spiral</strong></td>
+        <td>Iterative + risk analysis at each loop</td>
+        <td>High-risk, complex projects</td>
+      </tr>
+      <tr>
+        <td><strong>Agile</strong></td>
+        <td>Flexible, short sprints (≈2 weeks), collaborative</td>
+        <td>Rapidly changing requirements</td>
+      </tr>
+      <tr>
+        <td><strong>OOAD</strong></td>
+        <td>Object-oriented analysis and design</td>
+        <td>OO-based systems</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 2.5 -->
+  <h3>2.5 Feasibility Analysis (3 Types) <span class="must">🔴</span></h3>
+  <ul>
+    <li><strong>Technical feasibility</strong> — Can we build it with available technology?</li>
+    <li><strong>Economic feasibility</strong> — Will it provide enough business value to justify cost?</li>
+    <li><strong>Organizational feasibility</strong> — If we build it, will people actually use it?</li>
+  </ul>
+
+  <!-- 2.6 -->
+  <h3>2.6 Eight Underlying Principles of System Development <span class="extra">🟢</span></h3>
+  <ol>
+    <li>Get owners and users involved</li>
+    <li>Use a problem-solving approach</li>
+    <li>Establish phases and activities</li>
+    <li>Establish standards</li>
+    <li>Justify system as a capital investment (ROI)</li>
+    <li>Do not be afraid to cancel or revise scope</li>
+    <li>Divide and conquer</li>
+    <li>Design for growth and change</li>
+  </ol>
+
+
+  <!-- ═══════════════════════════════════════════ -->
+  <hr class="section-divider">
+  <h2 id="analysis-phases">3 · Analysis Phases</h2>
+  <p><em>Exam Q5 — 30 marks (highest weight question)</em></p>
+
+  <p>The Analysis phase has <strong>3 sub-phases</strong>:<br>
+    <strong>1. Survey Phase → 2. Detailed Study Phase → 3. Definition Phase</strong>
+  </p>
+
+  <!-- 3.1 -->
+  <h3>3.1 Survey Phase <span class="must">🔴</span></h3>
+
+  <div class="definition">
+    <strong>Survey Phase:</strong> The first sub-phase. Its goal is to quickly understand the current system's problems,
+    opportunities, and constraints — and to plan the project.
+  </div>
+
+  <h4>4 Activities in Survey Phase:</h4>
+  <ol>
+    <li>Survey Problems and Opportunities</li>
+    <li>Negotiate Project Scope</li>
+    <li>Plan the Project</li>
+    <li>Present Project (to management for approval)</li>
+  </ol>
+
+  <div class="qa-block">
+    <div class="q">Q: What are the objectives of "Plan the Project" in Survey Phase? (Exam Q5-A)</div>
+    <div class="a">A: (1) Select a project methodology, (2) Create a detailed work plan, (3) Identify staffing
+      requirements, (4) Prepare to manage and control the project.<br>
+      <em>Deliverables: work plan, staffing plan, standards list, project charter, risk assessment plan.</em>
+    </div>
+  </div>
+
+  <div class="qa-block">
+    <div class="q">Q: Why assign a Planner in the Survey Phase? (Exam Q5-B)</div>
+    <div class="a">A: Because this phase requires creating a comprehensive project work plan, estimating
+      costs/resources, scheduling activities, and identifying risks — specialist planning skills needed before
+      committing full resources.</div>
+  </div>
+
+  <!-- 3.2 -->
+  <h3>3.2 Detailed Study Phase <span class="must">🔴</span></h3>
+
+  <div class="definition">
+    <strong>Detailed Study Phase:</strong> The second sub-phase. Analysts deeply investigate the existing system,
+    gathering detailed information to understand all business processes, problems, and requirements.
+  </div>
+
+  <h4>6 Activities:</h4>
+  <ol>
+    <li>Model the Current System (using DFDs)</li>
+    <li>Analyze the Business Processes</li>
+    <li>Analyze Problems and Opportunities</li>
+    <li>Establish Systems Improvement Objectives and Constraints</li>
+    <li>Modify Project Scope and Plan</li>
+    <li>Present Findings and Recommendations</li>
+  </ol>
+
+  <div class="qa-block">
+    <div class="q">Q: What is Prototyping? Name 3 characteristics. (Exam Q5-D)</div>
+    <div class="a">A: Building a working model of user requirements to discover and verify them before the full system
+      is built.<br>
+      <strong>Characteristics:</strong> (1) Iterative — build → evaluate → refine cycle, (2) User-centric — users
+      actively provide feedback, (3) Preliminary — it is NOT the final system.
+    </div>
+  </div>
+
+  <div class="qa-block">
+    <div class="q">Q: Why should the PM prioritize business requirements? (Exam Q5-E)</div>
+    <div class="a">A: Resources (time, budget, staff) are always limited. Prioritization ensures the most critical,
+      high-value requirements are done first, allows incremental delivery, and reduces project risk.</div>
+  </div>
+
+  <!-- 3.3 -->
+  <h3>3.3 Definition Phase <span class="must">🔴</span></h3>
+
+  <div class="definition">
+    <strong>Definition Phase:</strong> The final sub-phase. The analyst defines requirements for the proposed new system
+    and documents the system proposal.
+  </div>
+
+  <h4>4 Activities:</h4>
+  <ol>
+    <li>Define proposed system requirements (functional and non-functional)</li>
+    <li>Develop alternative solution approaches</li>
+    <li>Evaluate and recommend the best alternative</li>
+    <li>Transition to the Design Phase</li>
+  </ol>
+
+  <div class="qa-block">
+    <div class="q">Q: Why assign a Modeler in the Definition Phase? (Exam Q5-F)</div>
+    <div class="a">A: This phase requires creating formal system models (DFDs, use cases, data models). Modeling
+      specialists ensure models accurately communicate the proposed system to all stakeholders before design begins.
+    </div>
+  </div>
+
+  <!-- 3.4 -->
+  <h3>3.4 Types of Requirements <span class="understand">🟡</span></h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>What it covers</th>
+        <th>Example</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Business Requirements</strong></td>
+        <td>Overall goals; contributions to org. success</td>
+        <td>"Produce performance reports"</td>
+      </tr>
+      <tr>
+        <td><strong>User Requirements</strong></td>
+        <td>Usability, UI expectations of end users</td>
+        <td>Easy navigation</td>
+      </tr>
+      <tr>
+        <td><strong>Functional Requirements</strong></td>
+        <td>What the system must <em>do</em></td>
+        <td>"User authentication", "Reporting"</td>
+      </tr>
+      <tr>
+        <td><strong>Non-Functional Requirements</strong></td>
+        <td>Characteristics the system must <em>have</em></td>
+        <td>"Response time &lt; 2 seconds"</td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <!-- ═══════════════════════════════════════════ -->
+  <hr class="section-divider">
+  <h2 id="fft">4 · Fact-Finding Techniques (FFT)</h2>
+  <p><em>Lecture 7 · Exam Q3</em></p>
+
+  <p>Before starting, prepare an <strong>Investigation Plan</strong> (includes Terms of Reference + timetable). Must be
+    approved by top management.</p>
+
+  <!-- 4.1 -->
+  <h3>4.1 The 5 FFTs <span class="must">🔴</span></h3>
+  <ol>
+    <li>Interviewing</li>
+    <li>Questionnaires</li>
+    <li>Observation</li>
+    <li>Sampling &amp; Record Inspection</li>
+    <li>Joint Application Development (JAD)</li>
+  </ol>
+
+  <!-- 4.2 -->
+  <h3>4.2 Interviewing <span class="understand">🟡</span></h3>
+
+  <div class="definition">
+    <strong>Interviewing:</strong> The most productive FFT. A structured conversation between the analyst and staff to
+    gather information about the current system.
+  </div>
+
+  <h4>3 Steps: Plan → Conduct → Terminate</h4>
+  <ul>
+    <li><strong>Planning:</strong> Define objectives, prepare questions, identify interviewees</li>
+    <li><strong>Conducting:</strong> Ask questions, distinguish facts from opinions, use simple language</li>
+    <li><strong>Terminating:</strong> Summarize information, allow follow-up if needed</li>
+  </ul>
+
+  <p><strong>Rule:</strong> Always use <strong>two interviewers</strong> — one to ask, one to record.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Ask Top Management about…</th>
+        <th>Ask Operational Staff about…</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Policies, strategies, future direction, constraints (budget, manpower, time)</td>
+        <td>Functions performed, forms used, communication lines, work volumes, improvement suggestions</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 4.3 -->
+  <h3>4.3 Questionnaires <span class="must">🔴</span></h3>
+
+  <div class="definition">
+    <strong>Questionnaire:</strong> A set of written questions distributed to many people simultaneously to gather
+    information efficiently.
+  </div>
+
+  <h4>When to use questionnaires (5 conditions):</h4>
+  <ol>
+    <li>Large number of people must be surveyed</li>
+    <li>Respondents are geographically dispersed</li>
+    <li>Quantitative data is needed (statistics, frequencies)</li>
+    <li>Anonymity is required for honest answers</li>
+    <li>Opinions need to be validated from a wide group</li>
+  </ol>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Advantages ✅</th>
+        <th>Disadvantages ❌</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Reaches many people quickly · Low cost · Anonymity encourages honesty · Easy to tabulate</td>
+        <td>Low response rate · No follow-up questions · May be misunderstood · Shallow depth</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 4.4 -->
+  <h3>4.4 Observation <span class="understand">🟡</span></h3>
+
+  <div class="definition">
+    <strong>Observation:</strong> The analyst directly watches how work is performed to understand actual (vs. stated)
+    procedures.
+  </div>
+
+  <ul>
+    <li>✅ Reveals actual vs. documented procedures · Firsthand data · Good for timing/volumes</li>
+    <li>❌ <strong>Hawthorne Effect</strong> — people change behavior when watched · Time-consuming</li>
+  </ul>
+
+  <div class="qa-block">
+    <div class="q">Q: What is the Hawthorne Effect?</div>
+    <div class="a">A: People change their behavior when they know they are being observed, making observations less
+      accurate.</div>
+  </div>
+
+  <!-- 4.5 -->
+  <h3>4.5 Sampling &amp; Record Inspection <span class="extra">🟢</span></h3>
+  <p>Analyzing a representative subset of existing documents (forms, reports, procedure manuals, organization charts,
+    transaction logs) to understand data volumes and current processes.</p>
+
+
+  <!-- ═══════════════════════════════════════════ -->
+  <hr class="section-divider">
+  <h2 id="modeling">5 · System Modeling &amp; DFDs</h2>
+  <p><em>Lecture 9 · Exam Q4 — 20 marks</em></p>
+
+  <!-- 5.1 -->
+  <h3>5.1 What is System Modeling? <span class="must">🔴</span></h3>
+
+  <div class="definition">
+    <strong>System Modeling:</strong> Developing and presenting an abstract blueprint of a system using graphical
+    notation. It emphasizes the <em>flow of information</em> between modules.
+  </div>
+
+  <div class="qa-block">
+    <div class="q">Q: What are the 2 purposes of modeling techniques? (Exam Q4-A)</div>
+    <div class="a">A: (1) <strong>Understand the current system</strong> — identify strengths and weaknesses. (2)
+      <strong>Communicate with stakeholders</strong> — provide a clear visual for non-technical people.</div>
+  </div>
+
+  <!-- 5.2 -->
+  <h3>5.2 DFD Symbols <span class="must">🔴</span></h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Symbol</th>
+        <th>Shape</th>
+        <th>Meaning</th>
+        <th>Example</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>External Entity</strong></td>
+        <td>Rectangle / Square</td>
+        <td>Source or destination outside the system</td>
+        <td>Customer, HQ</td>
+      </tr>
+      <tr>
+        <td><strong>Process</strong></td>
+        <td>Circle / Oval</td>
+        <td>Transforms data</td>
+        <td>Validate Order</td>
+      </tr>
+      <tr>
+        <td><strong>Data Store</strong></td>
+        <td>Open-ended rectangle</td>
+        <td>Data at rest (stored data)</td>
+        <td>Archive, Customer DB</td>
+      </tr>
+      <tr>
+        <td><strong>Data Flow</strong></td>
+        <td>Labeled Arrow →</td>
+        <td>Movement of data between components</td>
+        <td>Requested Order</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 5.3 -->
+  <h3>5.3 DFD Levels <span class="must">🔴</span></h3>
+
+  <h4>Context-Level DFD (Exam Q4-B)</h4>
+  <p>The <strong>highest-level</strong> view. Shows the <strong>entire system as ONE single process</strong> surrounded
+    by all external entities. Shows only what goes in and out. <em>No data stores, no internal processes shown.</em></p>
+
+  <div class="exam-focus">
+    <strong>📌 Rules for Context-Level DFD:</strong> One process bubble · All external entities around it · All data
+    flows in/out shown · No data stores.
+  </div>
+
+  <h4>Level-0 DFD (Exam Q4-C)</h4>
+  <p>Expands the single process into the <strong>major sub-processes</strong> (e.g., departments). Shows main processes,
+    data flows between them, major data stores, and external entities. Processes numbered <strong>1.0, 2.0,
+      3.0…</strong></p>
+
+  <h4>Level-1 DFD (Exam Q4-D)</h4>
+  <p>Explodes each Level-0 process into its <strong>sub-processes</strong> (child diagrams). Each department gets its
+    own Level-1 diagram. Sub-processes numbered <strong>1.1, 1.2, 1.3…</strong></p>
+
+  <h4>Level-2 DFD</h4>
+  <p>Explodes each Level-1 process further. Only created when a Level-1 process is still too complex to implement
+    directly.</p>
+
+  <div class="qa-block">
+    <div class="q">Q: What is the DFD Balancing Rule?</div>
+    <div class="a">A: Data flows going into and out of a <strong>parent process</strong> must exactly match the data
+      flows in the <strong>child diagram</strong> of that process.</div>
+  </div>
+
+  <!-- 5.4 -->
+  <h3>5.4 Common DFD Errors <span class="must">🔴</span></h3>
+  <ul>
+    <li><strong>Black Hole</strong> — Process has input but <em>no output</em></li>
+    <li><strong>Miracle</strong> — Process has output but <em>no input</em></li>
+    <li><strong>Store-to-Store flow</strong> — Direct flow between two data stores (must go through a process)</li>
+    <li><strong>Entity-to-Entity flow</strong> — Direct flow between two external entities</li>
+    <li><strong>Unbalanced DFD</strong> — Child flows don't match parent flows</li>
+  </ul>
+
+  <div class="exam-focus">
+    <strong>📌 Exam Focus:</strong> Q4 = 20 marks. Practice drawing Context, Level-0, Level-1 DFDs for the RRG
+    Restaurant example. Know the 5 DFD errors.
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════ -->
+  <hr class="section-divider">
+  <h2 id="architecture">6 · Technical Architecture (STA)</h2>
+  <p><em>Lecture 5 · Exam Q2</em></p>
+
+  <!-- 6.1 -->
+  <h3>6.1 STA Definition <span class="must">🔴</span></h3>
+
+  <div class="definition">
+    <strong>System Technical Architecture (STA):</strong> The fundamental functional organization of a system — its
+    components, their relationships, and the principles guiding design. Defines technologies used for <em>data,
+      processes, interfaces, and networks</em>.
+  </div>
+
+  <h4>4 Software Functions (know these):</h4>
+  <ol>
+    <li><strong>Presentation Logic</strong> — User interface display and input</li>
+    <li><strong>Application Logic</strong> — Business rules, processes</li>
+    <li><strong>Data Access Logic</strong> — How data is accessed</li>
+    <li><strong>Data Storage</strong> — Where data is stored</li>
+  </ol>
+
+  <!-- 6.2 -->
+  <h3>6.2 Architecture Types <span class="must">🔴</span></h3>
+
+  <h4>Client-Server Architecture</h4>
+  <p>Processing is <strong>split</strong> between client and server. Client handles presentation; server handles data.
+    Three tier types:</p>
+  <ul>
+    <li><strong>2-Tier:</strong> Client (presentation + business logic) ↔ Server (data storage + DB logic)</li>
+    <li><strong>3-Tier:</strong> Client (presentation) ↔ App Server (business logic) ↔ DB Server (data)</li>
+    <li><strong>n-Tier:</strong> Client ↔ Web Server ↔ App Server ↔ DB Server</li>
+  </ul>
+
+  <p><strong>Thick/Fat Client:</strong> Client has most of the application logic (less server-dependent).<br>
+    <strong>Thin Client:</strong> Client has minimal logic (e.g., browser); server does most work.
+  </p>
+
+  <h4>Server-Based Architecture</h4>
+  <p>The server performs <strong>ALL FOUR</strong> functions. Clients are "dumb terminals" that only display output.
+    Simple but not scalable.</p>
+
+  <div class="qa-block">
+    <div class="q">Q: What is the key difference between Client-Server and Server-Based?</div>
+    <div class="a">A: In Client-Server, processing is split. In Server-Based, the <strong>server does
+        everything</strong> and clients are just display screens.</div>
+  </div>
+
+  <!-- 6.3 -->
+  <h3>6.3 System Acquisition Strategies (3) <span class="must">🔴</span></h3>
+  <ol>
+    <li><strong>Custom Development (Build)</strong> — Build from scratch. Full control. Most expensive and
+      time-consuming.</li>
+    <li><strong>Commercial Off-the-Shelf (Buy / COTS)</strong> — Purchase existing software. Faster and cheaper. Less
+      customizable.</li>
+    <li><strong>Outsourcing</strong> — Hire an external company. Reduces internal workload. Organization loses some
+      control.</li>
+  </ol>
+
+
+  <!-- ═══════════════════════════════════════════ -->
+  <hr class="section-divider">
+  <h2 id="io-design">7 · Input / Output / Interface Design</h2>
+  <p><em>Exam Q3, Q4, Q5</em></p>
+
+  <!-- 7.1 -->
+  <h3>7.1 Input Design Objectives (2 Objectives) <span class="must">🔴</span></h3>
+  <ol>
+    <li><strong>Ease of Use</strong> — Make input completion easy and efficient</li>
+    <li><strong>Accuracy</strong> — Assure accurate completion through controls and validation</li>
+  </ol>
+
+  <h4>How to achieve Ease of Use:</h4>
+  <ul>
+    <li>Capture only <strong>variable data</strong> (data that changes each transaction)</li>
+    <li>Capture only <strong>base data</strong> (not data that can be calculated/derived)</li>
+    <li>Use checkboxes, dropdowns — minimize handwriting</li>
+    <li>Include instructions on forms</li>
+    <li>Sequence data top-to-bottom, left-to-right</li>
+  </ul>
+
+  <h4>Input Controls:</h4>
+  <table>
+    <thead>
+      <tr>
+        <th>External Controls (UI controls)</th>
+        <th>Internal Controls (Validation)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Text boxes · Radio buttons · Checkboxes · List boxes · Combo boxes · Spin boxes</td>
+        <td>Completeness check · Range/Limit check · Combination checks · Self-checking digits (checksum, NID) · Picture
+          checks (format)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 7.2 -->
+  <h3>7.2 Output Design Objectives (4 Objectives) <span class="must">🔴</span></h3>
+  <ol>
+    <li><strong>Deliver appropriate quantity</strong> — Give each user exactly what they need</li>
+    <li><strong>Output reaches the right person</strong> — Design a distribution plan</li>
+    <li><strong>Output provided on time</strong> — A delayed decision support report is useless</li>
+    <li><strong>Choose the right output method</strong> — Print, screen, web, audio, etc.</li>
+  </ol>
+
+  <!-- 7.3 -->
+  <h3>7.3 Interface Design — Standard Options &amp; Consistency <span class="must">🔴</span></h3>
+
+  <div class="qa-block">
+    <div class="q">Q: What does "Standard Options &amp; Consistency" mean and why is it required? (Exam Q5-A)</div>
+    <div class="a">A: All screens in the system should look and behave the same way. Required because: (1) Users learn
+      faster, (2) Reduces errors, (3) Reduces training time and costs, (4) Makes the system feel professional.</div>
+  </div>
+
+  <!-- 7.4 -->
+  <h3>7.4 Interface Types (7) <span class="understand">🟡</span></h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Example</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Natural Language</td>
+        <td>User types/speaks naturally</td>
+        <td>AI chatbots</td>
+      </tr>
+      <tr>
+        <td>Question-and-Answer</td>
+        <td>System asks, user answers</td>
+        <td>Wizard setup</td>
+      </tr>
+      <tr>
+        <td>Menu Interface</td>
+        <td>User selects from options</td>
+        <td>Main menu, dropdowns</td>
+      </tr>
+      <tr>
+        <td>Form-fill Interface</td>
+        <td>User fills in fields</td>
+        <td>Registration forms</td>
+      </tr>
+      <tr>
+        <td>Command-Language</td>
+        <td>User types commands</td>
+        <td>Command prompt, SQL</td>
+      </tr>
+      <tr>
+        <td>GUI</td>
+        <td>Icons, windows, mouse-driven</td>
+        <td>Windows, macOS apps</td>
+      </tr>
+      <tr>
+        <td>Other (Touch, Voice)</td>
+        <td>Alternative input methods</td>
+        <td>Touchscreens</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 7.5 -->
+  <h3>7.5 Caption Types <span class="extra">🟢</span></h3>
+  <p>A <strong>caption</strong> is a label for a field in a form. Types: Line · Above-line · Below-line · Boxed ·
+    Vertical check-off · Horizontal check-off · Table caption.</p>
+  <div class="mistake">
+    ⚠️ <strong>Consistency Rule:</strong> Never mix caption types within the same form.
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════ -->
+  <hr class="section-divider">
+  <h2 id="database">8 · Database Design</h2>
+  <p><em>Lecture 9 (DB) · Exam Q6</em></p>
+
+  <!-- 8.1 -->
+  <h3>8.1 Data Storage Objectives (3) <span class="must">🔴</span></h3>
+  <ol>
+    <li><strong>Making data available</strong> — Data must be accessible when the user needs it</li>
+    <li><strong>Assuring data integrity</strong> — Data must be <em>accurate and consistent</em></li>
+    <li><strong>Supporting efficient storage, retrieval, and update</strong> — Data must be quickly and easily
+      accessible for decisions</li>
+  </ol>
+
+  <!-- 8.2 -->
+  <h3>8.2 Flat File vs. Database Approach <span class="must">🔴</span></h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Feature</th>
+        <th>Flat File</th>
+        <th>Database Approach</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Storage</td>
+        <td>Simple 2D tables, each app has its own files</td>
+        <td>Centralized, shared by many applications</td>
+      </tr>
+      <tr>
+        <td>Managed by</td>
+        <td>Operating system</td>
+        <td>DBMS (managed by DBA)</td>
+      </tr>
+      <tr>
+        <td>Data independence</td>
+        <td>No — changing file structure breaks programs</td>
+        <td>Yes — programs independent of structure</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4>Flat File Disadvantages (know all 5):</h4>
+  <ol>
+    <li><strong>Data Separation and Isolation</strong> — Difficult to merge data across files</li>
+    <li><strong>Data Duplication</strong> — Same data stored multiple times → inconsistency</li>
+    <li><strong>Data Dependence</strong> — Programs break if file structure changes</li>
+    <li><strong>Poor Data Security</strong> — Hard to control access at field level</li>
+    <li><strong>Concurrency Problems</strong> — Multiple users updating same file causes conflicts</li>
+  </ol>
+
+  <!-- 8.3 -->
+  <h3>8.3 Database Approach Advantages (5) <span class="must">🔴</span></h3>
+  <ol>
+    <li><strong>Eliminates Data Redundancy</strong> — Each fact stored once; all apps share it</li>
+    <li><strong>Data Independence</strong> — Changing the database structure doesn't break programs</li>
+    <li><strong>Improved Data Integrity</strong> — Rules enforced uniformly across all applications</li>
+    <li><strong>Better Data Security</strong> — Fine-grained access control by DBA</li>
+    <li><strong>Data Sharing</strong> — Multiple users/apps access same data simultaneously</li>
+  </ol>
+
+  <!-- 8.4 -->
+  <h3>8.4 DBA — Roles &amp; Risks <span class="must">🔴</span></h3>
+
+  <div class="definition">
+    <strong>DBA (Database Administrator):</strong> Specialist responsible for designing, implementing, maintaining, and
+    securing the database.
+  </div>
+
+  <h4>2 Key Roles of the DBA:</h4>
+  <ol>
+    <li><strong>Database Design &amp; Implementation</strong> — Creates tables, indexes, relationships</li>
+    <li><strong>Security Administration</strong> — Controls who can access what data</li>
+  </ol>
+
+  <div class="mistake">
+    ⚠️ <strong>Potential Harm a DBA Can Cause:</strong> (1) Delete/corrupt critical data, (2) Leak confidential
+    information, (3) Create unauthorized backdoor accounts, (4) Deny access to legitimate users.
+  </div>
+
+  <!-- 8.5 -->
+  <h3>8.5 File Organization Methods <span class="understand">🟡</span></h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Organization</th>
+        <th>Best When…</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Sequential</strong></td>
+        <td>Hit rate is very high (process most records each time)</td>
+      </tr>
+      <tr>
+        <td><strong>Indexed</strong></td>
+        <td>Hit rate is not high; need to find specific records</td>
+      </tr>
+      <tr>
+        <td><strong>Indexed Sequential (ISAM)</strong></td>
+        <td>Hit rate is medium</td>
+      </tr>
+      <tr>
+        <td><strong>Direct / Hashed</strong></td>
+        <td>Hit rate medium or low; need fast random access</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="qa-block">
+    <div class="q">Q: What file organization is best when hit rate is very high?</div>
+    <div class="a">A: <strong>Sequential</strong> — when you process most records each run, sequential is most
+      efficient.</div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════ -->
+  <hr class="section-divider">
+  <h2 id="program-design">9 · Program Design</h2>
+  <p><em>Lecture 10 · Exam Q7</em></p>
+
+  <!-- 9.1 -->
+  <h3>9.1 Modular Programming <span class="must">🔴</span></h3>
+
+  <div class="definition">
+    <strong>Modular Programming:</strong> A design technique that separates program functionality into independent,
+    interchangeable modules. Each module executes <em>only one aspect</em> of the functionality.
+  </div>
+
+  <h4>Advantages (know at least 3):</h4>
+  <ol>
+    <li>Critical interfaces are tested first</li>
+    <li>Multiple programmers can work simultaneously</li>
+    <li>Code reuse — a module written once can be used many times</li>
+    <li>More control over development — problems isolated to specific modules</li>
+    <li>Makes identifying structure easier (through the structure chart)</li>
+  </ol>
+
+  <!-- 9.2 -->
+  <h3>9.2 Top-Down vs. Bottom-Up Strategy <span class="understand">🟡</span></h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th></th>
+        <th>Top-Down</th>
+        <th>Bottom-Up</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Starts from</strong></td>
+        <td>Highest-level (main) module</td>
+        <td>Lowest-level modules</td>
+      </tr>
+      <tr>
+        <td><strong>Direction</strong></td>
+        <td>Decomposes downward into sub-modules</td>
+        <td>Groups basic modules upward</td>
+      </tr>
+      <tr>
+        <td><strong>Best for</strong></td>
+        <td>New system design</td>
+        <td>Reusing existing components</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="definition">
+    <strong>Structure Chart:</strong> A hierarchical diagram showing all program modules, their parent-child
+    relationships, and the data that passes between them (data-in, data-out). Derived from structured design.
+  </div>
+
+  <!-- 9.3 -->
+  <h3>9.3 Cohesion &amp; Coupling <span class="must">🔴</span></h3>
+
+  <div class="qa-block">
+    <div class="q">Q: Define Cohesion and state the goal.</div>
+    <div class="a">A: Cohesion = how <strong>focused</strong> a module is on a single task. Goal: <strong>MAXIMIZE
+        cohesion</strong> (HIGH cohesion = module does one thing well = better quality).</div>
+  </div>
+
+  <div class="qa-block">
+    <div class="q">Q: Define Coupling and state the goal.</div>
+    <div class="a">A: Coupling = how much modules <strong>depend on each other</strong>. Goal: <strong>MINIMIZE
+        coupling</strong> (LOOSE coupling = modules nearly independent = better quality).</div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th></th>
+        <th>Definition</th>
+        <th>Goal</th>
+        <th>Good = ?</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Cohesion</strong></td>
+        <td>How focused a module is on one task</td>
+        <td>MAXIMIZE</td>
+        <td>HIGH Cohesion</td>
+      </tr>
+      <tr>
+        <td><strong>Coupling</strong></td>
+        <td>How much modules depend on each other</td>
+        <td>MINIMIZE</td>
+        <td>LOOSE Coupling</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="exam-focus">
+    <strong>📌 Memory trick:</strong> HIGH Cohesion + LOOSE Coupling = Good Quality Program Design.
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════ -->
+  <hr class="section-divider">
+  <h2 id="flashcards">10 · Quick Flashcard Review</h2>
+  <p><em>Read the question, cover the answer, then check. Do this 2–3 times.</em></p>
+
+  <div class="qa-block">
+    <div class="q">Q: What is SDLC and is it a methodology?</div>
+    <div class="a">A: A logical process to build IS. NOT a methodology — it describes phases; methodologies execute
+      them.</div>
+  </div>
+
+  <div class="qa-block">
+    <div class="q">Q: Name the 7 SDLC phases in order.</div>
+    <div class="a">A: Planning → Analysis → Design &amp; Prototyping → Implementation → Configuration &amp; Procurement
+      → Deployment &amp; Operations → Maintenance.</div>
+  </div>
+
+  <div class="qa-block">
+    <div class="q">Q: Name the 6 roles of the System Analyst.</div>
+    <div class="a">A: System Analyst · Business Analyst · Systems Architect · Infrastructure Analyst · Change Management
+      Analyst · Project Manager.</div>
+  </div>
+
+  <div class="qa-block">
+    <div class="q">Q: Name the 3 sub-phases of the Analysis phase.</div>
+    <div class="a">A: Survey → Detailed Study → Definition.</div>
+  </div>
+
+  <div class="qa-block">
+    <div class="q">Q: What are the 5 Fact-Finding Techniques?</div>
+    <div class="a">A: Interviewing · Questionnaires · Observation · Sampling &amp; Record Inspection · JAD.</div>
+  </div>
+
+  <div class="qa-block">
+    <div class="q">Q: Name the 4 DFD symbols and their shapes.</div>
+    <div class="a">A: External Entity (rectangle) · Process (circle/oval) · Data Store (open rectangle) · Data Flow
+      (labeled arrow).</div>
+  </div>
+
+  <div class="qa-block">
+    <div class="q">Q: What is a Context-Level DFD?</div>
+    <div class="a">A: The entire system as ONE process, surrounded by external entities. No data stores, no internal
+      processes shown.</div>
+  </div>
+
+  <div class="qa-block">
+    <div class="q">Q: What is the DFD Balancing Rule?</div>
+    <div class="a">A: Flows in/out of a parent process must match flows in/out of its child diagram.</div>
+  </div>
+
+  <div class="qa-block">
+    <div class="q">Q: What is a Black Hole in a DFD?</div>
+    <div class="a">A: A process with input but no output.</div>
+  </div>
+
+  <div class="qa-block">
+    <div class="q">Q: What is the difference between Client-Server and Server-Based architecture?</div>
+    <div class="a">A: Client-Server splits processing between client and server. Server-Based = server does ALL FOUR
+      functions; client is a dumb terminal.</div>
+  </div>
+
+  <div class="qa-block">
+    <div class="q">Q: Name the 3 data storage objectives.</div>
+    <div class="a">A: (1) Making data available, (2) Assuring data integrity, (3) Supporting efficient storage,
+      retrieval, and update.</div>
+  </div>
+
+  <div class="qa-block">
+    <div class="q">Q: Name 3 advantages of the database approach.</div>
+    <div class="a">A: Any 3 of: Eliminates redundancy · Data independence · Improved integrity · Better security · Data
+      sharing.</div>
+  </div>
+
+  <div class="qa-block">
+    <div class="q">Q: Name 3 disadvantages of the flat file approach.</div>
+    <div class="a">A: Any 3 of: Data separation &amp; isolation · Data duplication · Data dependence · Poor security ·
+      Concurrency problems.</div>
+  </div>
+
+  <div class="qa-block">
+    <div class="q">Q: What are the 2 roles of the DBA?</div>
+    <div class="a">A: (1) Database design &amp; implementation, (2) Security administration.</div>
+  </div>
+
+  <div class="qa-block">
+    <div class="q">Q: What are the 2 input design objectives?</div>
+    <div class="a">A: (1) Ease of use — make input efficient, (2) Accuracy — assure correct completion through controls.
+    </div>
+  </div>
+
+  <div class="qa-block">
+    <div class="q">Q: Define Cohesion and Coupling. What should you maximize/minimize?</div>
+    <div class="a">A: Cohesion = focus of one module on one task → MAXIMIZE (HIGH). Coupling = dependency between
+      modules → MINIMIZE (LOOSE).</div>
+  </div>
+
+  <div class="qa-block">
+    <div class="q">Q: Define Modular Programming.</div>
+    <div class="a">A: Separating program functionality into independent, interchangeable modules, each executing only
+      ONE aspect of functionality.</div>
+  </div>
+
+  <div class="qa-block">
+    <div class="q">Q: What is Prototyping and what are its 3 characteristics?</div>
+    <div class="a">A: Building a working model to verify requirements. Characteristics: Iterative · User-centric ·
+      Preliminary.</div>
+  </div>
+
+  <div class="qa-block">
+    <div class="q">Q: What is the PRIMARY objective of SA&amp;D?</div>
+    <div class="a">A: To <strong>create VALUE for the organization</strong> — NOT to create a wonderful system.</div>
+  </div>
+
+  <div class="qa-block">
+    <div class="q">Q: What file organization is best for a very high hit rate?</div>
+    <div class="a">A: Sequential.</div>
+  </div>
+
+  <hr style="margin-top:50px; border-top:2px solid #ccc;">
+  <p style="text-align:center; color:#888; font-family:Arial,sans-serif; font-size:0.85rem; margin-top:16px;">
+    System Analysis &amp; Design — Clean Study Notes · El-Shorouk Academy 2023/2024
+  </p>
+
+  <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('show');
+      document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
+    }
+  </script>
 </body>
-</html>
 
+</html>
