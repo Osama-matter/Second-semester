@@ -61,7 +61,7 @@ const counts = [8, 8, 8, 8, 7, 7, 6, 6, 6, 5, 5, 5, 5, 4, 4, 3];
 const total = 8;
 const pct = counts.map(c => Math.round((c/total)*100));
 
-const colors = pct.map(p => p === 100 ? '#059669' : p >= 75 ? '#b45309' : p >= 50 ? '#2563eb' : '#64748b');
+const colors = pct.map(p => p === 100 ? '#1D9E75' : p >= 75 ? '#BA7517' : p >= 50 ? '#378ADD' : '#888780');
 
 new Chart(document.getElementById('freqChart'), {
   type: 'bar',
