@@ -1,764 +1,416 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
-
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title>StudyPortal — S&S Semester</title>
-  <meta name="description"
-    content="Modern educational portal for System Design, Web Development, Networking, Business Administration and Data Structures." />
-  <link rel="stylesheet" href="portal.css" />
-  <style>
-    /* Hero Banner */
-    .hero {
-      background: linear-gradient(135deg, #0f0f1a 0%, #1a1a3e 40%, #0f2a4a 100%);
-      padding: 48px 32px;
-      border-radius: 20px;
-      margin-bottom: 30px;
-      position: relative;
-      overflow: hidden;
-      border: 1px solid var(--bd);
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة الطالب الذكية | Smart Student Portal</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg: #fafaf8;
+            --surface: #ffffff;
+            --card-bg: #ffffff;
+            --border: #e0e0da;
+            --text: #1a1a1a;
+            --text-dim: #555555;
+            --primary: #1d4ed8;
+            --secondary: #6d28d9;
+            --accent: #dc2626;
+            --gold: #b45309;
+            --glass: rgba(0, 0, 0, 0.02);
+            --sidebar-width: 320px;
+        }
 
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: -40px;
-      right: -40px;
-      width: 200px;
-      height: 200px;
-      background: radial-gradient(circle, rgba(99, 102, 241, .25), transparent 70%);
-      pointer-events: none
-    }
+        /* Aggressive Scrollbar Removal */
+        *, *::before, *::after {
+            margin: 0; padding: 0; box-sizing: border-box;
+            scrollbar-width: none !important;
+            -ms-overflow-style: none !important;
+        }
 
-    .hero::after {
-      content: '';
-      position: absolute;
-      bottom: -30px;
-      left: 30%;
-      width: 180px;
-      height: 180px;
-      background: radial-gradient(circle, rgba(6, 182, 212, .15), transparent 70%);
-      pointer-events: none
-    }
+        ::-webkit-scrollbar {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
+        }
 
-    .hero h1 {
-      font-family: var(--f2);
-      font-size: 34px;
-      font-weight: 800;
-      color: #fff;
-      margin-bottom: 12px;
-      position: relative;
-      letter-spacing: -0.02em;
-    }
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'IBM Plex Sans Arabic', sans-serif;
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
 
-    .hero h1 span {
-      background: linear-gradient(135deg, #818cf8, #06b6d4);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text
-    }
+        /* Background Mesh */
+        .bg-mesh {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(29, 78, 216, 0.03) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(109, 40, 217, 0.03) 0%, transparent 40%);
+        }
 
-    .hero p {
-      color: rgba(255, 255, 255, .7);
-      font-size: 16px;
-      max-width: 600px;
-      margin-bottom: 24px;
-      position: relative;
-      line-height: 1.6;
-    }
+        /* Sidebar Navigation */
+        aside {
+            width: var(--sidebar-width);
+            background: #ffffff;
+            border-left: 1px solid var(--border);
+            height: 100vh;
+            position: fixed;
+            right: 0;
+            top: 0;
+            padding: 3rem 1.2rem;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+            overflow-x: hidden;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.02);
+        }
 
-    .hero-btns {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      position: relative
-    }
+        .sidebar-logo {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 1.6rem;
+            margin-bottom: 3rem;
+            background: linear-gradient(to left, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            letter-spacing: -0.5px;
+        }
 
-    [data-theme=light] .hero {
-      background: linear-gradient(135deg, #ededff 0%, #e0e8ff 50%, #e0f0ff 100%)
-    }
+        .nav-section {
+            margin-bottom: 2.5rem;
+            overflow: visible;
+        }
 
-    [data-theme=light] .hero h1 {
-      color: #1a1a2e
-    }
+        .nav-section h4 {
+            color: var(--text-dim);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            padding-right: 0.5rem;
+        }
 
-    [data-theme=light] .hero p {
-      color: #4b5563
-    }
+        .nav-list {
+            list-style: none;
+        }
 
-    /* Recently opened strip */
-    .recent-strip {
-      display: flex;
-      gap: 10px;
-      overflow-x: auto;
-      padding-bottom: 4px;
-      margin-bottom: 24px;
-      scrollbar-width: none
-    }
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
 
-    .recent-strip::-webkit-scrollbar {
-      display: none
-    }
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: var(--text-dim);
+            text-decoration: none;
+            padding: 0.9rem 1.2rem;
+            border-radius: 18px;
+            font-size: 0.92rem;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid transparent;
+            background: transparent;
+            margin-bottom: 0.4rem;
+        }
 
-    .rc {
-      flex-shrink: 0;
-      background: var(--card);
-      border: 1px solid var(--bd);
-      border-radius: var(--rs);
-      padding: 10px 14px;
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      cursor: pointer;
-      transition: all var(--tr);
-      min-width: 160px
-    }
+        .nav-link:hover {
+            background: rgba(29, 78, 216, 0.08);
+            border-color: rgba(29, 78, 216, 0.15);
+            color: var(--primary);
+            transform: translateX(-8px);
+        }
 
-    .rc:hover {
-      border-color: var(--p);
-      transform: translateY(-2px)
-    }
+        .nav-link.active {
+            background: rgba(0, 242, 255, 0.1);
+            border-color: rgba(0, 242, 255, 0.2);
+            color: var(--primary);
+        }
 
-    .rc .r-ico {
-      font-size: 18px
-    }
+        .nav-link i {
+            font-size: 1.1rem;
+            color: var(--primary);
+            width: 24px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
 
-    .rc .r-info {
-      min-width: 0
-    }
+        .nav-link:hover i {
+            transform: scale(1.2);
+        }
 
-    .rc .r-name {
-      font-size: 12px;
-      font-weight: 600;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis
-    }
+        /* Main Content Area */
+        main {
+            flex: 1;
+            margin-right: var(--sidebar-width);
+            padding: 2rem 5%;
+        }
 
-    .rc .r-sub {
-      font-size: 10px;
-      color: var(--mu)
-    }
+        /* Header / Hero */
+        .header {
+            padding: 4rem 0 3rem;
+            text-align: right;
+        }
 
-    /* Search filter row */
-    .filter-row {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
-      align-items: center
-    }
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(to left, #fff, var(--text-dim));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-    .filter-row .label {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--tx3)
-    }
+        .header p {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+            max-width: 600px;
+        }
 
-    /* Course section */
-    .course-section {
-      margin-bottom: 32px
-    }
+        /* Search Bar */
+        .search-container {
+            position: relative;
+            margin-bottom: 3rem;
+            max-width: 500px;
+        }
 
-    .cs-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 14px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--bd2)
-    }
+        .search-container i {
+            position: absolute;
+            right: 1.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-dim);
+        }
 
-    .cs-header .cs-ico {
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      flex-shrink: 0
-    }
+        .search-input {
+            width: 100%;
+            padding: 1.2rem 3.5rem 1.2rem 1.2rem;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 1rem;
+            outline: none;
+            transition: 0.3s;
+        }
 
-    .cs-header h2 {
-      font-family: var(--f2);
-      font-size: 19px;
-      font-weight: 700;
-      color: var(--tx);
-    }
+        .search-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.1);
+        }
 
-    .cs-header .cs-count {
-      margin-left: auto;
-      font-size: 12px;
-      color: var(--mu)
-    }
+        /* Bento Grid */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 1.5rem;
+        }
 
-    /* Progress tracker */
-    .prog-section {
-      background: var(--card);
-      border: 1px solid var(--bd);
-      border-radius: var(--r);
-      padding: 20px;
-      margin-bottom: 26px
-    }
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
 
-    .prog-section h3 {
-      font-size: 14px;
-      font-weight: 700;
-      margin-bottom: 14px;
-      color: var(--tx2)
-    }
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
 
-    .prog-item {
-      margin-bottom: 12px
-    }
+        .col-4 { grid-column: span 4; }
+        .col-8 { grid-column: span 8; }
+        .col-12 { grid-column: span 12; }
 
-    .prog-label {
-      display: flex;
-      justify-content: space-between;
-      font-size: 12px;
-      margin-bottom: 4px
-    }
+        .card-icon {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
 
-    .prog-label span {
-      color: var(--mu)
-    }
+        .card h2 { font-size: 1.4rem; margin-bottom: 0.8rem; }
+        .card p { color: var(--text-dim); font-size: 0.9rem; }
 
-    /* Toast */
-    .toast {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: var(--card);
-      border: 1px solid var(--p);
-      border-radius: var(--rs);
-      padding: 12px 18px;
-      font-size: 13px;
-      color: var(--tx);
-      box-shadow: var(--shl);
-      z-index: 9999;
-      opacity: 0;
-      transform: translateY(10px);
-      transition: all .3s;
-      pointer-events: none;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      max-width: 300px
-    }
 
-    .toast.show {
-      opacity: 1;
-      transform: translateY(0)
-    }
+        /* Mobile Adjustments */
+        @media (max-width: 1024px) {
+            aside { transform: translateX(100%); }
+            aside.open { transform: translateX(0); }
+            main { margin-right: 0; }
+            .col-4, .col-8 { grid-column: span 12; }
+        }
 
-    /* Missing banner */
-    .missing-banner {
-      background: linear-gradient(135deg, rgba(239, 68, 68, .1), rgba(245, 158, 11, .1));
-      border: 1px solid rgba(239, 68, 68, .3);
-      border-radius: var(--r);
-      padding: 16px 20px;
-      margin-bottom: 22px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      flex-wrap: wrap
-    }
+        @media (max-width: 600px) {
+            .header h1 { font-size: 2.2rem; }
+            .header p { font-size: 0.95rem; }
+            .card { padding: 1.5rem; }
+            .sidebar-toggle { width: 44px; height: 44px; top: 1rem; right: 1rem; }
+        }
 
-    .missing-banner .mb-ico {
-      font-size: 28px
-    }
+        /* Sidebar Toggle Button */
+        .sidebar-toggle {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            color: #000;
+            border-radius: 12px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1100;
+            cursor: pointer;
+            box-shadow: var(--glow);
+        }
 
-    .missing-banner h3 {
-      font-size: 14px;
-      font-weight: 700;
-      color: #f87171;
-      margin-bottom: 3px
-    }
+        @media (max-width: 1024px) {
+            .sidebar-toggle { display: flex; }
+        }
 
-    .missing-banner p {
-      font-size: 12.5px;
-      color: var(--tx3)
-    }
-
-    @media (max-width: 480px) {
-      .logo-text-top {
-        display: none;
-      }
-
-      .hero h1 {
-        font-size: 26px;
-      }
-
-      .hero p {
-        font-size: 14px;
-      }
-
-      .tb-search input {
-        font-size: 14px !important;
-      }
-    }
-  </style>
-  <link rel="stylesheet" href="global.css" />
-  <link rel="stylesheet" href="components.css" />
-  <link rel="stylesheet" href="responsive.css" />
-  <script defer src="app.js"></script>
+    </style>
 </head>
+<body>
 
-<body class="ss-responsive ss-portal">
+    <div class="bg-mesh"></div>
 
-  <!-- Spinner -->
-  <div class="spin-wrap" id="spinner">
-    <div class="spin"></div>
-  </div>
+    <div class="sidebar-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </div>
 
-  <!-- Sidebar Overlay -->
-  <div class="sb-ov" id="sbOv" onclick="closeSidebar()"></div>
-
-  <div class="layout">
-    <!-- ═══ SIDEBAR ═══ -->
-    <aside class="sidebar" id="sidebar">
-      <div class="sb-logo">
-        <div class="icon">🎓</div>
-        <div class="logo-text">
-          <h2>StudyPortal</h2>
-          <small>S&S Semester</small>
-        </div>
-        <button class="sb-close" onclick="closeSidebar()">✕</button>
-      </div>
-      <div class="sb-srch">
-        <input type="text" id="sidebarSearch" placeholder="🔍 Search lectures..." oninput="sidebarFilter(this.value)" />
-      </div>
-      <nav class="sb-nav" id="sidebarNav">
-        <div class="ns">📌 Main</div>
-        <a href="index.html" class="ni active" id="nav-home"><span class="ico">🏠</span>Dashboard<span
-            class="nbadge">9</span></a>
-
-
-        <div class="ns">🖥️ System Design</div>
-        <div class="ni" onclick="toggleSub('sub-sad')"><span class="ico">📐</span>SAD <span
-            style="margin-left:auto;font-size:10px;color:var(--mu)">▾</span></div>
-        <div class="nsub" id="sub-sad">
-          <a href="SAD-study-notes.html" class="ni"><span class="ico">📝</span>Study Notes</a>
-          <a href="SAD-Revision-and-Exam-Solutions (1).html" class="ni"><span class="ico">✅</span>Exam Solutions</a>
+    <!-- SIDEBAR WITH ALL LINKS -->
+    <aside id="sidebar">
+        <div class="sidebar-logo">قائمة المحتويات</div>
+        
+        <div class="nav-section">
+            <h4>System Analysis & Design (SAD)</h4>
+            <ul class="nav-list">
+                <li class="nav-item"><a href="SAD_Ultimate_Study_Guide.html" class="nav-link"><i class="fas fa-fire"></i> الدليل الشامل</a></li>
+                <li class="nav-item"><a href="SAD_3Day_Schedule.html" class="nav-link"><i class="fas fa-calendar-alt"></i> جدول الـ 3 أيام</a></li>
+                <li class="nav-item"><a href="sad_exam_frequency_analysis.html" class="nav-link"><i class="fas fa-chart-bar"></i> تحليل الامتحانات</a></li>
+                <li class="nav-item"><a href="SAD-study-notes.html" class="nav-link"><i class="fas fa-sticky-note"></i> ملخصات المذاكرة</a></li>
+                <li class="nav-item"><a href="SAD-Revision-and-Exam-Solutions (1).html" class="nav-link"><i class="fas fa-check-double"></i> حلول المراجعة</a></li>
+            </ul>
         </div>
 
-        <div class="ns">🌐 Web Development</div>
-        <div class="ni" onclick="toggleSub('sub-web')"><span class="ico">💻</span>Web Dev <span
-            style="margin-left:auto;font-size:10px;color:var(--mu)">▾</span></div>
-        <div class="nsub" id="sub-web">
-          <a href="HTML_Lecture_Summary_Updated.html" class="ni"><span class="ico">🏷️</span>HTML Lectures</a>
-          <a href="Css.html" class="ni"><span class="ico">🎨</span>CSS Lectures</a>
-          <a href="Js.html" class="ni"><span class="ico">⚡</span>JavaScript</a>
-          <a href="Jssummary.html" class="ni"><span class="ico">📖</span>JS Summary</a>
-          <a href="php-file-handling-study.html" class="ni"><span class="ico">🐘</span>PHP File Handling</a>
-          <a href="php_lecture_dashboard_styled.html" class="ni"><span class="ico">🐘</span>PHP Lecture 6</a>
-          <a href="php-cookies-sessions-dashboard.html" class="ni"><span class="ico">🐘</span>Cookies & Sessions</a>
+        <div class="nav-section">
+            <h4>Web Technologies</h4>
+            <ul class="nav-list">
+                <li class="nav-item"><a href="HTML_Lecture_Summary_Updated.html" class="nav-link"><i class="fab fa-html5"></i> ملخص HTML</a></li>
+                <li class="nav-item"><a href="Css.html" class="nav-link"><i class="fab fa-css3-alt"></i> ملخص CSS</a></li>
+                <li class="nav-item"><a href="Js.html" class="nav-link"><i class="fab fa-js"></i> ملخص JavaScript</a></li>
+                <li class="nav-item"><a href="Jssummary.html" class="nav-link"><i class="fas fa-code"></i> ملخص JS (مختصر)</a></li>
+                <li class="nav-item"><a href="php_lecture_dashboard_styled.html" class="nav-link"><i class="fab fa-php"></i> لوحة تحكم PHP</a></li>
+                <li class="nav-item"><a href="php-cookies-sessions-dashboard.html" class="nav-link"><i class="fas fa-cookie"></i> Cookies & Sessions</a></li>
+                <li class="nav-item"><a href="php-file-handling-study.html" class="nav-link"><i class="fas fa-file-code"></i> PHP File Handling</a></li>
+            </ul>
         </div>
 
-        <div class="ns">🌐 Networking</div>
-        <a href="network_lecture_study_complete.html" class="ni"><span class="ico">📡</span>Network Lectures<span
-            class="nbadge">Full</span></a>
-
-        <div class="ns">💼 Business</div>
-        <a href="business-admin-study-guide.html" class="ni"><span class="ico">📊</span>Business Admin</a>
-
-
-      </nav>
+        <div class="nav-section">
+            <h4>Other Subjects</h4>
+            <ul class="nav-list">
+                <li class="nav-item"><a href="network_lecture_study_complete.html" class="nav-link"><i class="fas fa-network-wired"></i> شبكات الحاسب</a></li>
+                <li class="nav-item"><a href="business-admin-study-guide.html" class="nav-link"><i class="fas fa-briefcase"></i> إدارة الأعمال</a></li>
+                <li class="nav-item"><a href="missing-topics.html" class="nav-link"><i class="fas fa-exclamation-triangle"></i> مواضيع مفقودة</a></li>
+            </ul>
+        </div>
     </aside>
 
-    <!-- ═══ MAIN ═══ -->
-    <div class="main">
-      <!-- Topbar -->
-      <header class="topbar">
-        <div style="display:flex;align-items:center;gap:14px">
-          <button class="ham" onclick="openSidebar()" aria-label="Menu">☰</button>
-          <div style="display:flex;align-items:center;gap:10px;font-family:var(--f2);font-weight:800;font-size:18px">
-            <div
-              style="width:32px;height:32px;background:linear-gradient(135deg,var(--p),var(--ac));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px">
-              🎓</div>
-            <span class="logo-text-top">StudyPortal</span>
-          </div>
-          <div class="tb-right">
-            <button class="bico" onclick="toggleTheme()" id="themeBtn" title="Toggle Theme">🌙</button>
-            <a href="missing-topics.html" class="bico" title="Missing Topics">⚠️</a>
-          </div>
+    <main>
+        <header class="header">
+            <h1>بوابة الطالب الذكية</h1>
+            <p>جميع محاضراتك، ملخصاتك، وخطط المذاكرة في مكان واحد. ابحث عن أي ملف أو ابدأ المذاكرة فوراً.</p>
+        </header>
 
-      </header>
-
-      <!-- Page Content -->
-      <main class="page fade-in">
-
-        <!-- Breadcrumb -->
-        <nav class="bc" aria-label="breadcrumb">
-          <span>🏠</span><span class="bc-sep">/</span>
-          <span style="color:var(--pl)">Dashboard</span>
-        </nav>
-
-        <!-- Search Box -->
-        <div class="tb-search" style="max-width:100%; margin-bottom:24px">
-          <span class="sico">🔍</span>
-          <input type="text" id="globalSearch" placeholder="Search lectures, topics, categories..." autocomplete="off"
-            oninput="globalSearchFn(this.value)" onfocus="showDrop()" onblur="setTimeout(hideDrop,200)"
-            style="border-radius:12px; padding:12px 14px 12px 42px; font-size:15px" />
-          <div class="sdrop" id="sdrop" style="top:calc(100% + 4px)"></div>
+        <div class="search-container">
+            <i class="fas fa-search"></i>
+            <input type="text" class="search-input" placeholder="ابحث عن مادة أو موضوع..." id="fileSearch" onkeyup="searchFiles()">
         </div>
 
-        <!-- Hero -->
-        <div class="hero">
-          <h1>Welcome to <span>StudyPortal</span> 🎓</h1>
-          <p>Your complete semester study hub — System Design, Web Dev, Networking, Business & more. All lectures in one
-            place.</p>
-          <div class="hero-btns">
-            <a href="network_lecture_study_complete.html" class="btn btn-p">📡 Network Lectures</a>
-            <a href="SAD-study-notes.html" class="btn btn-ac">📐 System Design</a>
+        <div class="bento-grid">
+            
+            <!-- Subject Cards -->
+            <div class="card col-4">
+                <div class="card-icon"><i class="fas fa-project-diagram"></i></div>
+                <h2>تحليل وتصميم النظم</h2>
+                <p>الدليل الشامل، جداول المذاكرة، وتحليل أنماط الامتحانات السابقة.</p>
+                <a href="SAD_Ultimate_Study_Guide.html" class="nav-link" style="margin-top: 1rem; border: 1px solid var(--border);">فتح المجلد</a>
+            </div>
 
-          </div>
-        </div>
+            <!-- Subject Cards -->
+            <div class="card col-4">
+                <div class="card-icon"><i class="fab fa-html5"></i></div>
+                <h2>تقنيات الويب</h2>
+                <p>تعلم HTML, CSS, JavaScript والـ PHP مع نماذج عملية للبرمجة.</p>
+            </div>
 
-        <!-- Stats -->
-        <div class="stats">
-          <div class="stat">
-            <div class="st-ico c-pur" style="color:#fff">📚</div>
-            <div>
-              <div class="st-val">5</div>
-              <div class="st-lbl">Subjects</div>
+            <div class="card col-4">
+                <div class="card-icon"><i class="fas fa-network-wired"></i></div>
+                <h2>الشبكات</h2>
+                <p>شرح كامل لطبقات الشبكة وبروتوكولات الاتصال والعملي.</p>
             </div>
-          </div>
-          <div class="stat">
-            <div class="st-ico c-cya" style="color:#fff">📄</div>
-            <div>
-              <div class="st-val">9</div>
-              <div class="st-lbl">Lectures</div>
+
+            <div class="card col-4">
+                <div class="card-icon"><i class="fas fa-briefcase"></i></div>
+                <h2>إدارة الأعمال</h2>
+                <p>مفاهيم الإدارة والتعريفات الأساسية المطلوبة للامتحان.</p>
             </div>
-          </div>
-          <div class="stat">
-            <div class="st-ico c-grn" style="color:#fff">✅</div>
-            <div>
-              <div class="st-val">8</div>
-              <div class="st-lbl">Available</div>
-            </div>
-          </div>
 
         </div>
+    </main>
 
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
 
+        function searchFiles() {
+            let input = document.getElementById('fileSearch').value.toLowerCase();
+            let navLinks = document.querySelectorAll('.nav-link');
+            
+            navLinks.forEach(link => {
+                let text = link.innerText.toLowerCase();
+                if (text.includes(input)) {
+                    link.parentElement.style.display = "";
+                } else {
+                    link.parentElement.style.display = "none";
+                }
+            });
 
-        <!-- Search Filters -->
-        <div class="filter-row">
-          <span class="label">Filter:</span>
-          <span class="tag on" onclick="filterCards('all',this)">All</span>
-          <span class="tag" onclick="filterCards('sad',this)">📐 System Design</span>
-          <span class="tag" onclick="filterCards('web',this)">💻 Web Dev</span>
-          <span class="tag" onclick="filterCards('net',this)">📡 Networking</span>
-          <span class="tag" onclick="filterCards('biz',this)">💼 Business</span>
-        </div>
-
-        <!-- ── SYSTEM DESIGN ── -->
-        <div class="course-section" data-cat="sad">
-          <div class="cs-header">
-            <div class="cs-ico c-pur" style="color:#fff">📐</div>
-            <h2>System Analysis &amp; Design (SAD)</h2>
-            <div class="cs-count">2 lectures</div>
-          </div>
-          <div class="flist">
-            <div class="fitem" onclick="openLecture('SAD-study-notes.html')">
-              <div class="fi-ico">📝</div>
-              <div class="fi-info">
-                <div class="fi-name">SAD Study Notes</div>
-                <div class="fi-meta">📐 System Design · HTML · 43 KB</div>
-              </div>
-              <div class="fi-btns">
-                <a href="SAD-study-notes.html" class="fb fb-p">Open →</a>
-              </div>
-            </div>
-            <div class="fitem" onclick="openLecture('SAD-Revision-and-Exam-Solutions (1).html')">
-              <div class="fi-ico">✅</div>
-              <div class="fi-info">
-                <div class="fi-name">SAD Revision &amp; Exam Solutions</div>
-                <div class="fi-meta">📐 System Design · HTML · 54 KB</div>
-              </div>
-              <div class="fi-btns">
-                <a href="SAD-Revision-and-Exam-Solutions (1).html" class="fb fb-p">Open →</a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ── WEB DEVELOPMENT ── -->
-        <div class="course-section" data-cat="web">
-          <div class="cs-header">
-            <div class="cs-ico c-cya" style="color:#fff">💻</div>
-            <h2>Web Development</h2>
-            <div class="cs-count">7 lectures</div>
-          </div>
-          <div class="flist">
-            <div class="fitem" onclick="openLecture('HTML_Lecture_Summary_Updated.html')">
-              <div class="fi-ico">🏷️</div>
-              <div class="fi-info">
-                <div class="fi-name">HTML — Lecture Summary</div>
-                <div class="fi-meta">💻 Web Dev · HTML · 58 KB</div>
-              </div>
-              <div class="fi-btns">
-                <a href="HTML_Lecture_Summary_Updated.html" class="fb fb-p">Open →</a>
-              </div>
-            </div>
-            <div class="fitem" onclick="openLecture('Css.html')">
-              <div class="fi-ico">🎨</div>
-              <div class="fi-info">
-                <div class="fi-name">CSS — Lecture Notes</div>
-                <div class="fi-meta">💻 Web Dev · HTML · 58 KB</div>
-              </div>
-              <div class="fi-btns">
-                <a href="Css.html" class="fb fb-p">Open →</a>
-              </div>
-            </div>
-            <div class="fitem" onclick="openLecture('Js.html')">
-              <div class="fi-ico">⚡</div>
-              <div class="fi-info">
-                <div class="fi-name">JavaScript — Lecture Notes</div>
-                <div class="fi-meta">💻 Web Dev · HTML · 45 KB</div>
-              </div>
-              <div class="fi-btns">
-                <a href="Js.html" class="fb fb-p">Open →</a>
-              </div>
-            </div>
-            <div class="fitem" onclick="openLecture('Jssummary.html')">
-              <div class="fi-ico">📖</div>
-              <div class="fi-info">
-                <div class="fi-name">JavaScript — Summary</div>
-                <div class="fi-meta">💻 Web Dev · HTML · 45 KB</div>
-              </div>
-              <div class="fi-btns">
-                <a href="Jssummary.html" class="fb fb-p">Open →</a>
-              </div>
-            </div>
-            <div class="fitem" onclick="openLecture('php-file-handling-study.html')">
-              <div class="fi-ico">🐘</div>
-              <div class="fi-info">
-                <div class="fi-name">PHP — File Handling Study</div>
-                <div class="fi-meta">💻 Web Dev · HTML · 73 KB</div>
-              </div>
-              <div class="fi-btns">
-                <a href="php-file-handling-study.html" class="fb fb-p">Open →</a>
-              </div>
-            </div>
-            <div class="fitem" onclick="openLecture('php_lecture_dashboard_styled.html')">
-              <div class="fi-ico">🐘</div>
-              <div class="fi-info">
-                <div class="fi-name">PHP — Lecture 6 (Dashboard)</div>
-                <div class="fi-meta">💻 Web Dev · HTML · 31 KB</div>
-              </div>
-              <div class="fi-btns">
-                <a href="php_lecture_dashboard_styled.html" class="fb fb-p">Open →</a>
-              </div>
-            </div>
-            <div class="fitem" onclick="openLecture('php-cookies-sessions-dashboard.html')">
-              <div class="fi-ico">🍪</div>
-              <div class="fi-info">
-                <div class="fi-name">PHP — Cookies & Sessions</div>
-                <div class="fi-meta">💻 Web Dev · HTML · 44 KB</div>
-              </div>
-              <div class="fi-btns">
-                <a href="php-cookies-sessions-dashboard.html" class="fb fb-p">Open →</a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ── NETWORKING ── -->
-        <div class="course-section" data-cat="net">
-          <div class="cs-header">
-            <div class="cs-ico c-amb" style="color:#fff">📡</div>
-            <h2>Computer Networking</h2>
-            <div class="cs-count">1 lecture</div>
-          </div>
-          <div class="flist">
-            <div class="fitem" onclick="openLecture('network_lecture_study_complete.html')">
-              <div class="fi-ico">📡</div>
-              <div class="fi-info">
-                <div class="fi-name">Network Lectures — Complete Study Guide</div>
-                <div class="fi-meta">📡 Networking · HTML · 246 KB · Full Coverage</div>
-              </div>
-              <div class="fi-btns">
-                <a href="network_lecture_study_complete.html" class="fb fb-p">Open →</a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ── BUSINESS ADMIN ── -->
-        <div class="course-section" data-cat="biz">
-          <div class="cs-header">
-            <div class="cs-ico c-grn" style="color:#fff">💼</div>
-            <h2>Business Administration</h2>
-            <div class="cs-count">1 lecture</div>
-          </div>
-          <div class="flist">
-            <div class="fitem" onclick="openLecture('business-admin-study-guide.html')">
-              <div class="fi-ico">📊</div>
-              <div class="fi-info">
-                <div class="fi-name">Business Administration — Study Guide</div>
-                <div class="fi-meta">💼 Business · HTML · 33 KB</div>
-              </div>
-              <div class="fi-btns">
-                <a href="business-admin-study-guide.html" class="fb fb-p">Open →</a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ── DATA STRUCTURES ── -->
-        <div class="course-section" data-cat="ds">
-          <div class="cs-header">
-            <div class="cs-ico c-ros" style="color:#fff">🔴</div>
-            <h2>Data Structures (D.S)</h2>
-            <div class="cs-count" style="color:var(--re)">MISSING</div>
-          </div>
-          <div class="alert al-d">
-            <span>⚠️</span>
-            <div><strong>No content found</strong> for Data Structures. Please add lecture files (HTML, PDF) to this
-              portal or check the <a href="missing-topics.html" style="color:#f87171;text-decoration:underline">Missing
-                Topics Report</a> for suggestions.</div>
-          </div>
-        </div>
-
-        <!-- Progress Tracker -->
-        <div class="prog-section">
-          <h3>📈 Study Progress Tracker</h3>
-          <div class="prog-item">
-            <div class="prog-label"><span>System Design (SAD)</span><span>2/2 lectures</span></div>
-            <div class="pbar">
-              <div class="pfill" style="width:100%"></div>
-            </div>
-          </div>
-          <div class="prog-item">
-            <div class="prog-label"><span>Web Development</span><span>7/7 lectures</span></div>
-            <div class="pbar">
-              <div class="pfill" style="width:100%"></div>
-            </div>
-          </div>
-          <div class="prog-item">
-            <div class="prog-label"><span>Computer Networking</span><span>1/1 lectures</span></div>
-            <div class="pbar">
-              <div class="pfill" style="width:100%"></div>
-            </div>
-          </div>
-          <div class="prog-item">
-            <div class="prog-label"><span>Business Administration</span><span>1/1 lectures</span></div>
-            <div class="pbar">
-              <div class="pfill" style="width:100%"></div>
-            </div>
-          </div>
-          <div class="prog-item">
-            <div class="prog-label"><span style="color:var(--re)">Data Structures (D.S)</span><span
-                style="color:var(--re)">0/? lectures — Missing</span></div>
-            <div class="pbar">
-              <div class="pfill" style="width:0%;background:var(--re)"></div>
-            </div>
-          </div>
-        </div>
-
-      </main>
-
-
-    </div>
-  </div>
-
-  <!-- Toast -->
-  <div class="toast" id="toast">✅ <span id="toastMsg">Done!</span></div>
-
-  <script>
-    // ── Search Data ──────────────────────────────────────────────
-    const LECTURES = [
-      { name: "SAD Study Notes", file: "SAD-study-notes.html", cat: "System Design", icon: "📝" },
-      { name: "SAD Revision & Exam Solutions", file: "SAD-Revision-and-Exam-Solutions (1).html", cat: "System Design", icon: "✅" },
-      { name: "HTML Lecture Summary", file: "HTML_Lecture_Summary_Updated.html", cat: "Web Dev", icon: "🏷️" },
-      { name: "CSS Lecture Notes", file: "Css.html", cat: "Web Dev", icon: "🎨" },
-      { name: "JavaScript Lecture Notes", file: "Js.html", cat: "Web Dev", icon: "⚡" },
-      { name: "JavaScript Summary", file: "Jssummary.html", cat: "Web Dev", icon: "📖" },
-      { name: "PHP File Handling", file: "php-file-handling-study.html", cat: "Web Dev", icon: "🐘" },
-      { name: "PHP Lecture 6", file: "php_lecture_dashboard_styled.html", cat: "Web Dev", icon: "🐘" },
-      { name: "PHP Cookies & Sessions", file: "php-cookies-sessions-dashboard.html", cat: "Web Dev", icon: "🍪" },
-      { name: "Network Lectures Complete", file: "network_lecture_study_complete.html", cat: "Networking", icon: "📡" },
-      { name: "Business Admin Study Guide", file: "business-admin-study-guide.html", cat: "Business", icon: "📊" },
-    ];
-
-    // ── Theme ────────────────────────────────────────────────────
-    const root = document.documentElement;
-    function toggleTheme() {
-      const isDark = root.dataset.theme === 'dark';
-      root.dataset.theme = isDark ? 'light' : 'dark';
-      document.getElementById('themeBtn').textContent = isDark ? '☀️' : '🌙';
-      localStorage.setItem('theme', root.dataset.theme);
-    }
-    (() => { const t = localStorage.getItem('theme') || 'dark'; root.dataset.theme = t; document.getElementById('themeBtn').textContent = t === 'dark' ? '🌙' : '☀️'; })();
-
-    // ── Sidebar ──────────────────────────────────────────────────
-    function openSidebar() { document.getElementById('sidebar').classList.add('open'); document.getElementById('sbOv').classList.add('show') }
-    function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sbOv').classList.remove('show') }
-    function toggleSub(id) { document.getElementById(id).classList.toggle('open') }
-
-    // ── Sidebar Filter ───────────────────────────────────────────
-    function sidebarFilter(q) {
-      const items = document.querySelectorAll('.sb-nav .ni, .sb-nav .nsub .ni');
-      items.forEach(el => {
-        const txt = el.textContent.toLowerCase();
-        el.style.display = (!q || txt.includes(q.toLowerCase())) ? '' : 'none';
-      });
-    }
-
-    // ── Global Search ────────────────────────────────────────────
-    function globalSearchFn(q) {
-      const drop = document.getElementById('sdrop');
-      if (!q) { drop.innerHTML = ''; drop.classList.remove('show'); return; }
-      const res = LECTURES.filter(l => l.name.toLowerCase().includes(q.toLowerCase()) || l.cat.toLowerCase().includes(q.toLowerCase()));
-      if (!res.length) { drop.innerHTML = '<div class="sdrop-item" style="color:var(--mu);justify-content:center">No results found</div>'; drop.classList.add('show'); return; }
-      drop.innerHTML = res.map(l => `<div class="sdrop-item" onclick="location.href='${l.file}'"><span style="font-size:18px">${l.icon}</span><span style="flex:1">${l.name}</span><span class="sdrop-tag" style="background:var(--p)">${l.cat}</span></div>`).join('');
-      drop.classList.add('show');
-    }
-    function showDrop() { if (document.getElementById('globalSearch').value) document.getElementById('sdrop').classList.add('show') }
-    function hideDrop() { document.getElementById('sdrop').classList.remove('show') }
-
-    // ── Filter Cards ─────────────────────────────────────────────
-    function filterCards(cat, el) {
-      document.querySelectorAll('.tag').forEach(t => t.classList.remove('on'));
-      el.classList.add('on');
-      document.querySelectorAll('.course-section').forEach(s => {
-        if (cat === 'all' || s.dataset.cat === cat || cat === 'ds') { s.style.display = '' }
-        else { s.style.display = 'none' }
-      });
-      if (cat === 'all') { document.querySelectorAll('.course-section').forEach(s => s.style.display = '') }
-    }
-
-    // ── Open Lecture + track recent ─────────────────────────────
-    function openLecture(file) {
-      const lec = LECTURES.find(l => l.file === file);
-      if (lec) {
-        let rec = JSON.parse(localStorage.getItem('recentLectures') || '[]');
-        rec = rec.filter(r => r.file !== file);
-        rec.unshift(lec);
-        localStorage.setItem('recentLectures', JSON.stringify(rec.slice(0, 5)));
-      }
-      location.href = file;
-    }
-
-    // ── Toast ────────────────────────────────────────────────────
-    function showToast(msg) { const t = document.getElementById('toast'); document.getElementById('toastMsg').textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2500) }
-
-    // ── Loading ──────────────────────────────────────────────────
-    window.addEventListener('load', () => {
-      setTimeout(() => document.getElementById('spinner').classList.add('gone'), 600);
-    });
-
-    // ── Auto-open relevant sidebar sections ──────────────────────
-    window.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('sub-web').classList.add('open');
-      document.getElementById('sub-sad').classList.add('open');
-    });
-  </script>
+            // Also hide section headers if empty
+            document.querySelectorAll('.nav-section').forEach(section => {
+                let visibleItems = section.querySelectorAll('.nav-item[style="display: px;"], .nav-item:not([style*="display: none"])');
+                if (visibleItems.length === 0) {
+                    section.style.display = "none";
+                } else {
+                    section.style.display = "";
+                }
+            });
+        }
+    </script>
 </body>
-
 </html>

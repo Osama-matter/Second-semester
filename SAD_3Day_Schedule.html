@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>خطة المذاكرة — 3 أيام SAD</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --bg: #fafaf8;
+  --surface: #ffffff;
+  --card: #ffffff;
+  --border: #e0e0da;
+  --text: #1a1a1a;
+  --muted: #64748b;
+  --d1: #059669;
+  --d1bg: #f0fdf4;
+  --d1border: #bbf7d0;
+  --d2: #2563eb;
+  --d2bg: #eff6ff;
+  --d2border: #bfdbfe;
+  --d3: #db2777;
+  --d3bg: #fdf2f8;
+  --d3border: #fbcfe8;
+  --gold: #b45309;
+  --done: #f1f5f9;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'IBM Plex Sans Arabic', sans-serif;
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* HEADER */
+header {
+  text-align: center;
+  padding: 48px 20px 32px;
+  position: relative;
+  overflow: hidden;
+}
+@media(max-width: 600px) {
+  header { padding: 32px 16px 20px; }
+}
+header::before {
+  content: '';
+  position: absolute;
+  top: -60px; left: 50%;
+  transform: translateX(-50%);
+  width: 500px; height: 300px;
+  background: radial-gradient(ellipse, rgba(110,231,183,0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+.exam-badge {
+  display: inline-block;
+  background: rgba(252,211,77,0.12);
+  border: 1px solid rgba(252,211,77,0.3);
+  color: var(--gold);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 16px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+  letter-spacing: 0.5px;
+}
+header h1 {
+  font-size: clamp(28px, 5vw, 46px);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+header h1 span { color: var(--d1); }
+header p { color: var(--muted); font-size: 14px; }
+
+/* RULE CARD */
+.rule-card {
+  max-width: 680px;
+  margin: 0 auto 40px;
+  background: rgba(252,211,77,0.05);
+  border: 1px solid rgba(252,211,77,0.2);
+  border-radius: 14px;
+  padding: 18px 24px;
+  font-size: 14px;
+}
+.rule-card strong { color: var(--gold); }
+
+/* PROGRESS */
+.progress-section {
+  max-width: 900px;
+  margin: 0 auto 40px;
+  padding: 0 20px;
+}
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.progress-header span { font-size: 13px; color: var(--muted); }
+.progress-header strong { color: var(--d1); font-size: 15px; }
+.progress-bar-wrap {
+  background: rgba(255,255,255,0.05);
+  border-radius: 10px;
+  height: 8px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 10px;
+  background: linear-gradient(90deg, var(--d1), var(--d2));
+  transition: width 0.5s ease;
+  width: 0%;
+}
+
+/* DAYS GRID */
+.days-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 20px 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* DAY BLOCK */
+.day-block {
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.day-header {
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.day-num {
+  width: 48px; height: 48px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; font-weight: 700;
+  flex-shrink: 0;
+}
+.day-header-text h2 { font-size: 17px; font-weight: 600; }
+.day-header-text p { font-size: 12px; margin-top: 2px; }
+.day-marks {
+  margin-right: auto;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 14px;
+  border-radius: 20px;
+  border: 1px solid currentColor;
+}
+
+.day1 { background: var(--d1bg); border-color: var(--d1border); }
+.day1 .day-header { background: rgba(110,231,183,0.05); border-bottom: 1px solid var(--d1border); }
+.day1 .day-num { background: var(--d1bg); color: var(--d1); }
+.day1 .day-marks { background: var(--d1bg); color: var(--d1); }
+.day1 .day-header-text p { color: var(--d1); opacity: 0.7; }
+
+.day2 { background: var(--d2bg); border-color: var(--d2border); }
+.day2 .day-header { background: rgba(147,197,253,0.05); border-bottom: 1px solid var(--d2border); }
+.day2 .day-num { background: var(--d2bg); color: var(--d2); }
+.day2 .day-marks { background: var(--d2bg); color: var(--d2); }
+.day2 .day-header-text p { color: var(--d2); opacity: 0.7; }
+
+.day3 { background: var(--d3bg); border-color: var(--d3border); }
+.day3 .day-header { background: rgba(249,168,212,0.05); border-bottom: 1px solid var(--d3border); }
+.day3 .day-num { background: var(--d3bg); color: var(--d3); }
+.day3 .day-marks { background: var(--d3bg); color: var(--d3); }
+.day3 .day-header-text p { color: var(--d3); opacity: 0.7; }
+
+/* SESSIONS */
+.sessions { padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+
+.session {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  cursor: pointer;
+  transition: all 0.25s;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+}
+.session:hover { border-color: var(--primary); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+.session.done {
+  background: var(--done);
+  opacity: 0.7;
+}
+.session.done .session-title { text-decoration: line-through; color: var(--muted); }
+
+.session-check {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  flex-shrink: 0;
+  margin-top: 2px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+  font-size: 12px;
+}
+.session.done .session-check {
+  background: var(--d1);
+  border-color: var(--d1);
+  color: #000;
+}
+
+.session-content { flex: 1; }
+.session-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+.session-time {
+  font-size: 11px;
+  color: var(--muted);
+  background: rgba(255,255,255,0.05);
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+.session-title { font-size: 14px; font-weight: 600; }
+.session-pct {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+  margin-right: auto;
+}
+.pct-100 { background: rgba(110,231,183,0.15); color: var(--d1); }
+.pct-88  { background: rgba(252,211,77,0.15); color: var(--gold); }
+.pct-75  { background: rgba(147,197,253,0.15); color: var(--d2); }
+.pct-exam { background: rgba(249,168,212,0.15); color: var(--d3); }
+
+.session-steps {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.session-steps li {
+  font-size: 12.5px;
+  color: var(--muted);
+  padding-right: 14px;
+  position: relative;
+}
+.session-steps li::before {
+  content: '→';
+  position: absolute;
+  right: 0;
+  color: rgba(255,255,255,0.2);
+  font-size: 11px;
+}
+.session-steps li strong { color: var(--text); }
+
+.session-tip {
+  margin-top: 8px;
+  background: rgba(252,211,77,0.06);
+  border-right: 2px solid rgba(252,211,77,0.4);
+  padding: 6px 10px;
+  border-radius: 0 6px 6px 0;
+  font-size: 12px;
+  color: rgba(252,211,77,0.8);
+}
+
+/* RETRIEVAL BOX */
+.retrieval-box {
+  max-width: 680px;
+  margin: 0 auto 32px;
+  background: rgba(147,197,253,0.05);
+  border: 1px solid rgba(147,197,253,0.2);
+  border-radius: 14px;
+  padding: 18px 24px;
+}
+.retrieval-box h3 { color: var(--d2); font-size: 15px; margin-bottom: 10px; }
+.retrieval-steps { list-style: none; counter-reset: r; }
+.retrieval-steps li {
+  counter-increment: r;
+  font-size: 13.5px;
+  padding: 6px 0 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  display: flex; gap: 10px; align-items: flex-start;
+}
+.retrieval-steps li::before {
+  content: counter(r);
+  background: rgba(147,197,253,0.15);
+  color: var(--d2);
+  font-size: 11px;
+  font-weight: 700;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* FOOTER */
+.done-count {
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 8px;
+}
+.done-count span { color: var(--d1); font-weight: 600; }
+
+@media(max-width:600px) {
+  .day-marks { display: none; }
+  .session-pct { display: none; }
+  .day-header { padding: 14px 16px; gap: 12px; }
+  .day-num { width: 40px; height: 40px; font-size: 18px; }
+  .session { padding: 12px; gap: 10px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="exam-badge">CS210 · System Analysis & Design · Final Exam</div>
+  <h1>خطة المذاكرة <span>3 أيام</span></h1>
+  <p>مبنية على تكرار الأسئلة في 8 امتحانات حقيقية · اضغط على كل session لما تخلصها</p>
+</header>
+
+<div class="progress-section">
+  <div class="progress-header">
+    <span>التقدم الكلي</span>
+    <strong id="prog-text">0 / 13 session</strong>
+  </div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="prog-bar"></div>
+  </div>
+  <div class="done-count" id="done-msg">اضغط على كل session لما تخلصها ✓</div>
+</div>
+
+<div class="days-container">
+
+<!-- ===== DAY 1 ===== -->
+<div class="day-block day1">
+  <div class="day-header">
+    <div class="day-num">١</div>
+    <div class="day-header-text">
+      <h2>اليوم الأول — المواضيع الـ 100%</h2>
+      <p>دي بتجيب 40–50 درجة لوحدها</p>
+    </div>
+    <div class="day-marks">40–50 درجة</div>
+  </div>
+  <div class="sessions">
+
+    <div class="session" onclick="toggleSession(this)" data-id="s1">
+      <div class="session-check">✓</div>
+      <div class="session-content">
+        <div class="session-top">
+          <span class="session-time">صباحًا · 90 دقيقة</span>
+          <span class="session-title">DFD — رسم Context + Level-0 + Level-1</span>
+          <span class="session-pct pct-100">100% تكرار</span>
+        </div>
+        <ul class="session-steps">
+          <li>اقرأ قسم DFD من الـ Guide <strong>مرة واحدة كويس</strong></li>
+          <li><strong>اقفل كل حاجة</strong> — ورقة فاضية وقلم بس</li>
+          <li>ارسم Context Diagram للمطعم من دماغك</li>
+          <li>ارسم Level-0 DFD من دماغك</li>
+          <li>ارسم Level-1 للـ Sales Department من دماغك</li>
+          <li>افتح الـ Guide — شايف إيه اللي غلطت فيه بس</li>
+          <li>اعيد رسم اللي غلط تاني مرة</li>
+        </ul>
+        <div class="session-tip">لو رسمت المطعم صح 3 مرات — مش هتنساه في الامتحان</div>
+      </div>
+    </div>
+
+    <div class="session" onclick="toggleSession(this)" data-id="s2">
+      <div class="session-check">✓</div>
+      <div class="session-content">
+        <div class="session-top">
+          <span class="session-time">ظهرًا · 60 دقيقة</span>
+          <span class="session-title">STA Architecture — تعريف + رسم</span>
+          <span class="session-pct pct-100">100% تكرار</span>
+        </div>
+        <ul class="session-steps">
+          <li>اقرأ قسم STA من الـ Guide مرة واحدة</li>
+          <li>اقفل الـ Guide — اكتب تعريف STA من دماغك</li>
+          <li>ارسم architecture للمطعم (HQ + branches + network)</li>
+          <li>اكتب الـ 3 Acquisition Strategies + خاصيتين لكل واحدة</li>
+          <li>افتح وصحح</li>
+        </ul>
+        <div class="session-tip">الرسم مهم — بيجي بالسؤال "using drawing, design the architecture"</div>
+      </div>
+    </div>
+
+    <div class="session" onclick="toggleSession(this)" data-id="s3">
+      <div class="session-check">✓</div>
+      <div class="session-content">
+        <div class="session-top">
+          <span class="session-time">العصر · 60 دقيقة</span>
+          <span class="session-title">Input/Output Design</span>
+          <span class="session-pct pct-100">100% تكرار</span>
+        </div>
+        <ul class="session-steps">
+          <li>اقرأ القسم مرة واحدة</li>
+          <li>اقفل — ارسم Input Screen للـ Requested Order من دماغك</li>
+          <li>ارسم Output Report من دماغك</li>
+          <li>اكتب 3 طرق لتسهيل الإدخال (MCADVD)</li>
+          <li>اكتب 3 أنواع Validation Controls</li>
+          <li>افتح وصحح</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="session" onclick="toggleSession(this)" data-id="s4">
+      <div class="session-check">✓</div>
+      <div class="session-content">
+        <div class="session-top">
+          <span class="session-time">الليل · 45 دقيقة</span>
+          <span class="session-title">Program Design — Modular + Cohesion/Coupling</span>
+          <span class="session-pct pct-100">100% تكرار</span>
+        </div>
+        <ul class="session-steps">
+          <li>اقرأ القسم مرة واحدة</li>
+          <li>اقفل — اكتب تعريف Modular Programming</li>
+          <li>اكتب فرق Cohesion عن Coupling</li>
+          <li>اكتب فرق Top-Down عن Bottom-Up</li>
+          <li>افتح وصحح</li>
+        </ul>
+        <div class="session-tip">HCLC = High Cohesion Low Coupling = "He Codes Like Champions"</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== DAY 2 ===== -->
+<div class="day-block day2">
+  <div class="day-header">
+    <div class="day-num">٢</div>
+    <div class="day-header-text">
+      <h2>اليوم التاني — المواضيع 75–88%</h2>
+      <p>شبه مضمونة + مراجعة اليوم الأول</p>
+    </div>
+    <div class="day-marks">20–25 درجة</div>
+  </div>
+  <div class="sessions">
+
+    <div class="session" onclick="toggleSession(this)" data-id="s5">
+      <div class="session-check">✓</div>
+      <div class="session-content">
+        <div class="session-top">
+          <span class="session-time">صباحًا · 30 دقيقة — مراجعة اليوم الأول</span>
+          <span class="session-title">Retrieval Practice — اليوم الأول</span>
+        </div>
+        <ul class="session-steps">
+          <li><strong>مش قراءة</strong> — ورقة فاضية وقلم</li>
+          <li>ارسم Level-0 DFD من دماغك بدون ما تفتح أي حاجة</li>
+          <li>ارسم STA Architecture من دماغك</li>
+          <li>افتح وشوف إيه اللي نسيته — ركز عليه بس</li>
+        </ul>
+        <div class="session-tip">ده أهم خطوة في الخطة — الاسترجاع هو اللي بيثبت المعلومة</div>
+      </div>
+    </div>
+
+    <div class="session" onclick="toggleSession(this)" data-id="s6">
+      <div class="session-check">✓</div>
+      <div class="session-content">
+        <div class="session-top">
+          <span class="session-time">صباحًا · 60 دقيقة</span>
+          <span class="session-title">Fact-Finding — سؤال المطعم</span>
+          <span class="session-pct pct-88">88% تكرار</span>
+        </div>
+        <ul class="session-steps">
+          <li>اقرأ قسم Fact-Finding مرة واحدة</li>
+          <li>اقفل — اكتب إجابة كاملة لسؤال: "اجمع بيانات من HQ ومن الفروع"</li>
+          <li>HQ: إيه التقنيات؟ ليه؟</li>
+          <li>الفروع (24 فرع): إيه التقنيات؟ ليه؟</li>
+          <li>افتح وصحح</li>
+        </ul>
+        <div class="session-tip">الفروع = Questionnaire لأن 24 فرع موزعين على مصر — مش ممكن تعمل interview لكلهم</div>
+      </div>
+    </div>
+
+    <div class="session" onclick="toggleSession(this)" data-id="s7">
+      <div class="session-check">✓</div>
+      <div class="session-content">
+        <div class="session-top">
+          <span class="session-time">ظهرًا · 60 دقيقة</span>
+          <span class="session-title">Database — Flat File vs Database</span>
+          <span class="session-pct pct-88">88% تكرار</span>
+        </div>
+        <ul class="session-steps">
+          <li>اقرأ قسم Database مرة واحدة</li>
+          <li>اقفل — اكتب 5 عيوب Flat File (DIRSU)</li>
+          <li>اكتب 5 مميزات Database (RSICB)</li>
+          <li>اكتب دورين للـ DBA + إيه الضرر اللي ممكن يعمله</li>
+          <li>افتح وصحح</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="session" onclick="toggleSession(this)" data-id="s8">
+      <div class="session-check">✓</div>
+      <div class="session-content">
+        <div class="session-top">
+          <span class="session-time">العصر · 60 دقيقة</span>
+          <span class="session-title">SDLC + Analysis Phases</span>
+          <span class="session-pct pct-75">75% تكرار</span>
+        </div>
+        <ul class="session-steps">
+          <li>اقرأ قسم SDLC + Analysis Phases</li>
+          <li>اقفل — اكتب تعريف SDLC + SDM + الفرق بينهم</li>
+          <li>اكتب 3 مراحل SDLC (ADI)</li>
+          <li>اكتب 3 sub-phases للـ Analysis (SDD)</li>
+          <li>ليه بيعينوا Planner في Survey? ليه بيعينوا Modeler في Definition؟</li>
+          <li>افتح وصحح</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="session" onclick="toggleSession(this)" data-id="s9">
+      <div class="session-check">✓</div>
+      <div class="session-content">
+        <div class="session-top">
+          <span class="session-time">الليل · 30 دقيقة</span>
+          <span class="session-title">التعريفات الأساسية — IT / IS / Analyst</span>
+          <span class="session-pct pct-75">75% تكرار</span>
+        </div>
+        <ul class="session-steps">
+          <li>ورقة فاضية — اكتب تعريف IT</li>
+          <li>اكتب تعريف IS + 5 مكونات (HSPDN)</li>
+          <li>اكتب دورين للـ System Analyst</li>
+          <li>اكتب تعريف Project Sponsor</li>
+          <li>افتح وصحح</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== DAY 3 ===== -->
+<div class="day-block day3">
+  <div class="day-header">
+    <div class="day-num">٣</div>
+    <div class="day-header-text">
+      <h2>اليوم التالت — محاكاة امتحان</h2>
+      <p>زي يوم الامتحان بالظبط</p>
+    </div>
+    <div class="day-marks">يوم المراجعة</div>
+  </div>
+  <div class="sessions">
+
+    <div class="session" onclick="toggleSession(this)" data-id="s10">
+      <div class="session-check">✓</div>
+      <div class="session-content">
+        <div class="session-top">
+          <span class="session-time">صباحًا · 30 دقيقة</span>
+          <span class="session-title">Retrieval سريع — كل المواضيع</span>
+        </div>
+        <ul class="session-steps">
+          <li>ورقة فاضية — اكتب كل المختصرات اللي تتذكرها</li>
+          <li>HSPDN · ADI · SDD · IQORI · BMSEU · DIRSU · RSICB · HCLC</li>
+          <li>لكل مختصر — اكتب إيه معناه</li>
+          <li>شوف اللي نسيته — راجعه بس</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="session" onclick="toggleSession(this)" data-id="s11">
+      <div class="session-check">✓</div>
+      <div class="session-content">
+        <div class="session-top">
+          <span class="session-time">صباحًا · 90 دقيقة — امتحان حقيقي</span>
+          <span class="session-title">Mock Exam — امتحان 2024 أو 2025</span>
+          <span class="session-pct pct-exam">محاكاة</span>
+        </div>
+        <ul class="session-steps">
+          <li>افتح امتحان 2024 أو 2025 من الـ zip</li>
+          <li><strong>ورقة + قلم — مفيش Guide مفتوح</strong></li>
+          <li>جاوب على كل الأسئلة في <strong>90 دقيقة</strong></li>
+          <li>وقت خلص — افتح الـ Guide وصحح نفسك</li>
+          <li>اكتب اللي غلطت فيه في ورقة منفصلة</li>
+        </ul>
+        <div class="session-tip">ده أهم session في الـ 3 أيام — اعمله بجدية</div>
+      </div>
+    </div>
+
+    <div class="session" onclick="toggleSession(this)" data-id="s12">
+      <div class="session-check">✓</div>
+      <div class="session-content">
+        <div class="session-top">
+          <span class="session-time">ظهرًا · 45 دقيقة</span>
+          <span class="session-title">راجع إيه اللي غلطت فيه بس</span>
+        </div>
+        <ul class="session-steps">
+          <li>الورقة اللي كتبت فيها أخطاء الـ Mock Exam</li>
+          <li>ركز على دي بس — مش قراءة من الأول</li>
+          <li>لكل نقطة غلطت فيها — اكتبها 3 مرات من دماغك</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="session" onclick="toggleSession(this)" data-id="s13">
+      <div class="session-check">✓</div>
+      <div class="session-content">
+        <div class="session-top">
+          <span class="session-time">الليل — قبل النوم · 20 دقيقة فقط</span>
+          <span class="session-title">Night Sheet فقط — ومتذاكرش أكتر</span>
+          <span class="session-pct pct-exam">قبل الامتحان</span>
+        </div>
+        <ul class="session-steps">
+          <li>افتح الـ Night Sheet من الـ Guide بس</li>
+          <li>اقرأ المختصرات والتعريفات فقط</li>
+          <li><strong>بعدها نام بدري</strong> — الدماغ بتثبت المعلومات أثناء النوم</li>
+        </ul>
+        <div class="session-tip">مفيش مذاكرة جديدة الليل ده — النوم هو آخر خطوة في المذاكرة</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</div>
+
+<script>
+const TOTAL = 13;
+let completed = JSON.parse(localStorage.getItem('sad_schedule') || '[]');
+
+function init() {
+  completed.forEach(id => {
+    const el = document.querySelector(`[data-id="${id}"]`);
+    if (el) el.classList.add('done');
+  });
+  updateProgress();
+}
+
+function toggleSession(el) {
+  const id = el.dataset.id;
+  if (el.classList.contains('done')) {
+    el.classList.remove('done');
+    completed = completed.filter(x => x !== id);
+  } else {
+    el.classList.add('done');
+    if (!completed.includes(id)) completed.push(id);
+  }
+  localStorage.setItem('sad_schedule', JSON.stringify(completed));
+  updateProgress();
+}
+
+function updateProgress() {
+  const n = completed.length;
+  const pct = Math.round((n / TOTAL) * 100);
+  document.getElementById('prog-bar').style.width = pct + '%';
+  document.getElementById('prog-text').textContent = `${n} / ${TOTAL} session`;
+
+  const msg = document.getElementById('done-msg');
+  if (n === 0) msg.textContent = 'اضغط على كل session لما تخلصها ✓';
+  else if (n < 5) msg.innerHTML = `<span>${n} خلصت</span> — كمل يا Osama!`;
+  else if (n < 10) msg.innerHTML = `<span>${n} خلصت</span> — ماشي كويس جداً!`;
+  else if (n < TOTAL) msg.innerHTML = `<span>${n} خلصت</span> — قرب تخلص!`;
+  else msg.innerHTML = `<span>خلصت كل حاجة!</span> — الامتحان هيبقى سهل 🔥`;
+}
+
+init();
+</script>
+</body>
+</html>

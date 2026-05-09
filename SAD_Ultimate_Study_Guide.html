@@ -1,0 +1,1486 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔥 SAD Ultimate Final Exam Guide — CS210/3103</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Sora:wght@300;400;600;800&display=swap');
+
+  :root {
+    --bg: #fafaf8;
+    --bg2: #ffffff;
+    --bg3: #f5f5f5;
+    --border: #e0e0da;
+    --accent: #ea580c;
+    --accent2: #0284c7;
+    --accent3: #7c3aed;
+    --gold: #b45309;
+    --green: #16a34a;
+    --red: #dc2626;
+    --text: #1a1a1a;
+    --muted: #64748b;
+    --code: #f8fafc;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Sora', sans-serif;
+    line-height: 1.7;
+  }
+
+  /* NAV */
+  nav {
+    position: relative; z-index: 100;
+    background: #ffffff;
+    border-bottom: 1px solid var(--border);
+    padding: 20px;
+    display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+  }
+  @media(max-width: 600px) {
+    nav { padding: 8px 10px; justify-content: center; }
+    nav span { width: 100%; text-align: center; margin-bottom: 4px; }
+  }
+  nav a {
+    color: var(--text); text-decoration: none; font-size: 12px;
+    padding: 6px 14px; border-radius: 20px; 
+    border: 1px solid var(--accent2);
+    background: rgba(56, 189, 248, 0.05);
+    transition: all .3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 600;
+  }
+  nav a:hover { 
+    color: #000; 
+    background: var(--accent2); 
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+    transform: translateY(-2px);
+  }
+
+  /* HERO */
+  .hero {
+    text-align: center; padding: 60px 20px 40px;
+    background: radial-gradient(ellipse at 50% 0%, rgba(234,88,12,0.05) 0%, transparent 70%);
+  }
+  .hero h1 { font-size: clamp(24px, 5vw, 48px); font-weight: 800; line-height: 1.2; }
+  .hero h1 span { color: var(--accent); }
+  .hero p { color: var(--muted); margin-top: 12px; font-size: 14px; }
+  .badge { display: inline-block; background: var(--accent); color: #000; font-weight: 700; font-size: 11px; padding: 3px 10px; border-radius: 20px; margin: 4px 3px; }
+  .badge.blue { background: var(--accent2); }
+  .badge.purple { background: var(--accent3); }
+
+  /* MAIN LAYOUT */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 20px 60px; }
+  @media(max-width: 600px) { .container { padding: 0 12px 40px; } }
+
+  /* SECTIONS */
+  .section {
+    margin: 40px 0;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .section-header {
+    padding: 16px 24px;
+    background: var(--bg2);
+    display: flex; align-items: center; gap: 12px;
+    cursor: pointer; user-select: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-header:hover { background: var(--bg3); }
+  .section-header h2 { font-size: 17px; font-weight: 700; flex: 1; }
+  .section-header .toggle { color: var(--muted); font-size: 18px; transition: transform .3s; }
+  .section-header.open .toggle { transform: rotate(180deg); }
+  .section-body { padding: 24px; display: none; }
+  .section-body.open { display: block; }
+
+  /* CARDS */
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin: 12px 0;
+  }
+  .card.fire { border-color: var(--accent); background: rgba(249,115,22,.05); }
+  .card.star { border-color: var(--gold); background: rgba(251,191,36,.05); }
+  .card.warn { border-color: var(--red); background: rgba(248,113,113,.05); }
+  .card.tip { border-color: var(--green); background: rgba(52,211,153,.05); }
+  .card.blue { border-color: var(--accent2); background: rgba(56,189,248,.05); }
+
+  .card h3 { font-size: 14px; font-weight: 700; margin-bottom: 10px; }
+  .card h3.fire-label { color: var(--accent); }
+  .card h3.star-label { color: var(--gold); }
+  .card h3.tip-label { color: var(--green); }
+  .card h3.blue-label { color: var(--accent2); }
+
+  /* GRID */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  @media(max-width:700px) { .grid2,.grid3 { grid-template-columns: 1fr; } }
+
+  /* TABLE */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 14px 0; background: #fff; }
+  th { background: #f1f5f9; color: var(--accent2); padding: 10px 14px; text-align: right; border: 1px solid var(--border); font-size: 12px; text-transform: uppercase; letter-spacing: .5px; }
+  td { padding: 10px 14px; border: 1px solid var(--border); color: var(--text); vertical-align: top; text-align: right; }
+  tr:nth-child(even) td { background: #fafafa; }
+
+  /* CODE / DEFINITION BOX */
+  .def {
+    background: var(--code);
+    border-right: 3px solid var(--accent2);
+    padding: 12px 16px;
+    border-radius: 8px 0 0 8px;
+    font-size: 13px;
+    margin: 10px 0;
+    border: 1px solid var(--border);
+    border-right-width: 4px;
+  }
+  .def strong { color: var(--accent2); }
+
+  /* MNEMONIC */
+  .mnemonic {
+    background: linear-gradient(135deg, rgba(167,139,250,.1), rgba(249,115,22,.1));
+    border: 1px solid var(--accent3);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin: 10px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+  }
+  .mnemonic .letters { font-size: 22px; font-weight: 800; color: var(--accent3); letter-spacing: 4px; margin-bottom: 6px; }
+
+  /* EXAM Q */
+  .exam-q {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 8px 0;
+    font-size: 13px;
+  }
+  .exam-q .q-label { font-size: 10px; text-transform: uppercase; color: var(--accent); letter-spacing: 1px; font-weight: 700; margin-bottom: 6px; }
+  .exam-q .answer { background: rgba(52,211,153,.05); border-top: 1px dashed var(--border); margin-top: 10px; padding-top: 10px; color: var(--green); font-size: 12.5px; }
+
+  /* DFD */
+  .dfd-box {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    background: var(--code);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    white-space: pre;
+    overflow-x: auto;
+    line-height: 1.9;
+    margin: 12px 0;
+  }
+
+  /* FAST REVISION */
+  .fast-rev {
+    background: linear-gradient(135deg, rgba(249,115,22,.08), rgba(56,189,248,.08));
+    border: 1px solid rgba(249,115,22,.3);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin: 12px 0;
+    font-size: 12.5px;
+  }
+  .fast-rev h4 { color: var(--accent); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+
+  ul, ol { padding-left: 20px; }
+  li { margin: 4px 0; font-size: 13.5px; }
+  li::marker { color: var(--accent); }
+
+  .tag { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; margin-left: 6px; vertical-align: middle; }
+  .tag.fire { background: rgba(249,115,22,.2); color: var(--accent); }
+  .tag.star { background: rgba(251,191,36,.2); color: var(--gold); }
+  .tag.new { background: rgba(52,211,153,.2); color: var(--green); }
+
+  p { font-size: 13.5px; margin: 6px 0; }
+  h4 { font-size: 14px; font-weight: 600; color: var(--accent2); margin: 14px 0 8px; }
+  h5 { font-size: 13px; font-weight: 600; color: var(--gold); margin: 12px 0 6px; }
+
+  .warn-box {
+    background: rgba(248,113,113,.08);
+    border: 1px solid var(--red);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 10px 0;
+    font-size: 13px;
+    color: var(--red);
+  }
+
+  .night-sheet {
+    background: var(--bg2);
+    border: 2px solid var(--accent);
+    border-radius: 16px;
+    padding: 30px;
+    margin: 40px 0;
+  }
+  .night-sheet h2 { color: var(--accent); font-size: 22px; text-align: center; margin-bottom: 20px; }
+  .ns-row { display: flex; gap: 10px; flex-wrap: wrap; margin: 6px 0; }
+  .ns-pill {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 20px; padding: 4px 14px; font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .ns-pill.accent { border-color: var(--accent); color: var(--accent); }
+  .ns-pill.blue { border-color: var(--accent2); color: var(--accent2); }
+  .ns-pill.gold { border-color: var(--gold); color: var(--gold); }
+  .ns-pill.green { border-color: var(--green); color: var(--green); }
+
+  hr { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+</style>
+</head>
+<body>
+
+<nav>
+  <span>🔥 SAD GUIDE</span>
+  <a href="#fundamentals">Fundamentals</a>
+  <a href="#sdlc">SDLC</a>
+  <a href="#phases">Phases</a>
+  <a href="#factfinding">Fact Finding</a>
+  <a href="#dfd">DFD</a>
+  <a href="#sta">Architecture</a>
+  <a href="#input">Input/Output</a>
+  <a href="#database">Database</a>
+  <a href="#program">Program Design</a>
+  <a href="#tables">Comparison Tables</a>
+  <a href="#nightsheet">Night Sheet</a>
+</nav>
+
+<div class="hero">
+  <h1>🔥 The Ultimate <span>SAD</span> Exam Survival Guide</h1>
+  <p>CS210 / 3103 · System Analysis &amp; Design · El-Shorouk Academy · Based on REAL Exams 2017–2025</p>
+  <div style="margin-top:14px">
+    <span class="badge">60–80 Marks</span>
+    <span class="badge blue">120 Min</span>
+    <span class="badge purple">7 Questions</span>
+  </div>
+  <p style="margin-top:12px;font-size:12px;color:var(--muted)">Click any section header to expand/collapse · All repeated exam questions marked 🔥</p>
+</div>
+
+<div class="container">
+
+<!-- ===== SECTION 1: FUNDAMENTALS ===== -->
+<div class="section" id="fundamentals">
+  <div class="section-header open" onclick="toggle(this)">
+    <span>📌</span>
+    <h2>1. Fundamentals — Information Systems &amp; Roles <span class="tag fire">🔥 Exam Q1</span></h2>
+    <span class="toggle">▼</span>
+  </div>
+  <div class="section-body open">
+
+    <div class="card fire">
+      <h3 class="fire-label">🔥 Exam Definition — ALWAYS ASKED</h3>
+      <div class="def"><strong>Information Technology (IT):</strong> The use of computer hardware, software, and networks to collect, process, store, and distribute information to support decision-making and organizational activities.</div>
+      <div class="def"><strong>Information System (IS):</strong> A set of interrelated components that collect, process, store, and distribute information to support decision making and control in an organization.</div>
+      <div class="def"><strong>System Analysis:</strong> The process of studying and understanding an existing system to identify its problems and requirements for improvement or replacement.</div>
+      <div class="def"><strong>System Design:</strong> The process of planning a new system or modifying an existing one to satisfy the specified requirements.</div>
+    </div>
+
+    <h4>Components of an Information System <span class="tag fire">FREQUENT</span></h4>
+    <div class="mnemonic">
+      <div class="letters">H S P D N</div>
+      <b>H</b>ardware · <b>S</b>oftware · <b>P</b>eople · <b>D</b>ata · <b>N</b>etwork/Procedures
+    </div>
+    <ul>
+      <li><strong>Hardware:</strong> Physical devices — computers, printers, servers</li>
+      <li><strong>Software:</strong> Programs that run on hardware (OS, applications)</li>
+      <li><strong>People:</strong> Users, analysts, operators, managers</li>
+      <li><strong>Data:</strong> Raw facts that are processed into information</li>
+      <li><strong>Network/Procedures:</strong> Rules and connections between components</li>
+    </ul>
+
+    <h4>Roles of System Analyst <span class="tag star">⭐ FREQUENT</span></h4>
+    <div class="mnemonic">
+      <div class="letters">CIPDAM</div>
+      <b>C</b>ommunicator · <b>I</b>nvestigator · <b>P</b>roblem Solver · <b>D</b>esigner · <b>A</b>rchitect · <b>M</b>anager
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <ul>
+          <li>Communicator between users and technical team</li>
+          <li>Investigator — collects facts about current system</li>
+          <li>Problem identifier — detects shortcomings</li>
+        </ul>
+      </div>
+      <div class="card">
+        <ul>
+          <li>Designer — designs new system components</li>
+          <li>Architect — builds system structure</li>
+          <li>Project coordinator — manages team and schedule</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card star">
+      <h3 class="star-label">⭐ "Project Sponsor" — Asked in 2024!</h3>
+      <p>The <strong>Project Sponsor</strong> is the senior person (usually top management) who authorizes and funds the project. They define the business goals and are the champion of the project within the organization.</p>
+    </div>
+
+    <div class="fast-rev">
+      <h4>⚡ 30-Second Revision</h4>
+      IT = use of tech for info · IS = 5 components (HSPDN) · Analyst = bridge between users &amp; tech · Sponsor = the boss who funds it
+    </div>
+
+    <div class="exam-q">
+      <div class="q-label">🔥 Exam Q (2024, 2025) — Define + Explain</div>
+      A. Define "Information Technology". B. State two components of an IS and explain one.
+      C. State two roles of the system analyst and explain one.
+      <div class="answer">✅ Model: Define IT clearly (1 line). Pick 2 from HSPDN (Hardware, Software). For roles: pick Investigator + Designer. Explain in 2–3 lines each. Never write more than 3 lines per explanation — examiners want concise!</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 2: SDLC ===== -->
+<div class="section" id="sdlc">
+  <div class="section-header" onclick="toggle(this)">
+    <span>🔄</span>
+    <h2>2. SDLC — System Development Life Cycle <span class="tag fire">🔥 Exam Q2</span></h2>
+    <span class="toggle">▼</span>
+  </div>
+  <div class="section-body">
+
+    <div class="card fire">
+      <h3 class="fire-label">🔥 ALWAYS ASKED — Define SDLC</h3>
+      <div class="def"><strong>SDLC (System Development Life Cycle):</strong> A structured process that defines the phases and activities involved in developing, maintaining, and replacing information systems. It provides a framework for planning and controlling the development of an information system.</div>
+      <div class="def"><strong>System Development Methodology (SDM):</strong> The specific approach or set of procedures used to implement the SDLC. The SDM specifies how the work is done within each phase. SDLC = "what phases", SDM = "how to do them".</div>
+    </div>
+
+    <h4>The 3 Main Phases of SDLC <span class="tag fire">🔥 State 3 phases</span></h4>
+    <div class="mnemonic">
+      <div class="letters">A D I</div>
+      <b>A</b>nalysis Phase · <b>D</b>esign Phase · <b>I</b>mplementation Phase
+    </div>
+    <div class="grid3">
+      <div class="card">
+        <h3 style="color:var(--accent2)">📋 Analysis Phase</h3>
+        <p>Understand the current system, define problems, gather requirements</p>
+        <ul>
+          <li>Survey sub-phase</li>
+          <li>Detailed Study sub-phase</li>
+          <li>Definition sub-phase</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--gold)">🎨 Design Phase</h3>
+        <p>Plan the new system solution</p>
+        <ul>
+          <li>Logical Design (what)</li>
+          <li>Physical Design (how)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--green)">⚙️ Implementation Phase</h3>
+        <p>Build, test, and deploy</p>
+        <ul>
+          <li>Construction</li>
+          <li>Testing</li>
+          <li>Deployment/Maintenance</li>
+        </ul>
+      </div>
+    </div>
+
+    <h4>Business Requirements <span class="tag star">⭐ Define + 2 Types</span></h4>
+    <div class="def"><strong>Business Requirements:</strong> The conditions or capabilities that a system must fulfill to satisfy the needs of the users and the business objectives.</div>
+    <div class="grid2">
+      <div class="card">
+        <h3 style="color:var(--accent)">Functional Requirements</h3>
+        <p>What the system MUST DO — specific functions and behaviors</p>
+        <p style="color:var(--muted);font-size:12px">Example: "The system shall allow a customer to place an order"</p>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--accent3)">Non-Functional Requirements</h3>
+        <p>How the system performs — quality attributes</p>
+        <p style="color:var(--muted);font-size:12px">Example: "Response time &lt; 2 seconds", "99.9% uptime"</p>
+      </div>
+    </div>
+
+    <h4>Analysis Strategies <span class="tag fire">🔥 Mention 2 + Explain 1</span></h4>
+    <div class="grid2">
+      <div class="card">
+        <h3 style="color:var(--accent2)">Top-Down Analysis</h3>
+        <p>Start from the WHOLE system overview, then break it into smaller parts. Like reading a book title before chapters.</p>
+        <p style="color:var(--muted);font-size:12px">Used when: redesigning a completely new system</p>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--gold)">Bottom-Up Analysis</h3>
+        <p>Start from individual DETAILS and work up to the big picture. Like assembling puzzle pieces.</p>
+        <p style="color:var(--muted);font-size:12px">Used when: improving an existing system</p>
+      </div>
+    </div>
+
+    <h4>Project Payments Milestones <span class="tag star">⭐ Asked 2024!</span></h4>
+    <div class="def"><strong>Project Payments Milestones:</strong> Predefined checkpoints in the project timeline at which payments are made to the development team based on the successful completion of specific deliverables or phases.</div>
+
+    <h4>5 Types of Requirements (System Design Exam) <span class="tag fire">🔥 Asked 2024</span></h4>
+    <div class="mnemonic">
+      <div class="letters">PFIOP</div>
+      <b>P</b>erformance · <b>F</b>unctional · <b>I</b>nformation · <b>O</b>perational · <b>P</b>rotection(Security)
+    </div>
+    <ul>
+      <li><strong>Functional:</strong> What the system does (functions/features)</li>
+      <li><strong>Performance:</strong> Speed, capacity, response time</li>
+      <li><strong>Information:</strong> Data storage and retrieval needs</li>
+      <li><strong>Operational:</strong> How system fits the work environment</li>
+      <li><strong>Protection (Security):</strong> Access control, data security</li>
+    </ul>
+
+    <div class="fast-rev">
+      <h4>⚡ 30-Second Revision</h4>
+      SDLC = 3 phases (ADI) · SDM = how to do SDLC · Requirements = Functional + Non-Functional · Strategies = Top-Down &amp; Bottom-Up
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 3: ANALYSIS PHASES ===== -->
+<div class="section" id="phases">
+  <div class="section-header" onclick="toggle(this)">
+    <span>🔬</span>
+    <h2>3. System Analysis Phases in Detail <span class="tag fire">🔥 Exam Q3/Q5</span></h2>
+    <span class="toggle">▼</span>
+  </div>
+  <div class="section-body">
+
+    <h4>The Analysis Phase — 3 Sub-Phases</h4>
+    <div class="mnemonic">
+      <div class="letters">S D D</div>
+      <b>S</b>urvey Phase · <b>D</b>etailed Study Phase · <b>D</b>efinition Phase
+    </div>
+
+    <div class="card fire">
+      <h3 class="fire-label">🔥 Survey Phase Activities (Sub-phases)</h3>
+      <div class="mnemonic">
+        <div class="letters">P P D</div>
+        <b>P</b>lan the Project · <b>P</b>repare the Plan · <b>D</b>efine Project Scope
+      </div>
+      <ul>
+        <li><strong>Plan the Project:</strong> Assign the project sponsor, define objectives, set rough schedule and budget, determine feasibility</li>
+        <li><strong>Assign a Planner:</strong> The project manager assigns a planner because the survey phase creates plans that require special planning expertise</li>
+        <li><strong>Prepare the Plan:</strong> Create detailed project plan with time, cost, resources</li>
+      </ul>
+    </div>
+
+    <div class="card star">
+      <h3 class="star-label">⭐ Why assign a Planner in Survey Phase?</h3>
+      <p>Because the survey phase involves creating a project plan (schedule, budget, resources). Planning requires specialized skills in estimation and project management — skills the analyst may not have. So a dedicated planner is assigned.</p>
+    </div>
+
+    <div class="card fire">
+      <h3 class="fire-label">🔥 Detailed Study Phase Activities</h3>
+      <ul>
+        <li><strong>Collect Data:</strong> Apply fact-finding techniques (interviews, questionnaires, observation, record inspection)</li>
+        <li><strong>Analyze Current System:</strong> Understand existing processes, identify problems</li>
+        <li><strong>Prototyping:</strong> Build working model to discover and verify user requirements</li>
+        <li><strong>Define Requirements:</strong> Document what the new system must do</li>
+      </ul>
+    </div>
+
+    <div class="card blue">
+      <h3 class="blue-label">📦 Prototyping — 3 Characteristics (Asked 2024!)</h3>
+      <ul>
+        <li>Built <strong>quickly</strong> with minimum effort and cost</li>
+        <li>Provides a <strong>working model</strong> that users can interact with</li>
+        <li>Helps <strong>discover and verify</strong> user requirements early</li>
+        <li>May be <strong>throwaway</strong> (discarded after requirements confirmed) or evolutionary (becomes the final system)</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Definition Phase</h3>
+      <ul>
+        <li>Assign a <strong>modeler</strong> — because the definition phase produces formal models (DFDs, ERDs) that require modeling expertise</li>
+        <li>Produce the <strong>System Requirements Specification (SRS)</strong></li>
+        <li>Prioritize requirements — because not all requirements are equally important; management must decide which to include based on cost and value</li>
+      </ul>
+    </div>
+
+    <div class="exam-q">
+      <div class="q-label">🔥 Exam Pattern 2024 (Q5 — 30 Marks!)</div>
+      State objectives of "Plan the Project" / Why assign planner in survey phase? / Prototyping characteristics / Why prioritize requirements in definition phase? / Why assign modeler?
+      <div class="answer">✅ These are all short-answer "explain why" questions. Write 2–3 lines each. Be very concise. Don't pad with extra words.</div>
+    </div>
+
+    <div class="fast-rev">
+      <h4>⚡ 30-Second Revision</h4>
+      Survey = Plan project · Detailed Study = collect data + prototype · Definition = SRS + model · Planner assigned = planning expertise · Modeler assigned = DFD/ERD expertise
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 4: FACT FINDING ===== -->
+<div class="section" id="factfinding">
+  <div class="section-header" onclick="toggle(this)">
+    <span>🔍</span>
+    <h2>4. Fact-Finding Techniques <span class="tag fire">🔥 Exam Q3/Q4</span></h2>
+    <span class="toggle">▼</span>
+  </div>
+  <div class="section-body">
+
+    <h4>The 5 Fact-Finding Techniques</h4>
+    <div class="mnemonic">
+      <div class="letters">IQORI</div>
+      <b>I</b>nterview · <b>Q</b>uestionnaire · <b>O</b>bservation · <b>R</b>ecord Inspection · <b>I</b>nternet/Research
+    </div>
+
+    <div class="grid2">
+      <div class="card fire">
+        <h3 class="fire-label">🔥 Observation — Conditions to Use</h3>
+        <p>Use observation when:</p>
+        <ul>
+          <li>Users <strong>cannot clearly describe</strong> their work processes</li>
+          <li>You need to <strong>verify</strong> what was said in interviews</li>
+          <li>The process is <strong>complex</strong> and visual understanding is needed</li>
+          <li>Existing documentation is <strong>inadequate or missing</strong></li>
+        </ul>
+      </div>
+      <div class="card fire">
+        <h3 class="fire-label">🔥 Questionnaire — Conditions to Use</h3>
+        <p>Use questionnaire when:</p>
+        <ul>
+          <li>You need data from <strong>many people</strong> spread across locations</li>
+          <li>Respondents are geographically <strong>distant</strong></li>
+          <li>You need <strong>statistical/quantitative</strong> data</li>
+          <li>Time and cost are <strong>limited</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card star">
+      <h3 class="star-label">⭐ The TRG/RRG Restaurant Case — Repeated Every Year!</h3>
+      <p>The pattern: "State the fact-finding techniques needed to collect data from HQ and individual restaurants"</p>
+      <hr>
+      <h5>For HQ (Head Quarter):</h5>
+      <ul>
+        <li><strong>Interview</strong> — with HQ managers and department heads</li>
+        <li><strong>Record Inspection</strong> — examine HQ documents, reports, archives</li>
+        <li><strong>Observation</strong> — observe HQ workflows directly</li>
+      </ul>
+      <h5>For Individual Restaurants (branches):</h5>
+      <ul>
+        <li><strong>Questionnaire</strong> — because there are MANY branches (24–64 branches) spread over different governorates; can't visit all</li>
+        <li><strong>Interview</strong> — with branch sales managers (a sample)</li>
+      </ul>
+      <p style="color:var(--accent);font-size:12px">🔑 KEY REASON: Questionnaire for branches because there are too many (24/64) spread geographically — you can't interview them all!</p>
+    </div>
+
+    <div class="exam-q">
+      <div class="q-label">🔥 Exact Exam Question — 2024, 2025</div>
+      "State the fact-finding techniques used to prepare a plan to collect data and investigate the problems of the TRG Group restaurants (HQ and individual restaurants)"
+      <div class="answer">✅ Answer: For HQ → Interview + Record Inspection + Observation. For branches → Questionnaire (because 24+ branches spread across Egypt). Give reason WHY for each technique.</div>
+    </div>
+
+    <table>
+      <tr><th>Technique</th><th>Best For</th><th>Advantage</th><th>Disadvantage</th></tr>
+      <tr><td>Interview</td><td>Few key people, detailed info</td><td>Rich detail, clarification possible</td><td>Time consuming, costly</td></tr>
+      <tr><td>Questionnaire</td><td>Many people, spread out</td><td>Fast, cheap, large sample</td><td>Low response rate, no clarification</td></tr>
+      <tr><td>Observation</td><td>Complex processes</td><td>Accurate, first-hand</td><td>Hawthorne effect, time-consuming</td></tr>
+      <tr><td>Record Inspection</td><td>Documents, reports, forms</td><td>Objective data, historical</td><td>May be outdated or incomplete</td></tr>
+    </table>
+
+    <div class="fast-rev">
+      <h4>⚡ 30-Second Revision</h4>
+      Observation = when users can't explain their work · Questionnaire = many distant people · HQ = Interview+Inspection+Observation · Branches = Questionnaire (too many!)
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 5: DFD ===== -->
+<div class="section" id="dfd">
+  <div class="section-header" onclick="toggle(this)">
+    <span>📊</span>
+    <h2>5. System Modeling — DFD (Data Flow Diagrams) <span class="tag fire">🔥 HIGHEST MARKS</span></h2>
+    <span class="toggle">▼</span>
+  </div>
+  <div class="section-body">
+
+    <div class="card fire">
+      <h3 class="fire-label">🔥 What is System Modeling?</h3>
+      <div class="def"><strong>System Modeling:</strong> Developing and presenting an abstract blueprint of a system using graphical notation to help analysts understand and communicate system structure and behavior.</div>
+      <p style="margin-top:8px">Purpose of modeling techniques (2 main ones):</p>
+      <ul>
+        <li><strong>Understanding:</strong> Help the analyst understand complex systems</li>
+        <li><strong>Communication:</strong> Help communicate system design to users and team</li>
+      </ul>
+    </div>
+
+    <h4>DFD Components — 4 Symbols</h4>
+    <div class="mnemonic">
+      <div class="letters">EPDS</div>
+      <b>E</b>xternal Entity (rectangle) · <b>P</b>rocess (rounded rectangle/circle) · <b>D</b>ata Store (open rectangle) · <b>D</b>ata <b>F</b>low (arrow)
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <h3 style="color:var(--accent2)">□ External Entity</h3>
+        <p>A person, organization, or system OUTSIDE the system. Source or destination of data.</p>
+        <p style="color:var(--muted);font-size:12px">Example: Customer, Manager, Government</p>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--green)">⬭ Process</h3>
+        <p>An activity that transforms input data into output data. Named as action verbs.</p>
+        <p style="color:var(--muted);font-size:12px">Example: "Validate Order", "Generate Report"</p>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--gold)">▭ Data Store</h3>
+        <p>Where data is stored (file, database, archive). Shown as open-ended rectangle.</p>
+        <p style="color:var(--muted);font-size:12px">Example: Archive, Customer File, Orders DB</td></p>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--accent3)">→ Data Flow</h3>
+        <p>Movement of data between components. Named to describe what data is flowing.</p>
+        <p style="color:var(--muted);font-size:12px">Example: "Requested Order", "Validated Request"</p>
+      </div>
+    </div>
+
+    <h4>DFD Levels</h4>
+    <div class="card fire">
+      <h3 class="fire-label">🔥 3 Levels — Must Know Cold!</h3>
+      <div class="grid3">
+        <div style="padding:10px;background:var(--bg3);border-radius:8px;text-align:center">
+          <div style="font-size:24px;font-weight:800;color:var(--accent)">Context</div>
+          <div style="font-size:11px;color:var(--muted)">Level 0 (sometimes called)</div>
+          <hr style="margin:8px 0">
+          <ul style="text-align:left;font-size:12px">
+            <li>ONE process only</li>
+            <li>Shows ALL external entities</li>
+            <li>Shows ALL data flows in/out</li>
+            <li>No data stores</li>
+            <li>System = single bubble</li>
+          </ul>
+        </div>
+        <div style="padding:10px;background:var(--bg3);border-radius:8px;text-align:center">
+          <div style="font-size:24px;font-weight:800;color:var(--gold)">Level-0</div>
+          <div style="font-size:11px;color:var(--muted)">(Main processes)</div>
+          <hr style="margin:8px 0">
+          <ul style="text-align:left;font-size:12px">
+            <li>Expands the context process</li>
+            <li>Shows MAIN processes (departments)</li>
+            <li>Shows data stores</li>
+            <li>Same external entities</li>
+            <li>Must BALANCE with context</li>
+          </ul>
+        </div>
+        <div style="padding:10px;background:var(--bg3);border-radius:8px;text-align:center">
+          <div style="font-size:24px;font-weight:800;color:var(--green)">Level-1</div>
+          <div style="font-size:11px;color:var(--muted)">(Sub-processes)</div>
+          <hr style="margin:8px 0">
+          <ul style="text-align:left;font-size:12px">
+            <li>Expands ONE Level-0 process</li>
+            <li>Shows sub-processes inside it</li>
+            <li>Must BALANCE with Level-0</li>
+            <li>More detail</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <h4>🔥 The Balancing Rule — VERY IMPORTANT</h4>
+    <div class="warn-box">
+      ⚠️ BALANCING RULE: The inputs and outputs of a process at one level MUST MATCH the inputs and outputs of the same process when expanded to the next level.<br><br>
+      If Level-0 "Sales Dept" receives "Requested Order" from Customer → then when you expand Sales Dept to Level-1, it must STILL receive "Requested Order" from Customer.
+    </div>
+
+    <h4>🔥 Restaurant Case — DFD Step by Step (TRG / RRG)</h4>
+
+    <h5>STEP 1: Context Diagram</h5>
+    <div class="dfd-box">
+CONTEXT DIAGRAM — TRG/RRG Restaurant System
+════════════════════════════════════════════════
+
+  [Customer] ──Requested Order──→ [    RESTAURANT     ] ──Requested Items──→ [Customer]
+                                  [  MANAGEMENT        ]
+                                  [    SYSTEM          ] ──Requested Receipt──→ [Customer]
+                                         ↑
+                              (ONE process = whole system)
+
+  Note:
+  • Only ONE big process bubble
+  • External entities: Customer (appears twice - same entity)
+  • Show ALL flows in and out
+  • NO data stores at context level</div>
+
+    <h5>STEP 2: Level-0 DFD</h5>
+    <div class="dfd-box">
+LEVEL-0 DFD — TRG Restaurant
+════════════════════════════════════════════════
+
+[Customer]──Requested Order──→ [1. Sales Dept]
+                                      │ Validated Request
+                                      ↓
+                              [2. Cashier Dept]──Validated Request──→ [3. Meal Production]
+                                      ↑                                         │
+                              Requested Receipt                          Prepared Request
+                                                                                ↓
+                                                                   [4. Service Delivery]──→ [Customer]
+                                                                                              (items+receipt)
+
+  Data Stores: [Archive] connected to Sales, Cashier, Meal Production
+  External Entities: Customer (source and destination)</div>
+
+    <h5>STEP 3: Level-1 DFD (Sales Department)</h5>
+    <div class="dfd-box">
+LEVEL-1 DFD — Sales Department Detail
+════════════════════════════════════════════════
+
+[Customer] ──Requested Order──→ [1.1 Register Order]
+                                        │ Requested Order
+                                        ↓
+                                [1.2 Validate Order]
+                                        │ Validated Request
+                                        ↓ (to Cashier) / [1.3 Print Request] / [Archive]
+
+  Note: All inputs/outputs MUST BALANCE with Level-0 Sales Dept
+  • Input from Customer: Requested Order ✓ (same as Level-0)
+  • Output to Cashier: Validated Request ✓ (same as Level-0)</div>
+
+    <h4>Common DFD Errors</h4>
+    <div class="mnemonic">
+      <div class="letters">BMSEU</div>
+      <b>B</b>lack Hole · <b>M</b>iracle · <b>S</b>elf-loop · <b>E</b>ntity-to-Entity · <b>U</b>nbalanced
+    </div>
+    <div class="grid2">
+      <div class="card warn">
+        <h3 style="color:var(--red)">❌ Black Hole</h3>
+        <p>A process has INPUT but NO OUTPUT. Data goes in and disappears.</p>
+      </div>
+      <div class="card warn">
+        <h3 style="color:var(--red)">❌ Miracle</h3>
+        <p>A process has OUTPUT but NO INPUT. Data appears from nowhere.</p>
+      </div>
+      <div class="card warn">
+        <h3 style="color:var(--red)">❌ Self-Loop</h3>
+        <p>A data flow goes FROM a process BACK TO the same process.</p>
+      </div>
+      <div class="card warn">
+        <h3 style="color:var(--red)">❌ Entity-to-Entity</h3>
+        <p>A data flow goes directly between two external entities (no process involved).</p>
+      </div>
+    </div>
+
+    <div class="card tip">
+      <h3 class="tip-label">✅ How to Answer DFD Questions in the Exam</h3>
+      <ol>
+        <li>Read the case study carefully — identify external entities (people/orgs interacting with the system)</li>
+        <li>Identify all data flows (what documents/data are exchanged?)</li>
+        <li>For Context: Draw ONE bubble, put entities on sides, draw arrows with data names</li>
+        <li>For Level-0: Each department = one process bubble. Connect with same flows as context (BALANCE!)</li>
+        <li>For Level-1: Pick ONE department from Level-0, break it into sub-steps</li>
+        <li>Always LABEL every arrow with the data name</li>
+        <li>Check balancing before finishing</li>
+      </ol>
+    </div>
+
+    <div class="fast-rev">
+      <h4>⚡ 30-Second Revision</h4>
+      Context = 1 process · Level-0 = departments · Level-1 = sub-steps of 1 dept · Balance = same in/out · Errors = BMSEU · Restaurant: Customer → Sales → Cashier → Meal Prod → Delivery → Customer
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 6: ARCHITECTURE ===== -->
+<div class="section" id="sta">
+  <div class="section-header" onclick="toggle(this)">
+    <span>🏗️</span>
+    <h2>6. System Technical Architecture (STA) <span class="tag fire">🔥 Exam Q5/Q6</span></h2>
+    <span class="toggle">▼</span>
+  </div>
+  <div class="section-body">
+
+    <div class="card fire">
+      <h3 class="fire-label">🔥 Define STA — Always Asked!</h3>
+      <div class="def"><strong>System Technical Architecture (STA):</strong> A description of the hardware, software, and network components needed to implement an information system, including the arrangement of computers, servers, and communication infrastructure.</div>
+    </div>
+
+    <h4>3 System Acquisition Strategies <span class="tag fire">🔥 Asked in 2024 design exam — 15 marks!</span></h4>
+    <div class="mnemonic">
+      <div class="letters">BCM</div>
+      <b>B</b>uy (COTS) · <b>C</b>ustom Build · <b>M</b>odify/ERP
+    </div>
+    <div class="grid3">
+      <div class="card">
+        <h3 style="color:var(--accent2)">1. Buy (COTS)</h3>
+        <p><strong>Commercial Off-The-Shelf</strong> software</p>
+        <ul style="font-size:12px;margin-top:6px">
+          <li>Ready-made product</li>
+          <li>Fast deployment</li>
+          <li>Lower cost initially</li>
+          <li>Less customization</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--gold)">2. Custom Build</h3>
+        <p>Build the system from scratch internally or outsource</p>
+        <ul style="font-size:12px;margin-top:6px">
+          <li>100% fits requirements</li>
+          <li>Most expensive</li>
+          <li>Takes longest time</li>
+          <li>Full control</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--green)">3. Modify Existing</h3>
+        <p>Buy a system and customize it (ERP approach)</p>
+        <ul style="font-size:12px;margin-top:6px">
+          <li>Balance of cost &amp; fit</li>
+          <li>Medium time</li>
+          <li>Partial customization</li>
+        </ul>
+      </div>
+    </div>
+
+    <h4>Architecture Types <span class="tag fire">🔥</span></h4>
+
+    <div class="card fire">
+      <h3 class="fire-label">🔥 Client-Server vs Server-Based — Most Repeated!</h3>
+      <table>
+        <tr><th>Aspect</th><th>Client-Server</th><th>Server-Based</th></tr>
+        <tr><td>Processing</td><td>Split between client &amp; server</td><td>ALL on server</td></tr>
+        <tr><td>Client role</td><td>Does some processing</td><td>Just displays results (thin)</td></tr>
+        <tr><td>Cost</td><td>Higher (powerful clients needed)</td><td>Lower (cheap thin clients)</td></tr>
+        <tr><td>Scalability</td><td>Harder to scale</td><td>Easy to scale</td></tr>
+        <tr><td>Example</td><td>Thick client apps</td><td>Web browser apps</td></tr>
+      </table>
+    </div>
+
+    <h4>Thick Client vs Thin Client</h4>
+    <div class="grid2">
+      <div class="card">
+        <h3 style="color:var(--accent)">Thick (Fat) Client</h3>
+        <ul>
+          <li>Powerful local machine</li>
+          <li>Stores data &amp; apps locally</li>
+          <li>Works offline</li>
+          <li>Higher hardware cost</li>
+          <li>Harder to maintain/update</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--accent2)">Thin Client</h3>
+        <ul>
+          <li>Minimal local processing</li>
+          <li>Everything on server</li>
+          <li>Requires network always</li>
+          <li>Cheaper hardware</li>
+          <li>Easy central management</li>
+        </ul>
+      </div>
+    </div>
+
+    <h4>Tiers Architecture</h4>
+    <div class="grid3">
+      <div class="card">
+        <h3 style="color:var(--accent2)">2-Tier</h3>
+        <p>Client ↔ Server</p>
+        <p style="font-size:12px;color:var(--muted)">Direct client-server connection. Simple, fast, limited scalability.</p>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--gold)">3-Tier</h3>
+        <p>Client ↔ App Server ↔ DB Server</p>
+        <p style="font-size:12px;color:var(--muted)">Presentation + Logic + Data separated. More scalable.</p>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--green)">N-Tier</h3>
+        <p>Multiple specialized servers</p>
+        <p style="font-size:12px;color:var(--muted)">Enterprise scale. Each layer is independent.</p>
+      </div>
+    </div>
+
+    <div class="card star">
+      <h3 class="star-label">⭐ How to Design STA (Drawing Question)</h3>
+      <p>For the Restaurant/Clinic case, the STA always follows this pattern:</p>
+      <div class="dfd-box">
+ARCHITECTURE DESIGN — TRG Restaurant (Client-Server)
+════════════════════════════════════════════════════
+
+  [HQ/ISC - Alexandria]
+  ┌─────────────────────────────┐
+  │  Server 1 (Main)            │
+  │  Server 2 (Backup)          │
+  └─────────────┬───────────────┘
+                │ Communication Network (Internet/WAN)
+     ┌──────────┼──────────┐
+     ↓          ↓          ↓
+ [Branch 1]  [Branch 2] ... [Branch 24]
+ ┌────────┐  ┌────────┐
+ │ PC     │  │ PC     │
+ │ Printer│  │ Printer│
+ └────────┘  └────────┘
+
+KEY COUNTS TO JUSTIFY:
+- 1 PC + 1 Printer per branch = 24 PCs + 24 Printers
+- 2+ Servers at HQ (for reliability/load)
+- Network: WAN connecting all branches to HQ</div>
+      <p style="color:var(--accent);font-size:12px;margin-top:8px">🔑 Always justify WHY: "We need 24 PCs because there are 24 branches, one per branch to handle local input"</p>
+    </div>
+
+    <div class="card">
+      <h3>Single Seat — Explained</h3>
+      <p>In client-server architecture, <strong>"Single Seat"</strong> happens when all users try to use the same server resource and only one can proceed at a time — creating a bottleneck. This is why multiple servers or load balancing is needed.</p>
+    </div>
+
+    <div class="fast-rev">
+      <h4>⚡ 30-Second Revision</h4>
+      STA = hardware+software+network plan · 3 strategies = Buy/Build/Modify · Client-Server = split processing · Server-Based = all on server · 2-tier=C↔S, 3-tier=C↔App↔DB · Restaurant STA = PC+Printer per branch + servers at HQ
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 7: INPUT/OUTPUT DESIGN ===== -->
+<div class="section" id="input">
+  <div class="section-header" onclick="toggle(this)">
+    <span>🖥️</span>
+    <h2>7. Input, Output &amp; Interface Design <span class="tag fire">🔥 Exam Q6/Q7</span></h2>
+    <span class="toggle">▼</span>
+  </div>
+  <div class="section-body">
+
+    <h4>Making Input Easy &amp; Efficient <span class="tag fire">🔥 ALWAYS ASKED</span></h4>
+    <div class="mnemonic">
+      <div class="letters">MCADVD</div>
+      <b>M</b>inimize keystrokes · <b>C</b>ode lookup · <b>A</b>uto-fill defaults · <b>D</b>rop-downs · <b>V</b>alidation · <b>D</b>esign for flow
+    </div>
+    <div class="card fire">
+      <h3 class="fire-label">🔥 How to Make Input Easy — Exam Answer</h3>
+      <ul>
+        <li><strong>Minimize keystrokes:</strong> Use codes, dropdowns, checkboxes instead of typing</li>
+        <li><strong>Automatic entry:</strong> System auto-fills date, user ID, defaults</li>
+        <li><strong>Consistency:</strong> Use same layout and tab order as paper forms</li>
+        <li><strong>Validation:</strong> Check data as entered (range checks, format checks)</li>
+        <li><strong>Clear labels:</strong> Every field clearly labeled</li>
+        <li><strong>Help messages:</strong> Guide user with hints and error messages</li>
+      </ul>
+    </div>
+
+    <h4>Validation Controls (Internal Controls for Accuracy)</h4>
+    <div class="mnemonic">
+      <div class="letters">RFTCP</div>
+      <b>R</b>ange check · <b>F</b>ormat check · <b>T</b>ype check · <b>C</b>ompleteness check · <b>P</b>resence check
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <ul>
+          <li><strong>Range Check:</strong> Value within min/max (age: 0-120)</li>
+          <li><strong>Format Check:</strong> Correct format (date: DD/MM/YYYY)</li>
+          <li><strong>Type Check:</strong> Correct data type (number field = numbers only)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <ul>
+          <li><strong>Completeness Check:</strong> Required fields not left empty</li>
+          <li><strong>Reasonableness Check:</strong> Is the value logical? (salary: 500 EGP seems too low)</li>
+          <li><strong>Uniqueness Check:</strong> No duplicate IDs</li>
+        </ul>
+      </div>
+    </div>
+
+    <h4>Sample Input Screen — Requested Order <span class="tag fire">🔥</span></h4>
+    <div class="dfd-box">
+╔══════════════════════════════════════════════════════╗
+║          SALES DEPARTMENT — ORDER ENTRY FORM         ║
+╠══════════════════════════════════════════════════════╣
+║ Order Number: [AUTO-GENERATED]     Date: [AUTO]      ║
+║                                                      ║
+║ Customer Name:  [________________________]           ║
+║ Customer Addr:  [________________________]           ║
+║                                                      ║
+║ Items Ordered:                                       ║
+║  Item 1: [Name_______] Qty: [__]                     ║
+║  Item 2: [Name_______] Qty: [__]                     ║
+║  Item 3: [Name_______] Qty: [__]                     ║
+║  Item 4: [Name_______] Qty: [__]                     ║
+║  Item 5: [Name_______] Qty: [__]  (max 5 items)      ║
+║                                                      ║
+║  [VALIDATE]          [CLEAR]          [PRINT]        ║
+╚══════════════════════════════════════════════════════╝</div>
+
+    <h4>Sample Output Report — Requested Order <span class="tag fire">🔥</span></h4>
+    <div class="dfd-box">
+╔══════════════════════════════════════════════════════╗
+║             TRG GROUP — ORDER RECEIPT                ║
+╠══════════════════════════════════════════════════════╣
+║ Order Number: 1234          Date: 21/05/2025         ║
+║ Customer: Ahmed Mohamed                              ║
+║ Address: 10 Tahrir St, Cairo                         ║
+╠══════════════════════════════════════════════════════╣
+║  #  │ Item Name          │ Quantity                  ║
+║ ────┼────────────────────┼─────────                  ║
+║  1  │ Big Burger         │    2                      ║
+║  2  │ Fries (Large)      │    1                      ║
+║  3  │ Cola               │    2                      ║
+╚══════════════════════════════════════════════════════╝</div>
+
+    <h4>Output Design Objectives <span class="tag star">⭐ State 3</span></h4>
+    <div class="mnemonic">
+      <div class="letters">RACTU</div>
+      <b>R</b>elevance · <b>A</b>ccuracy · <b>C</b>ompleteness · <b>T</b>imeliness · <b>U</b>sability
+    </div>
+    <ul>
+      <li><strong>Relevance:</strong> Only needed information included</li>
+      <li><strong>Accuracy:</strong> Output is correct and reliable</li>
+      <li><strong>Completeness:</strong> All required data is present</li>
+      <li><strong>Timeliness:</strong> Output available when needed</li>
+      <li><strong>Usability:</strong> Easy to read and understand</li>
+    </ul>
+
+    <h4>Output Methods <span class="tag star">⭐</span></h4>
+    <ul>
+      <li><strong>Printed (Hard Copy):</strong> Physical paper output — receipts, reports</li>
+      <li><strong>Screen (Soft Copy):</strong> Displayed on monitor — queries, dashboards</li>
+      <li><strong>Electronic:</strong> Email, PDF, exported files</li>
+    </ul>
+
+    <h4>Interface Design — Standard Options &amp; Consistency</h4>
+    <div class="card star">
+      <h3 class="star-label">⭐ "Standard Options and Consistency" — Asked in 2024!</h3>
+      <p>This guideline means: Use the SAME design patterns everywhere in the system so users don't have to relearn.</p>
+      <p style="margin-top:8px"><strong>Why important:</strong> Consistency reduces errors, speeds up learning, and makes the system easier to use.</p>
+      <p style="margin-top:8px"><strong>2 ways to apply:</strong></p>
+      <ul>
+        <li>Use same menu structure, button labels, and colors throughout the system</li>
+        <li>Follow operating system standards (e.g., Ctrl+S = Save always works)</li>
+      </ul>
+    </div>
+
+    <h4>4 Ways to Keep Screens Consistent</h4>
+    <div class="mnemonic">
+      <div class="letters">LCNF</div>
+      <b>L</b>ayout · <b>C</b>olors · <b>N</b>aming · <b>F</b>eedback
+    </div>
+    <ul>
+      <li>Same screen <strong>layout</strong> (header, footer, menu position)</li>
+      <li>Same <strong>color scheme</strong> for same types of elements</li>
+      <li>Same <strong>terminology</strong> for same concepts</li>
+      <li>Same <strong>feedback</strong> messages for same actions</li>
+    </ul>
+
+    <div class="fast-rev">
+      <h4>⚡ 30-Second Revision</h4>
+      Easy input = MCADVD · Validation = RFTCP · Output objectives = RACTU · Interface = consistency + standard options · Input screen = auto fields + validation + clear labels
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 8: DATABASE ===== -->
+<div class="section" id="database">
+  <div class="section-header" onclick="toggle(this)">
+    <span>🗄️</span>
+    <h2>8. Database Design <span class="tag fire">🔥 Exam Q8/Q9</span></h2>
+    <span class="toggle">▼</span>
+  </div>
+  <div class="section-body">
+
+    <h4>2 Approaches to Data Storage</h4>
+    <div class="grid2">
+      <div class="card">
+        <h3 style="color:var(--gold)">Flat File (Conventional File) Approach</h3>
+        <p>Each application stores its OWN separate files.</p>
+        <h5 style="margin-top:10px">Advantages:</h5>
+        <ul>
+          <li>Simple to implement</li>
+          <li>No special software needed</li>
+          <li>Fast for simple, single-app use</li>
+        </ul>
+        <h5>Disadvantages:</h5>
+        <div class="mnemonic" style="margin-top:6px">
+          <div class="letters" style="font-size:16px">DIRSU</div>
+          <b>D</b>uplication · <b>I</b>nconsistency · <b>R</b>igidity · <b>S</b>ecurity weak · <b>U</b>nshared data
+        </div>
+        <ul>
+          <li>Data <strong>duplication</strong> — same data stored multiple times</li>
+          <li>Data <strong>inconsistency</strong> — different versions of same fact</li>
+          <li><strong>Rigid</strong> structure — hard to change</li>
+          <li>Poor <strong>security</strong> control</li>
+          <li>Data <strong>not shared</strong> between apps</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--green)">Database Approach</h3>
+        <p>Centralized database shared by all applications via DBMS.</p>
+        <h5 style="margin-top:10px">Advantages:</h5>
+        <div class="mnemonic" style="margin-top:6px">
+          <div class="letters" style="font-size:16px">RSICB</div>
+          <b>R</b>edundancy reduced · <b>S</b>hared data · <b>I</b>ntegrity · <b>C</b>onsistency · <b>B</b>etter security
+        </div>
+        <ul>
+          <li>Reduced <strong>redundancy</strong> — data stored once</li>
+          <li><strong>Shared</strong> across all applications</li>
+          <li>Data <strong>integrity</strong> enforced</li>
+          <li><strong>Consistent</strong> data everywhere</li>
+          <li><strong>Better security</strong> through access control</li>
+        </ul>
+        <h5>Disadvantages:</h5>
+        <ul>
+          <li>Complex and expensive to set up</li>
+          <li>Single point of failure risk</li>
+          <li>Requires trained DBA</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card fire">
+      <h3 class="fire-label">🔥 DBA — Roles AND Harm (Asked 2024!)</h3>
+      <p>While DBA plays a crucial role, they can also HARM the organization.</p>
+      <div class="grid2" style="margin-top:10px">
+        <div>
+          <h5>DBA Roles (Positive):</h5>
+          <ul>
+            <li>Design and create the database structure</li>
+            <li>Maintain database performance</li>
+            <li>Ensure data security and access control</li>
+            <li>Backup and recovery management</li>
+            <li>Train users on database use</li>
+          </ul>
+        </div>
+        <div>
+          <h5>DBA Harm (Negative):</h5>
+          <ul>
+            <li>Can access ALL data — privacy risk</li>
+            <li>Can modify or delete critical data</li>
+            <li>Can grant unauthorized access to others</li>
+            <li>If DBA leaves, organization may lose expertise</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <h4>Database Design Objectives <span class="tag star">⭐ State 3 + Explain 2</span></h4>
+    <div class="mnemonic">
+      <div class="letters">RIASC</div>
+      <b>R</b>edundancy reduction · <b>I</b>ntegrity · <b>A</b>ccessibility · <b>S</b>ecurity · <b>C</b>onsistency
+    </div>
+
+    <h4>Entity Types in Database Design <span class="tag star">⭐ Asked 2019</span></h4>
+    <ul>
+      <li><strong>Independent Entity:</strong> Exists on its own (Customer, Product)</li>
+      <li><strong>Dependent Entity:</strong> Existence depends on another entity (Order Item depends on Order)</li>
+      <li><strong>Associative Entity:</strong> Represents a relationship between two entities (Enrollment = Student + Course)</li>
+    </ul>
+
+    <h4>File Organization Methods</h4>
+    <div class="grid3">
+      <div class="card">
+        <h3 style="color:var(--accent2)">Sequential</h3>
+        <p>Records stored in order. Good for batch processing. Slow for random access.</p>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--gold)">Direct/Random</h3>
+        <p>Access any record directly by address. Fast retrieval. Needs index.</p>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--green)">Indexed Sequential (ISAM)</h3>
+        <p>Combines both — has index for fast access, records in sequence.</p>
+      </div>
+    </div>
+
+    <div class="fast-rev">
+      <h4>⚡ 30-Second Revision</h4>
+      Flat file disadvantages = DIRSU · Database advantages = RSICB · DBA roles = design+security+backup · DBA harm = can see/change all data · Entity types = Independent/Dependent/Associative
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 9: PROGRAM DESIGN ===== -->
+<div class="section" id="program">
+  <div class="section-header" onclick="toggle(this)">
+    <span>⚙️</span>
+    <h2>9. Program Design — Modular &amp; Structured <span class="tag fire">🔥 Exam Q9</span></h2>
+    <span class="toggle">▼</span>
+  </div>
+  <div class="section-body">
+
+    <div class="card fire">
+      <h3 class="fire-label">🔥 Modular Programming — Define + 2 Advantages</h3>
+      <div class="def"><strong>Modular Programming:</strong> A design technique that breaks a large complex program into smaller, independent, manageable units called modules, each performing a specific function.</div>
+      <h5 style="margin-top:10px">Advantages:</h5>
+      <div class="mnemonic">
+        <div class="letters">RETMD</div>
+        <b>R</b>eusability · <b>E</b>asy maintenance · <b>T</b>eam work · <b>M</b>anageability · <b>D</b>ebugging ease
+      </div>
+      <ul>
+        <li>Easy to <strong>maintain</strong> — fix one module without touching others</li>
+        <li><strong>Reusable</strong> — modules can be used in other programs</li>
+        <li>Enables <strong>teamwork</strong> — different developers work on different modules</li>
+        <li>Easier to <strong>test and debug</strong> — test each module independently</li>
+        <li>Reduces <strong>complexity</strong> — divide and conquer approach</li>
+      </ul>
+    </div>
+
+    <h4>2 Properties of Good Module Design <span class="tag fire">🔥 Asked 2024!</span></h4>
+    <div class="grid2">
+      <div class="card fire">
+        <h3 class="fire-label">🔥 High Cohesion</h3>
+        <div class="def"><strong>Cohesion:</strong> The degree to which elements INSIDE a module are related to each other and work toward a single purpose.</div>
+        <p style="margin-top:8px"><strong>High cohesion = GOOD</strong> → module does ONE thing well</p>
+        <p style="color:var(--muted);font-size:12px">Think: a specialist doctor who only does heart surgery</p>
+      </div>
+      <div class="card fire">
+        <h3 class="fire-label">🔥 Low Coupling</h3>
+        <div class="def"><strong>Coupling:</strong> The degree of interdependence BETWEEN modules — how much one module depends on another.</div>
+        <p style="margin-top:8px"><strong>Low coupling = GOOD</strong> → modules are independent</p>
+        <p style="color:var(--muted);font-size:12px">Think: a standalone app that doesn't need other apps to work</p>
+      </div>
+    </div>
+
+    <div class="warn-box">
+      ⚠️ Memory Trick: "HIGH Cohesion, LOW Coupling" = HCLC = "He Codes Like Champions" 🏆
+    </div>
+
+    <h4>Top-Down vs Bottom-Up Strategies <span class="tag fire">🔥</span></h4>
+    <table>
+      <tr><th>Aspect</th><th>Top-Down</th><th>Bottom-Up</th></tr>
+      <tr><td>Start from</td><td>Main module (overview)</td><td>Detailed sub-modules</td></tr>
+      <tr><td>Direction</td><td>General → Specific</td><td>Specific → General</td></tr>
+      <tr><td>Testing</td><td>Test main logic first</td><td>Test details first</td></tr>
+      <tr><td>Use when</td><td>New system design</td><td>Reusing existing components</td></tr>
+      <tr><td>Analogy</td><td>Building a house — roof plan first</td><td>Building with LEGO — pieces first</td></tr>
+    </table>
+
+    <div class="card star">
+      <h3 class="star-label">⭐ How to Follow Top-Down Strategy (Exam Answer)</h3>
+      <p>In Modern Structured Program Design, to follow Top-Down:</p>
+      <ol>
+        <li>Start by designing the <strong>main control module</strong> which calls all others</li>
+        <li>Break it into <strong>sub-modules</strong> at the next level</li>
+        <li>Continue breaking down until modules are <strong>small and manageable</strong></li>
+        <li>Each lower module handles a <strong>single specific function</strong></li>
+        <li>Use <strong>structure charts</strong> to visualize the hierarchy</li>
+      </ol>
+    </div>
+
+    <h4>2 Decomposition Strategies (Asked 2019)</h4>
+    <div class="grid2">
+      <div class="card">
+        <h3 style="color:var(--accent2)">Functional Decomposition</h3>
+        <p>Break system into functions/processes. Focus on WHAT the system does.</p>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--gold)">Object-Oriented Decomposition</h3>
+        <p>Break system into objects. Focus on WHO does what (objects with attributes and methods).</p>
+      </div>
+    </div>
+
+    <div class="fast-rev">
+      <h4>⚡ 30-Second Revision</h4>
+      Modular = break into modules (RETMD) · Good design = High Cohesion + Low Coupling (HCLC) · Top-down = general→specific · Bottom-up = specific→general · Decomposition = Functional OR OO
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 10: COMPARISON TABLES ===== -->
+<div class="section" id="tables">
+  <div class="section-header" onclick="toggle(this)">
+    <span>📊</span>
+    <h2>10. Master Comparison Tables</h2>
+    <span class="toggle">▼</span>
+  </div>
+  <div class="section-body">
+
+    <h4>All Key Comparisons — Exam Ready</h4>
+
+    <h5>Client-Server vs Server-Based</h5>
+    <table>
+      <tr><th>Point</th><th>Client-Server</th><th>Server-Based</th></tr>
+      <tr><td>Processing location</td><td>Both client and server</td><td>Only on server</td></tr>
+      <tr><td>Client type</td><td>Thick (powerful)</td><td>Thin (minimal)</td></tr>
+      <tr><td>Hardware cost</td><td>Higher</td><td>Lower</td></tr>
+      <tr><td>Maintenance</td><td>Harder (update each client)</td><td>Easier (central)</td></tr>
+      <tr><td>Offline use</td><td>Sometimes possible</td><td>No</td></tr>
+    </table>
+
+    <h5>Flat File vs Database</h5>
+    <table>
+      <tr><th>Point</th><th>Flat File</th><th>Database</th></tr>
+      <tr><td>Data storage</td><td>Separate per app</td><td>Centralized</td></tr>
+      <tr><td>Redundancy</td><td>High duplication</td><td>Minimal</td></tr>
+      <tr><td>Sharing</td><td>Not shared</td><td>Shared by all apps</td></tr>
+      <tr><td>Security</td><td>Weak</td><td>Strong (access control)</td></tr>
+      <tr><td>Consistency</td><td>Low (conflicts)</td><td>High</td></tr>
+      <tr><td>Cost</td><td>Low setup</td><td>Higher setup</td></tr>
+    </table>
+
+    <h5>Observation vs Interview vs Questionnaire</h5>
+    <table>
+      <tr><th>Point</th><th>Observation</th><th>Interview</th><th>Questionnaire</th></tr>
+      <tr><td>Best for</td><td>Complex workflows</td><td>Key stakeholders</td><td>Many people</td></tr>
+      <tr><td>Detail level</td><td>High (visual)</td><td>Very high</td><td>Medium</td></tr>
+      <tr><td>Cost</td><td>Medium</td><td>High</td><td>Low</td></tr>
+      <tr><td>Time</td><td>High</td><td>High</td><td>Low</td></tr>
+      <tr><td>Clarification</td><td>Yes</td><td>Yes</td><td>No</td></tr>
+      <tr><td>Sample size</td><td>Small</td><td>Small</td><td>Large</td></tr>
+    </table>
+
+    <h5>Top-Down vs Bottom-Up (Design)</h5>
+    <table>
+      <tr><th>Point</th><th>Top-Down</th><th>Bottom-Up</th></tr>
+      <tr><td>Start from</td><td>Overall system</td><td>Detailed modules</td></tr>
+      <tr><td>Good for</td><td>New systems</td><td>Existing component reuse</td></tr>
+      <tr><td>Testing order</td><td>High-level first</td><td>Low-level first</td></tr>
+      <tr><td>Design direction</td><td>General → Specific</td><td>Specific → General</td></tr>
+    </table>
+
+    <h5>Cohesion vs Coupling</h5>
+    <table>
+      <tr><th>Point</th><th>Cohesion</th><th>Coupling</th></tr>
+      <tr><td>Refers to</td><td>Within a module</td><td>Between modules</td></tr>
+      <tr><td>Goal</td><td>HIGH cohesion</td><td>LOW coupling</td></tr>
+      <tr><td>Means</td><td>Module does one thing well</td><td>Modules are independent</td></tr>
+      <tr><td>If bad</td><td>Low cohesion = messy module</td><td>High coupling = ripple effect</td></tr>
+    </table>
+
+  </div>
+</div>
+
+<!-- ===== NIGHT SHEET ===== -->
+<div class="night-sheet" id="nightsheet">
+  <h2>🌙 FINAL NIGHT REVISION SHEET</h2>
+  <p style="text-align:center;color:var(--muted);font-size:12px;margin-bottom:20px">Everything you need — 1 hour before the exam</p>
+
+  <h4>🔑 KEY MNEMONICS</h4>
+  <div style="display:flex;flex-wrap:wrap;gap:10px;margin:10px 0">
+    <div class="card" style="flex:1;min-width:200px;padding:12px">
+      <div style="font-family:monospace;font-size:16px;color:var(--accent3);font-weight:800">H S P D N</div>
+      <div style="font-size:11px;color:var(--muted)">IS Components: Hardware · Software · People · Data · Network</div>
+    </div>
+    <div class="card" style="flex:1;min-width:200px;padding:12px">
+      <div style="font-family:monospace;font-size:16px;color:var(--accent3);font-weight:800">A D I</div>
+      <div style="font-size:11px;color:var(--muted)">SDLC Phases: Analysis · Design · Implementation</div>
+    </div>
+    <div class="card" style="flex:1;min-width:200px;padding:12px">
+      <div style="font-family:monospace;font-size:16px;color:var(--accent3);font-weight:800">S D D</div>
+      <div style="font-size:11px;color:var(--muted)">Analysis Sub-phases: Survey · Detailed Study · Definition</div>
+    </div>
+    <div class="card" style="flex:1;min-width:200px;padding:12px">
+      <div style="font-family:monospace;font-size:16px;color:var(--accent3);font-weight:800">IQORI</div>
+      <div style="font-size:11px;color:var(--muted)">Fact-Finding: Interview · Questionnaire · Observation · Record · Internet</div>
+    </div>
+    <div class="card" style="flex:1;min-width:200px;padding:12px">
+      <div style="font-family:monospace;font-size:16px;color:var(--accent3);font-weight:800">E P D F</div>
+      <div style="font-size:11px;color:var(--muted)">DFD Symbols: Entity · Process · Data Store · Flow</div>
+    </div>
+    <div class="card" style="flex:1;min-width:200px;padding:12px">
+      <div style="font-family:monospace;font-size:16px;color:var(--accent3);font-weight:800">BMSEU</div>
+      <div style="font-size:11px;color:var(--muted)">DFD Errors: Black Hole · Miracle · Self-loop · Entity-Entity · Unbalanced</div>
+    </div>
+    <div class="card" style="flex:1;min-width:200px;padding:12px">
+      <div style="font-family:monospace;font-size:16px;color:var(--accent3);font-weight:800">BCM</div>
+      <div style="font-size:11px;color:var(--muted)">Acquisition: Buy · Custom Build · Modify</div>
+    </div>
+    <div class="card" style="flex:1;min-width:200px;padding:12px">
+      <div style="font-family:monospace;font-size:16px;color:var(--accent3);font-weight:800">DIRSU</div>
+      <div style="font-size:11px;color:var(--muted)">Flat File problems: Duplication · Inconsistency · Rigid · Security · Unshared</div>
+    </div>
+    <div class="card" style="flex:1;min-width:200px;padding:12px">
+      <div style="font-family:monospace;font-size:16px;color:var(--accent3);font-weight:800">RSICB</div>
+      <div style="font-size:11px;color:var(--muted)">DB advantages: Redundancy↓ · Shared · Integrity · Consistent · Better security</div>
+    </div>
+    <div class="card" style="flex:1;min-width:200px;padding:12px">
+      <div style="font-family:monospace;font-size:16px;color:var(--accent3);font-weight:800">H C L C</div>
+      <div style="font-size:11px;color:var(--muted)">Good modules: High Cohesion, Low Coupling → "He Codes Like Champions"</div>
+    </div>
+    <div class="card" style="flex:1;min-width:200px;padding:12px">
+      <div style="font-family:monospace;font-size:16px;color:var(--accent3);font-weight:800">RETMD</div>
+      <div style="font-size:11px;color:var(--muted)">Modular advantages: Reuse · Easy maint · Team · Manageable · Debug easy</div>
+    </div>
+    <div class="card" style="flex:1;min-width:200px;padding:12px">
+      <div style="font-family:monospace;font-size:16px;color:var(--accent3);font-weight:800">P F I O P</div>
+      <div style="font-size:11px;color:var(--muted)">5 Req types: Performance · Functional · Information · Operational · Protection</div>
+    </div>
+  </div>
+
+  <hr>
+
+  <h4>🔥 ONE-LINE DEFINITIONS (Write these EXACTLY in exam)</h4>
+  <div style="display:flex;flex-direction:column;gap:6px;margin:10px 0">
+    <div class="fast-rev"><strong>IT:</strong> Use of computer hardware/software/networks to collect, process, store, and distribute information.</div>
+    <div class="fast-rev"><strong>IS:</strong> Set of interrelated components (HSPDN) that process and distribute information to support decisions.</div>
+    <div class="fast-rev"><strong>SDLC:</strong> Structured process of phases (ADI) for developing, maintaining, and replacing information systems.</div>
+    <div class="fast-rev"><strong>SDM:</strong> Specific approach used to implement the SDLC (SDLC = what phases, SDM = how to do them).</div>
+    <div class="fast-rev"><strong>STA:</strong> Description of hardware, software, and network components needed to implement a system.</div>
+    <div class="fast-rev"><strong>Modular Programming:</strong> Breaking a large program into small, independent modules each doing one function.</div>
+    <div class="fast-rev"><strong>Cohesion:</strong> Degree to which elements inside a module work toward a single purpose. (Want: HIGH)</div>
+    <div class="fast-rev"><strong>Coupling:</strong> Degree of interdependence between modules. (Want: LOW)</div>
+    <div class="fast-rev"><strong>Prototype:</strong> A working model built quickly to discover and verify user requirements.</div>
+    <div class="fast-rev"><strong>Business Requirements:</strong> Conditions the system must fulfill to satisfy user and business needs.</div>
+    <div class="fast-rev"><strong>Project Sponsor:</strong> Senior person who authorizes and funds the project.</div>
+    <div class="fast-rev"><strong>System Modeling:</strong> Developing abstract blueprints of a system using graphical notation (DFDs, ERDs).</div>
+  </div>
+
+  <hr>
+
+  <h4>🍔 Restaurant Case — Key Facts</h4>
+  <div class="grid2">
+    <div class="card" style="font-size:12.5px">
+      <h5>DFD Flow (memorize order!)</h5>
+      Customer → Sales Dept → Cashier → Meal Production → Service Delivery → Customer
+      <br><br>Data stores: Archive at each dept
+    </div>
+    <div class="card" style="font-size:12.5px">
+      <h5>Fact Finding for Restaurant:</h5>
+      HQ → Interview + Record Inspection + Observation<br>
+      Branches → Questionnaire (because 24–64 branches spread across Egypt!)
+    </div>
+  </div>
+
+  <hr>
+
+  <h4>🎯 DFD Rules — Never Forget</h4>
+  <div class="grid3">
+    <div class="card" style="font-size:12px">Context = 1 process, no data stores</div>
+    <div class="card" style="font-size:12px">Level-0 = expand context process into departments</div>
+    <div class="card" style="font-size:12px">Level-1 = expand ONE Level-0 process into sub-steps</div>
+    <div class="card" style="font-size:12px">Balancing = in/out flows must match between levels</div>
+    <div class="card" style="font-size:12px">Label EVERY arrow with data name</div>
+    <div class="card" style="font-size:12px">Errors = Black Hole, Miracle, Self-loop, E-to-E, Unbalanced</div>
+  </div>
+
+  <hr>
+
+  <h4>📋 Common Exam Mistakes to AVOID</h4>
+  <div class="warn-box" style="font-size:13px">
+    ❌ Writing more than 3 lines for "explain in not more than 3 lines" questions — examiner deducts marks!<br>
+    ❌ Forgetting to BALANCE your DFD between levels<br>
+    ❌ Drawing a context diagram with multiple processes — context = ONE bubble only!<br>
+    ❌ Confusing SDM with SDLC (SDLC = phases; SDM = method to do them)<br>
+    ❌ Confusing Cohesion (internal) with Coupling (external between modules)<br>
+    ❌ Saying questionnaire for HQ — it's interview! Questionnaire = for 24+ distant branches<br>
+    ❌ Not labeling data flows on DFD arrows
+  </div>
+
+  <hr>
+  <p style="text-align:center;color:var(--accent);font-weight:700;font-size:16px;margin-top:20px">
+    🔥 Good Luck يا Osama — انت جاهز!  🔥
+  </p>
+</div>
+
+</div><!-- end container -->
+
+<script>
+function toggle(header) {
+  const body = header.nextElementSibling;
+  const isOpen = header.classList.contains('open');
+  header.classList.toggle('open', !isOpen);
+  body.classList.toggle('open', !isOpen);
+}
+
+// Open first section by default (already done in HTML)
+// Add smooth scroll
+document.querySelectorAll('nav a').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Open the section
+      const header = target.querySelector('.section-header');
+      if (header && !header.classList.contains('open')) toggle(header);
+    }
+  });
+});
+</script>
+</body>
+</html>

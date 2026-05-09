@@ -1,0 +1,102 @@
+
+<h2 class="sr-only">Frequency analysis of SAD exam topics across 8 years (2017–2025)</h2>
+
+<div style="padding:1rem 0">
+
+<div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:1.5rem">
+  <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.75rem 1.25rem;flex:1;min-width:120px">
+    <div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:4px">امتحانات اتحللت</div>
+    <div style="font-size:24px;font-weight:500">8</div>
+  </div>
+  <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.75rem 1.25rem;flex:1;min-width:120px">
+    <div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:4px">سنوات من</div>
+    <div style="font-size:24px;font-weight:500">2017–2025</div>
+  </div>
+  <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.75rem 1.25rem;flex:1;min-width:120px">
+    <div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:4px">مواضيع 100%</div>
+    <div style="font-size:24px;font-weight:500;color:#1D9E75">4</div>
+  </div>
+  <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.75rem 1.25rem;flex:1;min-width:120px">
+    <div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:4px">مواضيع ≥75%</div>
+    <div style="font-size:24px;font-weight:500;color:#BA7517">7</div>
+  </div>
+</div>
+
+<div style="position:relative;width:100%;min-height:300px;height:60vh;max-height:500px">
+  <canvas id="freqChart" role="img" aria-label="Bar chart showing exam topic repetition frequency. DFD Drawing and STA Architecture are the most repeated at 100%.">
+    Topic frequencies: DFD Drawing 100%, STA Architecture 100%, Input/Output Design 100%, Program Design Modular+Cohesion 100%, Fact-Finding Techniques 88%, Database Flat File vs DB 88%, SDLC Phases 75%, Observation conditions 75%, Questionnaire conditions 75%, IT/IS Definitions 63%, System Analyst Roles 63%.
+  </canvas>
+</div>
+
+<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:1rem;font-size:12px;color:var(--color-text-secondary)">
+  <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:#1D9E75"></span>100% — في كل امتحان</span>
+  <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:#BA7517"></span>75–88% — شبه مضمون</span>
+  <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:#378ADD"></span>50–63% — يجي كتير</span>
+  <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:#888780"></span>25–38% — أحيانًا</span>
+</div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const topics = [
+  'DFD رسم (Context/L0/L1)',
+  'STA Architecture + رسم',
+  'Input/Output Design',
+  'Modular + Cohesion/Coupling',
+  'Fact-Finding Techniques',
+  'Database: Flat File vs DB',
+  'SDLC Phases تعريف',
+  'Observation — متى نطبق؟',
+  'Questionnaire — متى نطبق؟',
+  'IT / IS تعريف',
+  'System Analyst Roles',
+  'Acquisition Strategies',
+  'Top-Down vs Bottom-Up',
+  'DBA Roles + Harm',
+  'Survey/Detailed/Definition phases',
+  'Output Design Objectives',
+];
+const counts = [8, 8, 8, 8, 7, 7, 6, 6, 6, 5, 5, 5, 5, 4, 4, 3];
+const total = 8;
+const pct = counts.map(c => Math.round((c/total)*100));
+
+const colors = pct.map(p => p === 100 ? '#059669' : p >= 75 ? '#b45309' : p >= 50 ? '#2563eb' : '#64748b');
+
+new Chart(document.getElementById('freqChart'), {
+  type: 'bar',
+  data: {
+    labels: topics,
+    datasets: [{
+      label: 'تكرار %',
+      data: pct,
+      backgroundColor: colors,
+      borderRadius: 4,
+      borderSkipped: false,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => ` ${ctx.raw}%  (${counts[ctx.dataIndex]}/${total} امتحانات)`
+        }
+      }
+    },
+    scales: {
+      x: {
+        min: 0, max: 100,
+        ticks: { callback: v => v + '%', font: { size: 12 } },
+        grid: { color: 'rgba(128,128,128,0.15)' }
+      },
+      y: {
+        ticks: { font: { size: 12 }, autoSkip: false }
+      }
+    }
+  }
+});
+</script>
