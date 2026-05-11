@@ -1,0 +1,1660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Network Course — Final Exam Problems</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e1117;
+    --surface: #161b27;
+    --card: #1c2333;
+    --border: #2a3448;
+    --accent1: #4f9cf9; /* blue */
+    --accent2: #f97b4f; /* orange */
+    --accent3: #6be5a0; /* green */
+    --accent4: #c77dff; /* purple */
+    --accent5: #ffd166; /* yellow */
+    --accent6: #ff6b9d; /* pink */
+    --text: #e8edf5;
+    --text-muted: #7a8aa0;
+    --formula-bg: #0a1628;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    background: linear-gradient(135deg, #0e1117 0%, #1a2744 50%, #0e1117 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 48px 40px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% -20%, rgba(79,156,249,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    font-weight: 400;
+    letter-spacing: -0.5px;
+    margin-bottom: 10px;
+    color: #fff;
+  }
+  header h1 span { color: var(--accent1); }
+  header p {
+    color: var(--text-muted);
+    font-size: 1rem;
+    font-weight: 300;
+    letter-spacing: 0.3px;
+  }
+  .badge-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 22px;
+  }
+  .badge {
+    background: rgba(79,156,249,0.1);
+    border: 1px solid rgba(79,156,249,0.25);
+    color: var(--accent1);
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 0.5px;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(14,17,23,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  nav::-webkit-scrollbar { display: none; }
+  nav a {
+    white-space: nowrap;
+    padding: 14px 16px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  nav a:hover { color: var(--text); border-color: var(--border); }
+  nav a.active { color: var(--accent1); border-color: var(--accent1); }
+  .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ─── LAYOUT ─── */
+  main { max-width: 1000px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  /* ─── TOPIC SECTION ─── */
+  .topic {
+    margin-bottom: 60px;
+    scroll-margin-top: 60px;
+  }
+  .topic-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 28px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--border);
+  }
+  .topic-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 6px;
+    letter-spacing: 1px;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+  .topic-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.85rem;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+  .topic-sub {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    margin-top: 4px;
+    font-weight: 300;
+  }
+
+  /* ─── PROBLEM CARD ─── */
+  .problem {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 18px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .problem:hover { border-color: #3a4d6a; }
+  .problem-q {
+    padding: 20px 22px 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    user-select: none;
+  }
+  .p-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    background: rgba(255,255,255,0.05);
+    border-radius: 5px;
+    padding: 3px 8px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .p-text {
+    font-size: 0.97rem;
+    font-weight: 400;
+    flex: 1;
+    line-height: 1.65;
+  }
+  .p-toggle {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    flex-shrink: 0;
+    margin-top: 2px;
+    transition: transform 0.25s;
+  }
+  .problem.open .p-toggle { transform: rotate(180deg); }
+
+  /* ─── SOLUTION PANEL ─── */
+  .solution {
+    display: none;
+    padding: 0 22px 22px 22px;
+    border-top: 1px dashed var(--border);
+    margin-top: 0;
+    padding-top: 18px;
+  }
+  .problem.open .solution { display: block; }
+  .sol-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 1.5px;
+    color: var(--accent3);
+    font-weight: 600;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+  .sol-text {
+    font-size: 0.93rem;
+    line-height: 1.75;
+    color: #cad3e0;
+  }
+  .formula {
+    background: var(--formula-bg);
+    border: 1px solid #1e3050;
+    border-left: 3px solid var(--accent1);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 14px 0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.88rem;
+    color: var(--accent1);
+    line-height: 1.8;
+    white-space: pre-wrap;
+  }
+  .note {
+    background: rgba(107,229,160,0.07);
+    border: 1px solid rgba(107,229,160,0.2);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 12px 0;
+    font-size: 0.88rem;
+    color: var(--accent3);
+  }
+  .note strong { font-weight: 600; }
+  .warn {
+    background: rgba(249,123,79,0.07);
+    border: 1px solid rgba(249,123,79,0.2);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 12px 0;
+    font-size: 0.88rem;
+    color: var(--accent2);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 0.88rem;
+  }
+  th {
+    background: rgba(79,156,249,0.1);
+    color: var(--accent1);
+    padding: 9px 14px;
+    text-align: left;
+    font-weight: 600;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 9px 14px;
+    border-bottom: 1px solid rgba(42,52,72,0.5);
+    color: #cad3e0;
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  /* ─── KEY FORMULA CARD ─── */
+  .formula-box {
+    background: var(--formula-bg);
+    border: 1px solid #1e3050;
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+  }
+  .formula-box h4 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 1.5px;
+    color: var(--accent5);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .formula-box .eq {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.92rem;
+    color: var(--accent1);
+    line-height: 2;
+  }
+
+  /* ─── TOPIC COLORS ─── */
+  .c1 { background: rgba(79,156,249,0.12); color: var(--accent1); }
+  .c2 { background: rgba(249,123,79,0.12); color: var(--accent2); }
+  .c3 { background: rgba(107,229,160,0.12); color: var(--accent3); }
+  .c4 { background: rgba(199,125,255,0.12); color: var(--accent4); }
+  .c5 { background: rgba(255,209,102,0.12); color: var(--accent5); }
+  .c6 { background: rgba(255,107,157,0.12); color: var(--accent6); }
+  .c7 { background: rgba(79,229,249,0.12); color: #4fe5f9; }
+
+  .bd1 { border-left: 4px solid var(--accent1); }
+  .bd2 { border-left: 4px solid var(--accent2); }
+  .bd3 { border-left: 4px solid var(--accent3); }
+  .bd4 { border-left: 4px solid var(--accent4); }
+  .bd5 { border-left: 4px solid var(--accent5); }
+  .bd6 { border-left: 4px solid var(--accent6); }
+  .bd7 { border-left: 4px solid #4fe5f9; }
+
+  /* progress bar */
+  .progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent1), var(--accent3));
+    width: 0%;
+    z-index: 999;
+    transition: width 0.2s;
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 768px) {
+    header { padding: 32px 20px; }
+    main { padding: 24px 12px 60px; }
+    .topic-header { gap: 12px; margin-bottom: 20px; }
+    .topic-title { font-size: 1.4rem; }
+    .problem-q { padding: 16px 18px; gap: 12px; }
+    .p-text { font-size: 0.9rem; }
+    .solution { padding: 0 18px 18px; }
+    .sol-text { font-size: 0.88rem; }
+    .formula { font-size: 0.8rem; padding: 12px; }
+    nav a { padding: 12px; font-size: 0.75rem; }
+    table { display: block; overflow-x: auto; white-space: nowrap; }
+  }
+
+  @media (max-width: 480px) {
+    header h1 { font-size: 1.7rem; }
+    .badge { font-size: 0.65rem; padding: 3px 10px; }
+    .topic-num { font-size: 0.6rem; padding: 3px 8px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<header>
+  <h1>Computer <span>Networks</span> — Final Exam Problems</h1>
+  <p>Data Communications and Networking · Forouzan 4th Edition · All exam-relevant problems</p>
+  <div class="badge-row">
+    <span class="badge">Lec 1 · Introduction</span>
+    <span class="badge">Lec 2 · Network Models</span>
+    <span class="badge">Lec 3 · Data & Signals</span>
+    <span class="badge">Lec 4 · Protocol Functions</span>
+    <span class="badge">Lec 5 · Transmission Media</span>
+    <span class="badge">Lec 6 · Error Detection</span>
+    <span class="badge">Lec 7 · Ethernet</span>
+  </div>
+</header>
+
+<nav id="topNav">
+  <a href="#intro" class="active"><span class="dot" style="background:var(--accent1)"></span>Introduction</a>
+  <a href="#models"><span class="dot" style="background:var(--accent2)"></span>Network Models</a>
+  <a href="#signals"><span class="dot" style="background:var(--accent3)"></span>Data & Signals</a>
+  <a href="#protocol"><span class="dot" style="background:var(--accent4)"></span>Protocol Functions</a>
+  <a href="#media"><span class="dot" style="background:var(--accent5)"></span>Transmission Media</a>
+  <a href="#error"><span class="dot" style="background:var(--accent6)"></span>Error Detection</a>
+  <a href="#ethernet"><span class="dot" style="background:#4fe5f9"></span>Ethernet</a>
+</nav>
+
+<main>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- TOPIC 1: INTRODUCTION -->
+<!-- ══════════════════════════════════════════════ -->
+<section class="topic" id="intro">
+  <div class="topic-header">
+    <div class="topic-num c1">LEC 01</div>
+    <div>
+      <div class="topic-title" style="color:var(--accent1)">Introduction to Data Communications</div>
+      <div class="topic-sub">Components · Characteristics · Network types · Topology</div>
+    </div>
+  </div>
+
+  <div class="problem bd1" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q1</span>
+      <span class="p-text">What are the four main characteristics that determine the effectiveness of a data communication system? Define each.</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <strong>1. Delivery</strong> — The system must deliver data to the correct destination only. Data must reach the right device and the right user.<br><br>
+        <strong>2. Accuracy</strong> — The system must deliver data accurately, without alteration. Data changed during transmission is unusable.<br><br>
+        <strong>3. Timeliness</strong> — The system must deliver data in a timely manner. Late delivery is useless for real-time applications (audio/video = real-time transmission).<br><br>
+        <strong>4. Jitter</strong> — Variation in the packet arrival time. If the delay for packet 1 = 20 ms, packet 2 = 45 ms, packet 3 = 40 ms — this jitter causes problems for time-sensitive applications.
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd1" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q2</span>
+      <span class="p-text">Name and briefly describe the five components of a data communication system.</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <table>
+          <tr><th>Component</th><th>Description</th><th>Example</th></tr>
+          <tr><td><strong>Message</strong></td><td>The information to be communicated</td><td>Text, number, image, audio, video</td></tr>
+          <tr><td><strong>Sender</strong></td><td>Device that sends the message</td><td>Computer, telephone, camera</td></tr>
+          <tr><td><strong>Receiver</strong></td><td>Device that receives the message</td><td>Computer, telephone, TV</td></tr>
+          <tr><td><strong>Medium</strong></td><td>Physical path the message travels</td><td>Twisted pair, fiber, radio waves</td></tr>
+          <tr><td><strong>Protocol</strong></td><td>Set of rules governing communications</td><td>HTTP, TCP/IP, Ethernet</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd1" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q3</span>
+      <span class="p-text">Distinguish between peer-to-peer and client-server network models. What are the advantages and disadvantages of each?</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <table>
+          <tr><th></th><th>Client-Server</th><th>Peer-to-Peer (P2P)</th></tr>
+          <tr><td><strong>Structure</strong></td><td>Dedicated server(s) serve client requests</td><td>No fixed clients or servers; any node can be both</td></tr>
+          <tr><td><strong>Advantage</strong></td><td>Centralized control; easier management</td><td>No single point of failure; low cost</td></tr>
+          <tr><td><strong>Disadvantage</strong></td><td>Server failure = network failure; expensive</td><td>Hard to manage; no central authority</td></tr>
+          <tr><td><strong>Use case</strong></td><td>Web servers, email servers</td><td>File sharing, small home networks</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd1" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q4</span>
+      <span class="p-text">Compare LAN, MAN, and WAN in terms of size, ownership, and speed.</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <table>
+          <tr><th>Type</th><th>Full Name</th><th>Typical Size</th><th>Ownership</th><th>Speed</th></tr>
+          <tr><td><strong>LAN</strong></td><td>Local Area Network</td><td>Building / campus</td><td>Private</td><td>10 Mbps – 10 Gbps</td></tr>
+          <tr><td><strong>MAN</strong></td><td>Metropolitan Area Network</td><td>City</td><td>Private or public</td><td>~100 Mbps</td></tr>
+          <tr><td><strong>WAN</strong></td><td>Wide Area Network</td><td>Country / worldwide</td><td>Public or leased</td><td>Lower than LAN</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd1" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q5</span>
+      <span class="p-text">For a fully connected mesh topology with n devices: how many physical links are required? How many ports does each device need? Calculate for n = 5.</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <div class="formula">Number of links  = n(n−1)/2
+Ports per device = n−1</div>
+        For n = 5:<br>
+        Links = 5 × 4 / 2 = <strong>10 links</strong><br>
+        Ports per device = 5 − 1 = <strong>4 ports</strong>
+        <div class="note"><strong>Key advantage:</strong> Mesh provides dedicated links = no traffic problems, robust, easy to isolate faults. <strong>Disadvantage:</strong> High cost (cables + ports).</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd1" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q6</span>
+      <span class="p-text">What is the difference between analog data and digital data? Give one example of each.</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <strong>Analog data:</strong> Continuous — takes on any value over a range. Example: sound (voice), temperature readings from a clock.<br><br>
+        <strong>Digital data:</strong> Discrete — takes on a limited set of defined values. Example: text stored as ASCII codes, integers in a computer.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- TOPIC 2: NETWORK MODELS -->
+<!-- ══════════════════════════════════════════════ -->
+<section class="topic" id="models">
+  <div class="topic-header">
+    <div class="topic-num c2">LEC 02</div>
+    <div>
+      <div class="topic-title" style="color:var(--accent2)">Network Models & Addressing</div>
+      <div class="topic-sub">OSI Model · TCP/IP Suite · Encapsulation · Addressing</div>
+    </div>
+  </div>
+
+  <div class="problem bd2" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q1</span>
+      <span class="p-text">List the seven layers of the OSI model from layer 7 to layer 1, and state the unit of data (PDU) at each layer.</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <table>
+          <tr><th>Layer #</th><th>Name</th><th>PDU (Data Unit)</th><th>Key Function</th></tr>
+          <tr><td>7</td><td>Application</td><td>Data / Message</td><td>User interface, network services</td></tr>
+          <tr><td>6</td><td>Presentation</td><td>Data</td><td>Translation, encryption, compression</td></tr>
+          <tr><td>5</td><td>Session</td><td>Data</td><td>Dialog control, synchronization</td></tr>
+          <tr><td>4</td><td>Transport</td><td>Segment</td><td>End-to-end delivery, flow control</td></tr>
+          <tr><td>3</td><td>Network</td><td>Datagram / Packet</td><td>Logical addressing, routing</td></tr>
+          <tr><td>2</td><td>Data Link</td><td>Frame</td><td>Physical addressing, framing</td></tr>
+          <tr><td>1</td><td>Physical</td><td>Bit</td><td>Bit transmission over medium</td></tr>
+        </table>
+        <div class="note"><strong>Memory trick:</strong> All People Seem To Need Data Processing (top → bottom)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd2" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q2</span>
+      <span class="p-text">What is encapsulation? Describe what happens at each layer when data is sent from sender to receiver.</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <strong>Encapsulation</strong> means each layer adds its own header (H) — and sometimes a trailer (T) — to the data it receives from the layer above. The data portion of a packet at level N−1 carries the entire packet from level N and treats it as one integral unit (level N−1 does not see inside).<br><br>
+        <strong>At the sender (top → down):</strong><br>
+        • Application (7) → creates the message<br>
+        • Each layer adds its H (and T at layer 2)<br>
+        • Physical (1) → converts to bits and sends<br><br>
+        <strong>At the receiver (bottom → up):</strong><br>
+        • Each layer strips its own H (and T)<br>
+        • Layer 7 receives the original message<br><br>
+        <div class="note"><strong>Result:</strong> Layer N on machine A communicates logically with Layer N on machine B (peer-to-peer communication).</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd2" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q3</span>
+      <span class="p-text">What are the five roles/responsibilities of the Data Link Layer? State the unit of data at this layer.</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        Unit: <strong>Frame</strong> (hop-to-hop delivery)<br><br>
+        <strong>1. Framing:</strong> Divides bit stream from network layer into frames.<br>
+        <strong>2. Physical Addressing:</strong> Adds header with sender/receiver physical address (MAC).<br>
+        <strong>3. Flow Control:</strong> If receiver is slower than sender, a flow control mechanism prevents overwhelming the receiver.<br>
+        <strong>4. Error Control:</strong> Adds mechanisms to detect and retransmit damaged/lost frames; prevents duplicate frames (via trailer).<br>
+        <strong>5. Access Control:</strong> When multiple devices share a link, determines which device has control at any given time.
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd2" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q4</span>
+      <span class="p-text">Compare the OSI model with the TCP/IP protocol suite. What are the layers of each? What is the key practical difference?</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <table>
+          <tr><th>OSI (7 layers)</th><th>TCP/IP (4–5 layers)</th></tr>
+          <tr><td>Application (7)</td><td rowspan="3">Application</td></tr>
+          <tr><td>Presentation (6)</td></tr>
+          <tr><td>Session (5)</td></tr>
+          <tr><td>Transport (4)</td><td>Transport</td></tr>
+          <tr><td>Network (3)</td><td>Internet (Network)</td></tr>
+          <tr><td>Data Link (2)</td><td rowspan="2">Network Access (Data Link + Physical)</td></tr>
+          <tr><td>Physical (1)</td></tr>
+        </table>
+        <strong>Key difference:</strong> OSI is a theoretical reference model; TCP/IP is a practical implemented model actually used on the Internet. TCP/IP collapses sessions/presentation into application.
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd2" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q5</span>
+      <span class="p-text">In the OSI model, which layers are "network support layers" vs "user support layers"? What connects them?</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <strong>Network Support Layers (Physical aspects):</strong> Layers 1, 2, 3 — deal with physical transmission of data from one device to another.<br><br>
+        <strong>User Support Layers (Software aspects):</strong> Layers 5, 6, 7 — allow interoperability among unrelated software systems.<br><br>
+        <strong>Layer 4 (Transport)</strong> is the link — it ensures that what the lower layers transmitted is in a form usable by the upper layers. It bridges the gap.<br><br>
+        <div class="note"><strong>Hardware vs Software:</strong> Lower layers (1, 2, 3) → hardware + software. Upper layers (4, 5, 6, 7) → software only. Physical layer → mostly hardware.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- TOPIC 3: DATA AND SIGNALS -->
+<!-- ══════════════════════════════════════════════ -->
+<section class="topic" id="signals">
+  <div class="topic-header">
+    <div class="topic-num c3">LEC 03</div>
+    <div>
+      <div class="topic-title" style="color:var(--accent3)">Data and Signals</div>
+      <div class="topic-sub">Digital signals · Nyquist · Shannon · Attenuation · Performance metrics</div>
+    </div>
+  </div>
+
+  <div class="formula-box">
+    <h4>⚡ Key Formulas — Data & Signals</h4>
+    <div class="eq">
+Nyquist (noiseless):   BitRate = 2 × Bandwidth × log₂L<br>
+Shannon (noisy):       Capacity = Bandwidth × log₂(1 + SNR)<br>
+SNR (dB):              SNR_dB = 10 × log₁₀(SNR)<br>
+Attenuation (dB):      dB = 10 × log₁₀(P₂/P₁)<br>
+Bit Length:            Bit Length = Propagation Speed × Bit Duration<br>
+Propagation Time:      Prop. Time = Distance / Propagation Speed<br>
+Transmission Time:     Trans. Time = Message Size / Bandwidth<br>
+Latency:               Latency = Prop. Time + Trans. Time + Queuing + Processing<br>
+Throughput:            Throughput = (frames/sec) × (bits/frame)
+    </div>
+  </div>
+
+  <div class="problem bd3" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q1</span>
+      <span class="p-text">A digital signal has 8 levels. How many bits are needed per level?</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <div class="formula">Number of bits = log₂ L = log₂ 8 = 3 bits per level</div>
+        Each signal level is represented by <strong>3 bits</strong>.
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd3" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q2</span>
+      <span class="p-text">A digital signal has 9 levels. How many bits per level?</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <div class="formula">log₂ 9 ≈ 3.17 bits → not an integer, must round up to power of 2 → 4 bits</div>
+        Answer: <strong>4 bits per level</strong>.
+        <div class="warn"><strong>Rule:</strong> The number of bits must be a whole integer AND a power of 2. So round log₂L up to the next power of 2.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd3" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q3</span>
+      <span class="p-text">We need to download text documents at the rate of 100 pages per second. Assume a page has 24 lines with 80 characters each, and each character requires 8 bits. What is the required bit rate?</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <div class="formula">Bits per page = 24 lines × 80 chars × 8 bits = 15,360 bits/page
+
+Bit rate = 100 pages/s × 15,360 bits/page = 1,536,000 bps ≈ 1.536 Mbps</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd3" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q4</span>
+      <span class="p-text">(Attenuation) A signal's power is reduced to one-half after passing through a medium. What is the attenuation in dB?</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <div class="formula">dB = 10 × log₁₀(P₂/P₁) = 10 × log₁₀(1/2) = 10 × (−0.3) = −3 dB</div>
+        A loss of <strong>−3 dB</strong> is equivalent to losing one-half the power.
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd3" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q5</span>
+      <span class="p-text">A signal is amplified so its power increases 10 times. What is the gain in dB?</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <div class="formula">dB = 10 × log₁₀(P₂/P₁) = 10 × log₁₀(10) = 10 × 1 = +10 dB</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd3" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q6</span>
+      <span class="p-text">A signal travels through three cascaded links with dB values of −3 dB, +7 dB, and −5 dB. What is the total dB change?</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <div class="formula">Total dB = (−3) + (+7) + (−5) = −1 dB</div>
+        <div class="note"><strong>Key concept:</strong> Decibel values are simply added (or subtracted) when cascading — that is why engineers use dB!</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd3" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q7</span>
+      <span class="p-text">The power of a signal is given as dBm = −30. Calculate the power in milliwatts.</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <div class="formula">dBm = 10 × log₁₀(Pm)   →   −30 = 10 × log₁₀(Pm)
+log₁₀(Pm) = −3   →   Pm = 10^(−3) = 0.001 mW</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd3" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q8</span>
+      <span class="p-text">A cable has a loss of −0.3 dB/km. If the starting power is 2 mW, what is the power at 5 km?</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <div class="formula">Loss = 5 × (−0.3) = −1.5 dB
+
+−1.5 = 10 × log₁₀(P₂/2)
+log₁₀(P₂/2) = −0.15
+P₂/2 = 10^(−0.15) ≈ 0.708
+P₂ = 2 × 0.708 ≈ 1.416 mW</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd3" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q9 ★</span>
+      <span class="p-text">(Nyquist) A noiseless channel has a bandwidth of 3000 Hz and uses two signal levels. What is the maximum bit rate?</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <div class="formula">BitRate = 2 × B × log₂ L
+        = 2 × 3000 × log₂ 2
+        = 2 × 3000 × 1
+        = 6000 bps</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd3" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q10 ★</span>
+      <span class="p-text">(Nyquist) Same noiseless channel, 3000 Hz bandwidth, but now with 4 signal levels. What is the maximum bit rate?</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <div class="formula">BitRate = 2 × 3000 × log₂ 4
+        = 6000 × 2
+        = 12,000 bps</div>
+        <div class="warn"><strong>Note:</strong> Increasing signal levels increases bit rate, but also increases reliability problems. There is a practical limit.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd3" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q11 ★</span>
+      <span class="p-text">(Nyquist) We need to send 265 kbps over a noiseless channel with a bandwidth of 20 kHz. How many signal levels do we need?</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <div class="formula">265,000 = 2 × 20,000 × log₂ L
+log₂ L = 265,000 / 40,000 = 6.625
+L = 2^6.625 ≈ 98.7 → not a power of 2</div>
+        Since 98.7 is not a power of 2:<br>
+        • If L = 128: BitRate = 2 × 20,000 × 7 = <strong>280 kbps</strong><br>
+        • If L = 64: BitRate = 2 × 20,000 × 6 = <strong>240 kbps</strong><br>
+        We either increase levels to 128 or reduce bit rate to 240 kbps.
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd3" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q12 ★</span>
+      <span class="p-text">(Shannon) A telephone line has a bandwidth of 3000 Hz and SNR = 3162. What is the maximum channel capacity?</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <div class="formula">C = B × log₂(1 + SNR)
+  = 3000 × log₂(1 + 3162)
+  = 3000 × log₂(3163)
+  = 3000 × 11.62
+  ≈ 34,860 bps ≈ 34.86 kbps</div>
+        The theoretical maximum bit rate of this telephone line is <strong>34.86 kbps</strong>.
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd3" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q13 ★</span>
+      <span class="p-text">(Shannon) SNR_dB = 36 and bandwidth = 2 MHz. Calculate the theoretical channel capacity.</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <div class="formula">SNR_dB = 10 × log₁₀(SNR)
+36 = 10 × log₁₀(SNR)   →   SNR = 10^3.6 ≈ 3981
+
+C = 2,000,000 × log₂(1 + 3981)
+  = 2,000,000 × log₂(3982)
+  = 2,000,000 × 11.96
+  ≈ 23.9 Mbps</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd3" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q14 ★</span>
+      <span class="p-text">(Both Formulas) A channel has 1 MHz bandwidth and SNR = 63. Find the appropriate bit rate and number of signal levels.</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <strong>Step 1:</strong> Use Shannon to find the upper limit:
+        <div class="formula">C = 1,000,000 × log₂(1 + 63) = 1,000,000 × log₂(64) = 1,000,000 × 6 = 6 Mbps</div>
+        <strong>Step 2:</strong> Choose a lower practical rate, e.g., <strong>4 Mbps</strong>. Then use Nyquist to find L:
+        <div class="formula">4,000,000 = 2 × 1,000,000 × log₂ L
+log₂ L = 2   →   L = 4 signal levels</div>
+        <div class="note"><strong>Rule:</strong> Shannon gives the upper limit; Nyquist tells us how many signal levels we need to achieve a chosen rate below that limit.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd3" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q15 ★</span>
+      <span class="p-text">(Propagation Time) Distance = 12,000 km, propagation speed = 2.4 × 10⁸ m/s. Find the propagation time.</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <div class="formula">Propagation Time = Distance / Speed
+= 12,000,000 m / (2.4 × 10⁸ m/s)
+= 0.05 s = 50 ms</div>
+        A bit can cross the Atlantic Ocean in only <strong>50 ms</strong>.
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd3" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q16 ★</span>
+      <span class="p-text">(Latency) A 2.5-kbyte email is sent over a 1 Gbps network. Distance = 12,000 km, light speed = 2.4 × 10⁸ m/s. Find propagation time and transmission time.</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <div class="formula">Propagation Time = 12,000,000 / (2.4 × 10⁸) = 0.05 s = 50 ms
+
+Message size = 2.5 × 1024 × 8 = 20,480 bits
+Transmission Time = 20,480 / (1 × 10⁹) ≈ 0.00002 s = 0.02 ms</div>
+        <div class="note"><strong>Conclusion:</strong> For a short message over a high-bandwidth link, propagation time (50 ms) dominates. Transmission time (0.02 ms) is negligible.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd3" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q17 ★</span>
+      <span class="p-text">(Throughput) A network with 10 Mbps bandwidth passes 12,000 frames/minute, each frame carrying 10,000 bits. What is the throughput?</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <div class="formula">Throughput = (12,000 frames/min) × (10,000 bits/frame) ÷ 60 s/min
+           = 120,000,000 / 60
+           = 2,000,000 bps = 2 Mbps</div>
+        Throughput (2 Mbps) is about <strong>one-fifth</strong> of the bandwidth (10 Mbps).
+        <div class="note"><strong>Key concept:</strong> Throughput ≤ Bandwidth. Actual (throughput) is always less than potential (bandwidth).</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- TOPIC 4: PROTOCOL FUNCTIONS / MULTIPLEXING -->
+<!-- ══════════════════════════════════════════════ -->
+<section class="topic" id="protocol">
+  <div class="topic-header">
+    <div class="topic-num c4">LEC 04</div>
+    <div>
+      <div class="topic-title" style="color:var(--accent4)">Protocol Functions & Multiplexing</div>
+      <div class="topic-sub">Segmentation · FDM · TDM · STDM · Flow & Error Control</div>
+    </div>
+  </div>
+
+  <div class="problem bd4" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q1</span>
+      <span class="p-text">What is segmentation? What are its advantages and disadvantages?</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <strong>Segmentation:</strong> At transmission, a message is divided into smaller transmittable segments, each with a sequence number. On receiving, reassembly reorders them back to the original message.<br><br>
+        <table>
+          <tr><th>Advantages</th><th>Disadvantages</th></tr>
+          <tr><td>More efficient error control</td><td>Overhead (sequence numbers etc.)</td></tr>
+          <tr><td>Shorter delays</td><td>More processing time needed</td></tr>
+          <tr><td>Smaller buffers needed</td><td>Complexity of reassembly</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd4" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q2</span>
+      <span class="p-text">What is Frequency Division Multiplexing (FDM)? Describe the four steps of the FDM process.</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <strong>FDM</strong> is an analog multiplexing technique that combines analog signals by dividing the total bandwidth into sub-channels, each at a different frequency.<br><br>
+        <strong>FDM Process:</strong><br>
+        <strong>1.</strong> Divide the available bandwidth into independent frequency channels (with guard bands between them to prevent interference).<br>
+        <strong>2.</strong> Modulate each signal to a different frequency band.<br>
+        <strong>3.</strong> Combine all modulated signals into one composite signal using a multiplexer.<br>
+        <strong>4.</strong> At the receiver, decompose the composite signal using a demultiplexer and filters (demodulate each sub-signal).<br><br>
+        <div class="note"><strong>Guard bands:</strong> Unused frequency gaps between channels to prevent interference. They waste some capacity.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd4" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q3 ★</span>
+      <span class="p-text">(FDM) Three voice channels, each 4 kHz, are to be combined on a link with bandwidth from 20 to 32 kHz. Show how, assuming no guard bands.</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        Total available bandwidth = 32 − 20 = 12 kHz. Three channels × 4 kHz = 12 kHz ✓
+        <div class="formula">Channel 1 → 20 to 24 kHz
+Channel 2 → 24 to 28 kHz
+Channel 3 → 28 to 32 kHz</div>
+        Each voice channel is shifted (modulated) to its own frequency band, then combined as a composite signal.
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd4" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q4 ★</span>
+      <span class="p-text">(FDM) Five channels, each 100 kHz, need to be multiplexed together with guard bands of 10 kHz between channels. What is the minimum link bandwidth?</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        For 5 channels, we need 4 guard bands (between consecutive channels).
+        <div class="formula">Minimum bandwidth = (5 × 100 kHz) + (4 × 10 kHz)
+                         = 500 + 40
+                         = 540 kHz</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd4" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q5 ★</span>
+      <span class="p-text">(FDM / AMPS) The AMPS cellular system uses a band from 824–849 MHz for sending (25 MHz). Each user has 30 kHz bandwidth. How many people can simultaneously use cellular phones?</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <div class="formula">Total channels = 25 MHz / 30 kHz = 25,000 / 30 ≈ 833
+
+Control channels (used for signaling) = 42
+Available voice channels = 833 − 42 − (rounding) = 790 channels</div>
+        <strong>790 simultaneous users</strong> can use cellular phones.
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd4" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q6 ★</span>
+      <span class="p-text">(Synchronous TDM) Three 1-kbps connections are multiplexed. One bit per unit. Find: (a) duration of each input slot, (b) duration of each output slot, (c) duration of each frame.</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <div class="formula">a. Input bit duration = 1 / 1 kbps = 1 ms
+   Input slot duration = 1 ms
+
+b. Output slot = Input slot / n = 1 ms / 3 = 1/3 ms ≈ 0.333 ms
+
+c. Frame = n × output slots = 3 × (1/3 ms) = 1 ms
+   (Frame duration = input unit duration)</div>
+        <div class="note"><strong>Rule:</strong> Frame duration always equals input unit duration. Output slot = input slot / n.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd4" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q7 ★</span>
+      <span class="p-text">(Synchronous TDM) Four 1-Mbps connections are multiplexed. Find: (a) input bit duration, (b) output bit duration, (c) output bit rate, (d) output frame rate.</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <div class="formula">n = 4 connections
+
+a. Input bit duration = 1 / 1 Mbps = 1 μs
+
+b. Output bit duration = 1 μs / 4 = 0.25 μs = ¼ μs
+
+c. Output bit rate = 1 / (0.25 μs) = 4 Mbps
+   (= 4 × input rate = 4 × 1 Mbps = 4 Mbps ✓)
+
+d. Frame rate = input bit rate = 1,000,000 frames/second
+   Verify: 1,000,000 frames/s × 4 bits/frame = 4 Mbps ✓</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd4" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q8 ★</span>
+      <span class="p-text">(Synchronous TDM) Four 1-kbps connections multiplexed, 1 bit per unit. Find: (a) bit duration before MUX, (b) link transmission rate, (c) time slot duration, (d) frame duration.</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <div class="formula">a. Bit duration before MUX = 1 / 1 kbps = 1 ms
+
+b. Link rate = 4 × 1 kbps = 4 kbps
+
+c. Time slot duration = 1 ms / 4 = 0.25 ms = 250 μs
+   (also = 1 / 4 kbps = 250 μs ✓)
+
+d. Frame duration = 4 × 250 μs = 1 ms
+   (= input unit duration ✓)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd4" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q9</span>
+      <span class="p-text">Compare FDM, Synchronous TDM (STDM), and Statistical TDM. Which is most efficient?</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <table>
+          <tr><th>Feature</th><th>FDM</th><th>Sync TDM</th><th>Statistical TDM</th></tr>
+          <tr><td>Type</td><td>Analog</td><td>Digital</td><td>Digital</td></tr>
+          <tr><td>Sharing</td><td>Frequency</td><td>Time (fixed slots)</td><td>Time (dynamic slots)</td></tr>
+          <tr><td>Guard bands</td><td>Yes (wastes BW)</td><td>No</td><td>No</td></tr>
+          <tr><td>Fixed allocation</td><td>Yes</td><td>Yes (even if idle)</td><td>No (only when needed)</td></tr>
+          <tr><td>Addressing needed</td><td>No</td><td>No</td><td>Yes (source ID in each slot)</td></tr>
+          <tr><td>Efficiency</td><td>Lower</td><td>Medium</td><td>Higher</td></tr>
+        </table>
+        <div class="note"><strong>Statistical TDM</strong> is most efficient — it allocates slots only when a channel has data to send, unlike Synchronous TDM which wastes slots on idle channels.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- TOPIC 5: TRANSMISSION MEDIA -->
+<!-- ══════════════════════════════════════════════ -->
+<section class="topic" id="media">
+  <div class="topic-header">
+    <div class="topic-num c5">LEC 05</div>
+    <div>
+      <div class="topic-title" style="color:var(--accent5)">Transmission Media</div>
+      <div class="topic-sub">Twisted pair · Coaxial · Fiber optic · Wireless (Radio, Microwave, Infrared)</div>
+    </div>
+  </div>
+
+  <div class="problem bd5" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q1</span>
+      <span class="p-text">What are the two main categories of transmission media? Give examples of each.</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <table>
+          <tr><th>Category</th><th>Also called</th><th>Examples</th></tr>
+          <tr><td><strong>Guided (Wired)</strong></td><td>Bounded</td><td>Twisted pair cable, Coaxial cable, Fiber optic cable</td></tr>
+          <tr><td><strong>Unguided (Wireless)</strong></td><td>Unbounded</td><td>Radio waves, Microwaves, Infrared</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd5" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q2</span>
+      <span class="p-text">Compare twisted pair cable with coaxial cable in terms of bandwidth, shielding, and use cases.</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <table>
+          <tr><th>Feature</th><th>Twisted Pair (UTP/STP)</th><th>Coaxial Cable</th></tr>
+          <tr><td>Bandwidth</td><td>Lower (UTP Cat 5 up to 100 MHz)</td><td>Higher (up to 750 MHz)</td></tr>
+          <tr><td>Shielding</td><td>UTP = none; STP = shielded</td><td>Inner wire, insulator, outer shield, jacket</td></tr>
+          <tr><td>Cost</td><td>Cheapest</td><td>More expensive</td></tr>
+          <tr><td>Noise immunity</td><td>Lower</td><td>Higher</td></tr>
+          <tr><td>Use</td><td>Phone, 10BaseT, 100BaseTX</td><td>Cable TV, 10Base2, 10Base5</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd5" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q3</span>
+      <span class="p-text">Compare single-mode vs multimode fiber optic cable. Which is used for longer distances?</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <table>
+          <tr><th>Feature</th><th>Single-Mode (SMF)</th><th>Multimode (MMF)</th></tr>
+          <tr><td>Core diameter</td><td>Small (&lt;10 μm)</td><td>Large (50–200 μm)</td></tr>
+          <tr><td>Light modes</td><td>One mode</td><td>Multiple modes</td></tr>
+          <tr><td>Attenuation</td><td>Lower (faster)</td><td>Higher (slower)</td></tr>
+          <tr><td>Dispersion</td><td>None</td><td>Signal distortion/dispersion</td></tr>
+          <tr><td>Distance</td><td><strong>Long distance</strong></td><td>Short distance (building/campus)</td></tr>
+          <tr><td>Cost</td><td>Performance higher, expensive to build</td><td>Fiber more costly; deployment cheaper</td></tr>
+          <tr><td>Light source</td><td>Laser diode</td><td>LED</td></tr>
+          <tr><td>Color</td><td>Yellow</td><td>OM1/OM2=Orange, OM3/OM4=Aqua</td></tr>
+        </table>
+        <div class="note"><strong>Single-mode</strong> is used for long-distance, high-bandwidth communication (CATV, telecos). Multimode for short distances (campus LAN).</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd5" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q4</span>
+      <span class="p-text">List at least 4 advantages and 3 disadvantages of fiber optic cable over copper cable.</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <strong>Advantages:</strong><br>
+        1. Higher bandwidth capacity<br>
+        2. Less signal attenuation (longer distances)<br>
+        3. Immunity to electromagnetic interference (EMI)<br>
+        4. Resistance to corrosive materials<br>
+        5. Lighter weight<br>
+        6. Greater immunity to tapping (more secure)<br><br>
+        <strong>Disadvantages:</strong><br>
+        1. Harder to install and maintain<br>
+        2. Unidirectional light propagation (need two fibers for two-way)<br>
+        3. Higher cost
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd5" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q5</span>
+      <span class="p-text">Compare Radio Waves, Microwaves, and Infrared as wireless media (frequency range, directionality, propagation mode, advantages/disadvantages).</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <table>
+          <tr><th>Feature</th><th>Radio Waves</th><th>Microwaves</th><th>Infrared</th></tr>
+          <tr><td>Frequency</td><td>3 kHz – 1 GHz</td><td>1 – 300 GHz</td><td>300 GHz – 400 THz</td></tr>
+          <tr><td>Directionality</td><td>Omnidirectional</td><td>Unidirectional</td><td>Unidirectional (line-of-sight)</td></tr>
+          <tr><td>Propagation</td><td>Sky propagation</td><td>Line-of-sight</td><td>Line-of-sight (short range)</td></tr>
+          <tr><td>Advantage</td><td>Antennas need not align; long-range</td><td>Antennas can align without interference; high data rate</td><td>High security (can't penetrate walls)</td></tr>
+          <tr><td>Disadvantage</td><td>Susceptible to interference; narrow band</td><td>Very high freq can't penetrate walls; affected by rain</td><td>Cannot be used outdoors (sunlight interference)</td></tr>
+          <tr><td>Use</td><td>AM/FM radio, TV, cordless phones</td><td>Mobile phones, satellite</td><td>TV remotes, short-range devices</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd5" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q6</span>
+      <span class="p-text">What is the difference between step-index and graded-index multimode fiber?</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <strong>Step-index:</strong> Uniform refractive index in the core; a sharp, sudden decrease at the core-cladding interface. Light bounces off the cladding at sharp angles. Used in both single-mode and some multimode fibers.<br><br>
+        <strong>Graded-index:</strong> Refractive index decreases continuously (parabolically) from the center of the core outward. Light rays follow sinusoidal (curved) paths. This minimizes modal dispersion compared to step-index multimode fiber.
+        <div class="note"><strong>Result:</strong> Graded-index fiber has less distortion than step-index multimode fiber, allowing better performance over longer distances.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- TOPIC 6: ERROR DETECTION -->
+<!-- ══════════════════════════════════════════════ -->
+<section class="topic" id="error">
+  <div class="topic-header">
+    <div class="topic-num c6">LEC 06</div>
+    <div>
+      <div class="topic-title" style="color:var(--accent6)">Error Detection and Correction</div>
+      <div class="topic-sub">Single-bit vs Burst errors · Checksum · One's complement</div>
+    </div>
+  </div>
+
+  <div class="problem bd6" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q1</span>
+      <span class="p-text">What is the difference between a single-bit error and a burst error? Which is more common in serial transmission?</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <strong>Single-bit error:</strong> Only 1 bit in the data unit has changed (0 → 1 or 1 → 0). Rare in serial transmission because consecutive bits are very close together.<br><br>
+        <strong>Burst error:</strong> Two or more bits in the data unit have changed. The length of a burst error is measured from the first corrupted bit to the last. <em>More common in serial transmission</em> because noise usually affects a period of time, corrupting multiple consecutive bits.<br><br>
+        <div class="warn"><strong>Note:</strong> Burst error length ≠ number of corrupted bits. It is the span from first to last corrupted bit (bits in between may or may not be corrupted).</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd6" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q2</span>
+      <span class="p-text">Distinguish between error detection and error correction. Which requires more redundant bits?</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <strong>Error Detection:</strong> We only check whether any error has occurred (yes/no). Simpler; fewer redundant bits needed.<br><br>
+        <strong>Error Correction:</strong> We must know the exact number of corrupted bits AND their location so we can fix them. Requires more redundant bits.<br><br>
+        <div class="note"><strong>Redundancy:</strong> Extra bits added by the sender that create a mathematical relationship with the data bits. The receiver checks this relationship to detect or correct errors.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd6" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q3</span>
+      <span class="p-text">Explain the Internet Checksum process at both the sender and receiver sides.</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <strong>At the Sender:</strong><br>
+        1. Divide the message into 16-bit words.<br>
+        2. Set the checksum word to 0.<br>
+        3. Add all words (including the 0 checksum) using one's complement addition.<br>
+        4. Complement the sum → this becomes the <strong>checksum</strong>.<br>
+        5. Send the data + checksum.<br><br>
+        <strong>At the Receiver:</strong><br>
+        1. Divide the received message (including checksum) into 16-bit words.<br>
+        2. Add all words using one's complement addition.<br>
+        3. Complement the result.<br>
+        4. If the result = 0000 0000 0000 0000 → <strong>no error; accept</strong>.<br>
+           If result ≠ 0 → <strong>error; reject</strong>.
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd6" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q4</span>
+      <span class="p-text">(One's Complement) Represent the number 21 using one's complement arithmetic with only 4 bits.</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        21 in binary = 10101 (needs 5 bits). With only 4 bits, we "wrap around" the leftmost bit:
+        <div class="formula">10101  →  wrap leftmost bit:
+  0101
++    1   (the wrapped bit)
+= 0110 = 6</div>
+        Answer: <strong>6</strong> (21 mod 15 in one's complement 4-bit representation).
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd6" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q5</span>
+      <span class="p-text">(One's Complement) Represent −6 in 4-bit one's complement.</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <div class="formula">+6 in 4-bit binary = 0110
+Negative (complement) = invert all bits = 1001 = 9</div>
+        So −6 is represented as <strong>1001</strong> (= 9 in unsigned). The complement of 6 is 9 in 4-bit one's complement.
+        <div class="note"><strong>Rule:</strong> In one's complement, the negative of a number is found by inverting ALL bits (0 ↔ 1).</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd6" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q6 ★</span>
+      <span class="p-text">(Full Checksum Calculation) Calculate the Internet Checksum for the text "Forouzan" (8 characters). Use ASCII and show work for both sender and receiver.</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        The text "Forouzan" = 8 bytes = 4 words of 16 bits each:
+        <div class="formula">Word 1: Fo = 0100 0110  0110 1111  (46 6F)
+Word 2: ro = 0111 0010  0110 1111  (72 6F)
+Word 3: uz = 0111 0101  0111 1010  (75 7A)
+Word 4: an = 0110 0001  0110 1110  (61 6E)
+
+Sender:
+Checksum (initial)  = 0000 0000  0000 0000
+Sum of all 5 words  = 1000 1111  1100 0111  (8F C7)
+One's complement    = 0111 0000  0011 1000  (70 38) ← CHECKSUM SENT
+
+Receiver:
+Receives: Fo, ro, uz, an + checksum (70 38)
+Sum                 = 1111 1111  1111 1111  (FF FF)
+One's complement    = 0000 0000  0000 0000  → ALL ZEROS = NO ERROR ✓</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd6" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q7</span>
+      <span class="p-text">What is the basic idea behind the checksum (simple version)? How does the receiver use it?</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <strong>Sender:</strong> Sends data (e.g., 7, 11, 12, 0, 6) along with their sum (36) or the negative of the sum (−36).<br><br>
+        <strong>With negative checksum (−36):</strong> Receiver adds all numbers including the checksum: 7 + 11 + 12 + 0 + 6 + (−36) = 0. If the result = 0 → no error. If ≠ 0 → error.
+        <div class="note">Sending the negative of the sum as the checksum simplifies the receiver's job — it just adds everything up and checks for 0.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- TOPIC 7: ETHERNET -->
+<!-- ══════════════════════════════════════════════ -->
+<section class="topic" id="ethernet">
+  <div class="topic-header">
+    <div class="topic-num c7">LEC 07</div>
+    <div>
+      <div class="topic-title" style="color:#4fe5f9">Wired LANs: Ethernet</div>
+      <div class="topic-sub">IEEE 802.3 · MAC Frame · Addressing · CSMA/CD · Fast/Gigabit Ethernet</div>
+    </div>
+  </div>
+
+  <div class="problem bd7" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q1</span>
+      <span class="p-text">Describe the fields in an IEEE 802.3 (Standard Ethernet) MAC frame.</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <table>
+          <tr><th>Field</th><th>Size</th><th>Purpose</th></tr>
+          <tr><td>Preamble</td><td>7 bytes</td><td>Synchronization; alerts receiving station</td></tr>
+          <tr><td>SFD (Start Frame Delimiter)</td><td>1 byte</td><td>Marks the beginning of the frame</td></tr>
+          <tr><td>Destination Address</td><td>6 bytes</td><td>Physical (MAC) address of receiver</td></tr>
+          <tr><td>Source Address</td><td>6 bytes</td><td>Physical (MAC) address of sender</td></tr>
+          <tr><td>Length/Type</td><td>2 bytes</td><td>Length of data field OR network protocol type</td></tr>
+          <tr><td>Data</td><td>46–1500 bytes</td><td>The actual payload (padded to min 46 bytes)</td></tr>
+          <tr><td>CRC</td><td>4 bytes</td><td>Cyclic Redundancy Check — error detection</td></tr>
+        </table>
+        <div class="note"><strong>Minimum frame:</strong> 18 bytes (overhead) + 46 bytes (min data) = 64 bytes total. <strong>Maximum:</strong> 18 + 1500 = 1518 bytes.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd7" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q2 ★</span>
+      <span class="p-text">How can you determine whether a MAC address is unicast, multicast, or broadcast? For each address below, state the type: (a) 4A:30:10:21:10:1A, (b) 47:20:1B:2E:08:EE, (c) FF:FF:FF:FF:FF:FF</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <strong>Rule:</strong> Look at the <em>least significant bit (LSB)</em> of the <em>first byte</em>.<br>
+        &nbsp;&nbsp;• If bit = 0 (even hex digit) → <strong>Unicast</strong><br>
+        &nbsp;&nbsp;• If bit = 1 (odd hex digit) → <strong>Multicast</strong><br>
+        &nbsp;&nbsp;• If all bits are 1 (FF:FF:FF:FF:FF:FF) → <strong>Broadcast</strong><br><br>
+
+        <strong>(a) 4A:30:10:21:10:1A</strong><br>
+        First byte = 4A → "A" in binary = 1010 → LSB = 0 (even) → <strong>Unicast</strong><br><br>
+
+        <strong>(b) 47:20:1B:2E:08:EE</strong><br>
+        First byte = 47 → "7" in binary = 0111 → LSB = 1 (odd) → <strong>Multicast</strong><br><br>
+
+        <strong>(c) FF:FF:FF:FF:FF:FF</strong><br>
+        All bits = 1 → <strong>Broadcast</strong> (special case of multicast)
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd7" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q3 ★</span>
+      <span class="p-text">Show how the MAC address 47:20:1B:2E:08:EE is sent on the line (bit transmission order).</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        Addresses are sent byte by byte from left to right, but within each byte, bits are sent <strong>right to left (LSB first)</strong>:
+        <div class="formula">47 = 0100 0111  →  sent as: 1 1 1 0 0 0 1 0
+20 = 0010 0000  →  sent as: 0 0 0 0 0 1 0 0
+1B = 0001 1011  →  sent as: 1 1 0 1 1 0 0 0
+2E = 0010 1110  →  sent as: 0 1 1 1 0 1 0 0
+08 = 0000 1000  →  sent as: 0 0 0 1 0 0 0 0
+EE = 1110 1110  →  sent as: 0 1 1 1 0 1 1 1</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd7" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q4</span>
+      <span class="p-text">Explain the CSMA/CD protocol and how it handles collisions.</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <strong>CSMA/CD</strong> = Carrier Sense Multiple Access / Collision Detection<br><br>
+        <strong>How it works:</strong><br>
+        1. A station wants to send → it <em>listens</em> (senses carrier) to check if the medium is idle.<br>
+        2. If the medium is idle → it transmits.<br>
+        3. While transmitting → it monitors the medium for a collision.<br>
+        4. If a collision is detected → both stations immediately <em>stop transmitting</em>.<br>
+        5. Each station waits a <em>random backoff time</em> before attempting to retransmit.<br>
+        6. This reduces the probability of another collision.<br><br>
+        <div class="note"><strong>Only one station can transmit at a time</strong> on a shared medium. CSMA/CD is used in half-duplex Ethernet (with hub). Full-duplex (with switch) does not need CSMA/CD.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd7" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q5 ★</span>
+      <span class="p-text">Interpret the following Ethernet naming conventions: 10Base2, 10Base5, 10BaseT, 10BaseF. What do the three parts mean?</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        The name has three parts: <strong>[Speed][Transmission][Segment]</strong>
+        <div class="formula">Example: 10Base2
+  Part 1: "10" → Data rate = 10 Mbps
+  Part 2: "Base" → Baseband transmission
+  Part 3: "2" → Max segment length = 2 × 100 = 200 m</div>
+        <table>
+          <tr><th>Name</th><th>Speed</th><th>Transmission</th><th>Cable / Max Segment</th></tr>
+          <tr><td>10Base2</td><td>10 Mbps</td><td>Baseband</td><td>Thin coaxial (Thinnet), 200 m</td></tr>
+          <tr><td>10Base5</td><td>10 Mbps</td><td>Baseband</td><td>Thick coaxial (Thicknet), 500 m</td></tr>
+          <tr><td>10BaseT</td><td>10 Mbps</td><td>Baseband</td><td>Twisted Pair (T = Twisted), not specified by name</td></tr>
+          <tr><td>10BaseF</td><td>10 Mbps</td><td>Baseband</td><td>Fiber Optic (F = Fiber), not specified by name</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd7" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q6</span>
+      <span class="p-text">What is the difference between Standard Ethernet (10 Mbps), Fast Ethernet (100 Mbps), and Gigabit Ethernet (1000 Mbps) in terms of topology and duplex?</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <table>
+          <tr><th>Feature</th><th>Standard (802.3)<br>10 Mbps</th><th>Fast (802.3u)<br>100 Mbps</th><th>Gigabit (802.3z)<br>1000 Mbps</th></tr>
+          <tr><td>Topology</td><td>Bus or Star</td><td>Star only (dropped Bus)</td><td>Star only</td></tr>
+          <tr><td>Half-duplex</td><td>Yes (with hub) → CSMA/CD</td><td>Yes (with hub) → CSMA/CD</td><td>Yes (with hub) → CSMA/CD</td></tr>
+          <tr><td>Full-duplex</td><td>Yes (with switch) → no CSMA/CD</td><td>Yes (with switch) → no CSMA/CD</td><td>Yes (with switch) → no CSMA/CD</td></tr>
+          <tr><td>Auto-negotiation</td><td>No</td><td>Yes</td><td>Yes</td></tr>
+        </table>
+        <div class="note">In full-duplex Gigabit Ethernet with a switch, there are no collisions — the max cable length is determined only by signal attenuation.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd7" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q7</span>
+      <span class="p-text">What are the types of Fast Ethernet (100BaseX)? Name the three implementations and what cable each uses.</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        <table>
+          <tr><th>Type</th><th>Cable</th><th>Notes</th></tr>
+          <tr><td>100BaseT4</td><td>4 pairs of UTP Cat 3, 4, or 5</td><td>Uses all 4 pairs</td></tr>
+          <tr><td>100BaseTX</td><td>2 pairs of Cat 5 UTP or STP</td><td>Most common; uses 2 pairs</td></tr>
+          <tr><td>100BaseFX</td><td>2 fiber optic cables</td><td>Longer distances</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem bd7" onclick="toggle(this)">
+    <div class="problem-q">
+      <span class="p-num">Q8</span>
+      <span class="p-text">What is a bridge in Ethernet? How does it improve performance?</span>
+      <span class="p-toggle">▾</span>
+    </div>
+    <div class="solution">
+      <div class="sol-label">▸ Solution</div>
+      <div class="sol-text">
+        A <strong>bridge</strong> connects two or more LAN segments, dividing a large Ethernet network into separate <em>collision domains</em>. Each segment has fewer devices, so collisions are less frequent.<br><br>
+        <strong>When to use a bridge:</strong><br>
+        1. When a large number of new users join the network.<br>
+        2. When applications requiring high bandwidth (databases, video conferencing) are added.<br><br>
+        <strong>Result:</strong> Each segment gets its own dedicated bandwidth; overall network performance improves because broadcasts and collisions are contained within each segment.
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script>
+function toggle(el) {
+  el.classList.toggle('open');
+}
+
+// Scroll progress bar
+window.addEventListener('scroll', () => {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = (scrollTop / docHeight) * 100;
+  document.getElementById('progressBar').style.width = progress + '%';
+});
+
+// Nav active state
+const sections = document.querySelectorAll('.topic');
+const navLinks = document.querySelectorAll('nav a');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.getAttribute('id');
+      navLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, { threshold: 0.3, rootMargin: '-60px 0px 0px 0px' });
+
+sections.forEach(s => observer.observe(s));
+
+// Keyboard shortcut: press 'E' to expand all, 'C' to collapse all
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'e' || e.key === 'E') {
+    document.querySelectorAll('.problem').forEach(p => p.classList.add('open'));
+  }
+  if (e.key === 'c' || e.key === 'C') {
+    document.querySelectorAll('.problem').forEach(p => p.classList.remove('open'));
+  }
+});
+</script>
+</body>
+</html>

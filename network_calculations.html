@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Network — Calculation Problems</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #F5F3EE;
+  --paper:   #FFFDF8;
+  --ink:     #1A1208;
+  --muted:   #7A6E5F;
+  --border:  #D9D0C0;
+
+  --L3: #C84B11;   /* signals   – burnt orange */
+  --L4: #1B6CA8;   /* protocol  – deep blue   */
+  --L6: #2E7D32;   /* error     – forest green */
+  --L7: #6A1B9A;   /* ethernet  – deep purple  */
+
+  --formula-bg: #1A1208;
+  --formula-fg: #F0E68C;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Space Grotesk', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  line-height: 1.7;
+}
+
+/* ── HEADER ── */
+header {
+  background: var(--ink);
+  color: #fff;
+  padding: 52px 40px 44px;
+  position: relative;
+  overflow: hidden;
+}
+header::after {
+  content: '∑';
+  position: absolute;
+  right: 40px; top: 10px;
+  font-size: 180px;
+  color: rgba(255,255,255,0.04);
+  font-family: 'JetBrains Mono', monospace;
+  pointer-events: none;
+  line-height: 1;
+}
+header h1 {
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -1px;
+  max-width: 700px;
+}
+header h1 em {
+  font-style: normal;
+  color: var(--formula-fg);
+}
+header p {
+  color: rgba(255,255,255,0.55);
+  font-size: 0.92rem;
+  margin-top: 10px;
+  font-weight: 300;
+}
+.chapter-pills {
+  display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px;
+}
+.pill {
+  padding: 5px 14px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.15s;
+}
+.pill:hover { opacity: 0.85; }
+.pill.L3 { background: var(--L3); color: #fff; }
+.pill.L4 { background: var(--L4); color: #fff; }
+.pill.L6 { background: var(--L6); color: #fff; }
+.pill.L7 { background: var(--L7); color: #fff; }
+
+/* ── STICKY FORMULA STRIP ── */
+.formula-strip {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--ink);
+  border-bottom: 2px solid #333;
+  padding: 10px 20px;
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--formula-fg);
+  white-space: nowrap;
+}
+.formula-strip::-webkit-scrollbar { display: none; }
+.fs-sep { color: #444; user-select: none; }
+
+/* ── LAYOUT ── */
+main { max-width: 860px; margin: 0 auto; padding: 40px 20px 100px; }
+
+/* ── CHAPTER ── */
+.chapter { margin-bottom: 56px; scroll-margin-top: 56px; }
+.chapter-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+  padding-bottom: 14px;
+  border-bottom: 2px solid var(--ink);
+}
+.ch-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  padding: 4px 10px;
+  border-radius: 3px;
+  color: #fff;
+  flex-shrink: 0;
+}
+.ch-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+/* ── CARD ── */
+.card {
+  background: var(--paper);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 16px;
+  overflow: hidden;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.card:hover {
+  border-color: #B0A090;
+  box-shadow: 0 3px 16px rgba(0,0,0,0.07);
+}
+
+.card-q {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 18px 20px;
+  cursor: pointer;
+  user-select: none;
+}
+.q-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 3px;
+  color: #fff;
+  flex-shrink: 0;
+  margin-top: 3px;
+  letter-spacing: 0.5px;
+}
+.q-text {
+  flex: 1;
+  font-size: 0.97rem;
+  font-weight: 500;
+  line-height: 1.6;
+}
+.q-arrow {
+  font-size: 1rem;
+  color: var(--muted);
+  flex-shrink: 0;
+  margin-top: 3px;
+  transition: transform 0.2s;
+}
+.card.open .q-arrow { transform: rotate(180deg); }
+
+/* ── ANSWER ── */
+.card-ans {
+  display: none;
+  padding: 4px 20px 22px;
+}
+.card.open .card-ans { display: block; }
+
+.ans-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border);
+}
+
+/* formula block */
+.fml {
+  background: var(--formula-bg);
+  color: var(--formula-fg);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.86rem;
+  line-height: 1.9;
+  padding: 16px 18px;
+  border-radius: 8px;
+  margin: 12px 0;
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+/* step-by-step */
+.steps { margin: 12px 0; }
+.step {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 8px;
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+.step-n {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.68rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+  font-family: 'JetBrains Mono', monospace;
+  color: #fff;
+}
+.ans-box {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 6px 14px;
+  border-radius: 5px;
+  margin-top: 10px;
+  color: #fff;
+}
+.note {
+  background: #FFF8E1;
+  border-left: 3px solid #F9A825;
+  padding: 10px 14px;
+  border-radius: 0 6px 6px 0;
+  font-size: 0.87rem;
+  margin: 10px 0;
+  color: #5D4037;
+}
+.warn {
+  background: #FCE4EC;
+  border-left: 3px solid #E91E63;
+  padding: 10px 14px;
+  border-radius: 0 6px 6px 0;
+  font-size: 0.87rem;
+  margin: 10px 0;
+  color: #880E4F;
+}
+
+/* colour helpers per lecture */
+.L3 { background: var(--L3); }
+.L4 { background: var(--L4); }
+.L6 { background: var(--L6); }
+.L7 { background: var(--L7); }
+.txt-L3 { color: var(--L3); }
+.txt-L4 { color: var(--L4); }
+.txt-L6 { color: var(--L6); }
+.txt-L7 { color: var(--L7); }
+.border-L3 { border-left: 4px solid var(--L3); }
+.border-L4 { border-left: 4px solid var(--L4); }
+.border-L6 { border-left: 4px solid var(--L6); }
+.border-L7 { border-left: 4px solid var(--L7); }
+
+/* keyboard hint */
+.kbd-hint {
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-bottom: 28px;
+  font-family: 'JetBrains Mono', monospace;
+}
+kbd {
+  background: var(--ink);
+  color: #fff;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+}
+
+/* progress */
+#prog { position: fixed; top: 0; left: 0; height: 3px; background: var(--L3); width: 0; z-index: 999; transition: width 0.15s; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  header { padding: 32px 20px; }
+  header::after { font-size: 120px; right: 10px; }
+  main { padding: 24px 12px 60px; }
+  .chapter-head { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .ch-title { font-size: 1.2rem; }
+  .card-q { padding: 14px 16px; gap: 10px; }
+  .q-text { font-size: 0.9rem; }
+  .fml { font-size: 0.78rem; padding: 12px; }
+  .step { font-size: 0.85rem; }
+  .formula-strip { font-size: 0.65rem; padding: 8px 12px; }
+}
+
+@media (max-width: 480px) {
+  header h1 { font-size: 1.6rem; }
+  .pill { font-size: 0.65rem; padding: 4px 10px; }
+  .q-badge { font-size: 0.6rem; padding: 2px 6px; }
+  .ans-box { font-size: 0.85rem; width: 100%; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<div id="prog"></div>
+
+<header>
+  <h1>Network <em>Calculation</em> Problems</h1>
+  <p>Every summation &amp; calculation example from the course — Lectures 3, 4, 6, 7</p>
+  <div class="chapter-pills">
+    <button class="pill L3" onclick="go('L3')">Lec 3 · Data &amp; Signals</button>
+    <button class="pill L4" onclick="go('L4')">Lec 4 · Multiplexing</button>
+    <button class="pill L6" onclick="go('L6')">Lec 6 · Error Detection</button>
+    <button class="pill L7" onclick="go('L7')">Lec 7 · Ethernet</button>
+  </div>
+</header>
+
+<div class="formula-strip">
+  <span>Nyquist: <b>BR = 2 · B · log₂L</b></span>
+  <span class="fs-sep">│</span>
+  <span>Shannon: <b>C = B · log₂(1+SNR)</span>
+  <span class="fs-sep">│</span>
+  <span>dB: <b>10·log₁₀(P₂/P₁)</b></span>
+  <span class="fs-sep">│</span>
+  <span>Prop.Time: <b>d/v</b></span>
+  <span class="fs-sep">│</span>
+  <span>Trans.Time: <b>size/BW</b></span>
+  <span class="fs-sep">│</span>
+  <span>TDM out slot: <b>in_slot/n</b></span>
+  <span class="fs-sep">│</span>
+  <span>FDM min BW: <b>n·ch + (n−1)·guard</b></span>
+</div>
+
+<main>
+
+<p class="kbd-hint">Press <kbd>E</kbd> expand all &nbsp;·&nbsp; <kbd>C</kbd> collapse all &nbsp;·&nbsp; click any card to show answer</p>
+
+<!-- ════════════════════════════════════════════════
+     LECTURE 3 — DATA & SIGNALS
+════════════════════════════════════════════════ -->
+<section class="chapter" id="L3">
+  <div class="chapter-head">
+    <span class="ch-tag L3">LEC 03</span>
+    <span class="ch-title txt-L3">Data &amp; Signals — Calculations</span>
+  </div>
+
+  <!-- 3-1 -->
+  <div class="card border-L3" onclick="toggle(this)">
+    <div class="card-q">
+      <span class="q-badge L3">3.1</span>
+      <span class="q-text">A digital signal has <strong>8 levels</strong>. How many bits are needed per level?</span>
+      <span class="q-arrow">▾</span>
+    </div>
+    <div class="card-ans">
+      <div class="ans-label">▸ Solution</div>
+      <div class="fml">Bits per level = log₂ L = log₂ 8 = <b>3 bits</b></div>
+      <span class="ans-box L3">Answer: 3 bits per level</span>
+    </div>
+  </div>
+
+  <!-- 3-2 -->
+  <div class="card border-L3" onclick="toggle(this)">
+    <div class="card-q">
+      <span class="q-badge L3">3.2</span>
+      <span class="q-text">A digital signal has <strong>9 levels</strong>. How many bits per level?</span>
+      <span class="q-arrow">▾</span>
+    </div>
+    <div class="card-ans">
+      <div class="ans-label">▸ Solution</div>
+      <div class="fml">log₂ 9 ≈ 3.17  →  not an integer power of 2
+Round UP to next power of 2  →  4 bits</div>
+      <div class="warn">⚠ The result must be a whole number AND a power of 2. Always round up.</div>
+      <span class="ans-box L3">Answer: 4 bits per level</span>
+    </div>
+  </div>
+
+  <!-- 3-3 -->
+  <div class="card border-L3" onclick="toggle(this)">
+    <div class="card-q">
+      <span class="q-badge L3">3.3</span>
+      <span class="q-text">Download <strong>100 pages/second</strong>. Each page = 24 lines × 80 chars, each char = 8 bits. What is the required bit rate?</span>
+      <span class="q-arrow">▾</span>
+    </div>
+    <div class="card-ans">
+      <div class="ans-label">▸ Solution</div>
+      <div class="fml">Bits per page = 24 × 80 × 8 = 15,360 bits
+
+Bit rate = 100 pages/s × 15,360 bits/page
+         = 1,536,000 bps  ≈  1.536 Mbps</div>
+      <span class="ans-box L3">Answer: 1.536 Mbps</span>
+    </div>
+  </div>
+
+  <!-- 3-4 -->
+  <div class="card border-L3" onclick="toggle(this)">
+    <div class="card-q">
+      <span class="q-badge L3">3.4</span>
+      <span class="q-text">(Attenuation) Signal power reduced to <strong>one-half</strong>. Find attenuation in dB.</span>
+      <span class="q-arrow">▾</span>
+    </div>
+    <div class="card-ans">
+      <div class="ans-label">▸ Solution — Example 3.26</div>
+      <div class="fml">dB = 10 · log₁₀(P₂/P₁)
+   = 10 · log₁₀(1/2)
+   = 10 · (−0.301)
+   = −3 dB</div>
+      <div class="note">📌 −3 dB always means power is halved. +3 dB means power is doubled.</div>
+      <span class="ans-box L3">Answer: −3 dB</span>
+    </div>
+  </div>
+
+  <!-- 3-5 -->
+  <div class="card border-L3" onclick="toggle(this)">
+    <div class="card-q">
+      <span class="q-badge L3">3.5</span>
+      <span class="q-text">(Amplification) Signal power increased <strong>10 times</strong>. Find gain in dB.</span>
+      <span class="q-arrow">▾</span>
+    </div>
+    <div class="card-ans">
+      <div class="ans-label">▸ Solution — Example 3.27</div>
+      <div class="fml">dB = 10 · log₁₀(P₂/P₁)
+   = 10 · log₁₀(10)
+   = 10 · 1
+   = +10 dB</div>
+      <span class="ans-box L3">Answer: +10 dB</span>
+    </div>
+  </div>
+
+  <!-- 3-6 -->
+  <div class="card border-L3" onclick="toggle(this)">
+    <div class="card-q">
+      <span class="q-badge L3">3.6</span>
+      <span class="q-text">(Cascading) Signal passes 3 points: −3 dB → +7 dB → −5 dB. Total dB?</span>
+      <span class="q-arrow">▾</span>
+    </div>
+    <div class="card-ans">
+      <div class="ans-label">▸ Solution — Example 3.28</div>
+      <div class="fml">Total dB = (−3) + (+7) + (−5) = −1 dB</div>
+      <div class="note">📌 dB values are simply ADDED when cascading — that is why engineers use decibels!</div>
+      <span class="ans-box L3">Answer: −1 dB (net loss)</span>
+    </div>
+  </div>
+
+  <!-- 3-7 -->
+  <div class="card border-L3" onclick="toggle(this)">
+    <div class="card-q">
+      <span class="q-badge L3">3.7</span>
+      <span class="q-text">(dBm) Signal has <strong>dBm = −30</strong>. Find power in milliwatts.</span>
+      <span class="q-arrow">▾</span>
+    </div>
+    <div class="card-ans">
+      <div class="ans-label">▸ Solution — Example 3.29</div>
+      <div class="fml">dBm = 10 · log₁₀(Pm)
+−30  = 10 · log₁₀(Pm)
+log₁₀(Pm) = −3
+Pm = 10^(−3) = 0.001 mW</div>
+      <span class="ans-box L3">Answer: 0.001 mW (= 1 μW)</span>
+    </div>
+  </div>
+
+  <!-- 3-8 -->
+  <div class="card border-L3" onclick="toggle(this)">
+    <div class="card-q">
+      <span class="q-badge L3">3.8</span>
+      <span class="q-text">(Cable loss) Loss = <strong>−0.3 dB/km</strong>, starting power = <strong>2 mW</strong>. Find power at <strong>5 km</strong>.</span>
+      <span class="q-arrow">▾</span>
+    </div>
+    <div class="card-ans">
+      <div class="ans-label">▸ Solution — Example 3.30</div>
+      <div class="fml">Step 1: Total loss = 5 × (−0.3) = −1.5 dB
+
+Step 2: −1.5 = 10 · log₁₀(P₂/2)
+         log₁₀(P₂/2) = −0.15
+         P₂/2 = 10^(−0.15) ≈ 0.708
+         P₂ = 2 × 0.708 ≈ 1.416 mW</div>
+      <span class="ans-box L3">Answer: ≈ 1.416 mW</span>
+    </div>
+  </div>
+
+  <!-- 3-9 NYQUIST -->
+  <div class="card border-L3" onclick="toggle(this)">
+    <div class="card-q">
+      <span class="q-badge L3">3.9 ★</span>
+      <span class="q-text">(Nyquist) Noiseless channel: BW = <strong>3000 Hz</strong>, signal levels L = <strong>2</strong>. Max bit rate?</span>
+      <span class="q-arrow">▾</span>
+    </div>
+    <div class="card-ans">
+      <div class="ans-label">▸ Solution — Example 3.24</div>
+      <div class="fml">BitRate = 2 × B × log₂ L
+        = 2 × 3000 × log₂ 2
+        = 6000 × 1
+        = 6,000 bps</div>
+      <span class="ans-box L3">Answer: 6,000 bps</span>
+    </div>
+  </div>
+
+  <!-- 3-10 -->
+  <div class="card border-L3" onclick="toggle(this)">
+    <div class="card-q">
+      <span class="q-badge L3">3.10 ★</span>
+      <span class="q-text">(Nyquist) Same channel BW = <strong>3000 Hz</strong>, now L = <strong>4</strong> levels. Max bit rate?</span>
+      <span class="q-arrow">▾</span>
+    </div>
+    <div class="card-ans">
+      <div class="ans-label">▸ Solution — Example 3.25</div>
+      <div class="fml">BitRate = 2 × 3000 × log₂ 4
+        = 6000 × 2
+        = 12,000 bps</div>
+      <span class="ans-box L3">Answer: 12,000 bps</span>
+    </div>
+  </div>
+
+  <!-- 3-11 -->
+  <div class="card border-L3" onclick="toggle(this)">
+    <div class="card-q">
+      <span class="q-badge L3">3.11 ★</span>
+      <span class="q-text">(Nyquist — find L) Need to send <strong>265 kbps</strong> over a noiseless channel with BW = <strong>20 kHz</strong>. How many signal levels?</span>
+      <span class="q-arrow">▾</span>
+    </div>
+    <div class="card-ans">
+      <div class="ans-label">▸ Solution — Example 3.26</div>
+      <div class="fml">265,000 = 2 × 20,000 × log₂ L
+log₂ L  = 265,000 / 40,000 = 6.625
+L       = 2^6.625 ≈ 98.7   ← not a power of 2
+
+Options:
+  If L = 128 → BR = 2 × 20,000 × 7 = 280 kbps  (faster)
+  If L =  64 → BR = 2 × 20,000 × 6 = 240 kbps  (slower)</div>
+      <div class="note">📌 Since 98.7 is not a power of 2, we round to the nearest power: 64 or 128 and accept the resulting bit rate.</div>
+      <span class="ans-box L3">Answer: L=128 → 280 kbps  OR  L=64 → 240 kbps</span>
+    </div>
+  </div>
+
+  <!-- 3-12 SHANNON -->
+  <div class="card border-L3" onclick="toggle(this)">
+    <div class="card-q">
+      <span class="q-badge L3">3.12 ★</span>
+      <span class="q-text">(Shannon — SNR=0) An extremely noisy channel (SNR ≈ 0). What is the capacity?</span>
+      <span class="q-arrow">▾</span>
+    </div>
+    <div class="card-ans">
+      <div class="ans-label">▸ Solution — Example 3.27</div>
+      <div class="fml">C = B × log₂(1 + SNR)
+  = B × log₂(1 + 0)
+  = B × log₂(1)
+  = B × 0
+  = 0 bps</div>
+      <div class="note">📌 Capacity = 0 regardless of bandwidth. You cannot send data through pure noise.</div>
+      <span class="ans-box L3">Answer: 0 bps</span>
+    </div>
+  </div>
+
+  <!-- 3-13 -->
+  <div class="card border-L3" onclick="toggle(this)">
+    <div class="card-q">
+      <span class="q-badge L3">3.13 ★</span>
+      <span class="q-text">(Shannon — telephone) BW = <strong>3000 Hz</strong>, SNR = <strong>3162</strong>. Max capacity?</span>
+      <span class="q-arrow">▾</span>
+    </div>
+    <div class="card-ans">
+      <div class="ans-label">▸ Solution — Example 3.28</div>
+      <div class="fml">C = 3000 × log₂(1 + 3162)
+  = 3000 × log₂(3163)
+  = 3000 × 11.62
+  ≈ 34,860 bps  ≈  34.86 kbps</div>
+      <span class="ans-box L3">Answer: ≈ 34.86 kbps</span>
+    </div>
+  </div>
+
+  <!-- 3-14 -->
+  <div class="card border-L3" onclick="toggle(this)">
+    <div class="card-q">
+      <span class="q-badge L3">3.14 ★</span>
+      <span class="q-text">(Shannon — dB SNR) SNR<sub>dB</sub> = <strong>36</strong>, BW = <strong>2 MHz</strong>. Find theoretical capacity.</span>
+      <span class="q-arrow">▾</span>
+    </div>
+    <div class="card-ans">
+      <div class="ans-label">▸ Solution — Example 3.29</div>
+      <div class="fml">Step 1: Convert dB to linear
+  36 = 10 · log₁₀(SNR)
+  log₁₀(SNR) = 3.6
+  SNR = 10^3.6 ≈ 3981
+
+Step 2: Apply Shannon
+  C = 2,000,000 × log₂(1 + 3981)
+    = 2,000,000 × log₂(3982)
+    = 2,000,000 × 11.96
+    ≈ 23.9 Mbps</div>
+      <span class="ans-box L3">Answer: ≈ 23.9 Mbps</span>
+    </div>
+  </div>
+
+  <!-- 3-15 BOTH -->
+  <div class="card border-L3" onclick="toggle(this)">
+    <div class="card-q">
+      <span class="q-badge L3">3.15 ★★</span>
+      <span class="q-text">(Both formulas) BW = <strong>1 MHz</strong>, SNR = <strong>63</strong>. Find appropriate bit rate AND number of signal levels.</span>
+      <span class="q-arrow">▾</span>
+    </div>
+    <div class="card-ans">
+      <div class="ans-label">▸ Solution — Example 3.41</div>
+      <div class="steps">
+        <div class="step"><span class="step-n L3">1</span><span>Use Shannon for upper limit: C = 1,000,000 × log₂(1+63) = 1,000,000 × log₂(64) = 1,000,000 × 6 = <strong>6 Mbps</strong></span></div>
+        <div class="step"><span class="step-n L3">2</span><span>Choose a practical rate below 6 Mbps, e.g. <strong>4 Mbps</strong></span></div>
+        <div class="step"><span class="step-n L3">3</span><span>Use Nyquist to find L: 4,000,000 = 2 × 1,000,000 × log₂ L → log₂ L = 2 → <strong>L = 4 levels</strong></span></div>
+      </div>
+      <div class="fml">Shannon upper limit = 6 Mbps
+Chosen rate        = 4 Mbps
+Signal levels (L)  = 4</div>
+      <div class="note">📌 Shannon gives the CEILING. Nyquist tells you HOW MANY LEVELS to achieve your chosen rate.</div>
+      <span class="ans-box L3">Answer: 4 Mbps with 4 signal levels</span>
+    </div>
+  </div>
+
+  <!-- 3-16 -->
+  <div class="card border-L3" onclick="toggle(this)">
+    <div class="card-q">
+      <span class="q-badge L3">3.16</span>
+      <span class="q-text">(Bandwidth × 2) Subscriber line BW = 4 kHz → 56 kbps. If BW doubled to 8 kHz, new rate?</span>
+      <span class="q-arrow">▾</span>
+    </div>
+    <div class="card-ans">
+      <div class="ans-label">▸ Solution — Examples 3.42 & 3.43</div>
+      <div class="fml">4 kHz BW  →  56,000 bps  (given)
+8 kHz BW  →  2 × 56,000 = 112,000 bps</div>
+      <span class="ans-box L3">Answer: 112,000 bps (112 kbps)</span>
+    </div>
+  </div>
+
+  <!-- 3-17 THROUGHPUT -->
+  <div class="card border-L3" onclick="toggle(this)">
+    <div class="card-q">
+      <span class="q-badge L3">3.17 ★</span>
+      <span class="q-text">(Throughput) BW = 10 Mbps. Network passes <strong>12,000 frames/min</strong>, each frame = <strong>10,000 bits</strong>. Throughput?</span>
+      <span class="q-arrow">▾</span>
+    </div>
+    <div class="card-ans">
+      <div class="ans-label">▸ Solution — Example 3.44</div>
+      <div class="fml">Throughput = (12,000 frames/min × 10,000 bits/frame) ÷ 60 s/min
+           = 120,000,000 ÷ 60
+           = 2,000,000 bps  =  2 Mbps</div>
+      <div class="note">📌 Throughput (2 Mbps) ≈ one-fifth of bandwidth (10 Mbps). Always: Throughput ≤ Bandwidth.</div>
+      <span class="ans-box L3">Answer: 2 Mbps</span>
+    </div>
+  </div>
+
+  <!-- 3-18 PROPAGATION -->
+  <div class="card border-L3" onclick="toggle(this)">
+    <div class="card-q">
+      <span class="q-badge L3">3.18 ★</span>
+      <span class="q-text">(Propagation Time) Distance = <strong>12,000 km</strong>, speed = <strong>2.4 × 10⁸ m/s</strong>. Propagation time?</span>
+      <span class="q-arrow">▾</span>
+    </div>
+    <div class="card-ans">
+      <div class="ans-label">▸ Solution — Example 3.45</div>
+      <div class="fml">Propagation Time = Distance / Speed
+= 12,000,000 m / (2.4 × 10⁸ m/s)
+= 0.05 s = 50 ms</div>
+      <div class="note">📌 A bit can cross the Atlantic Ocean in just 50 ms!</div>
+      <span class="ans-box L3">Answer: 50 ms</span>
+    </div>
+  </div>
+
+  <!-- 3-19 BOTH TIMES small -->
+  <div class="card border-L3" onclick="toggle(this)">
+    <div class="card-q">
+      <span class="q-badge L3">3.19 ★</span>
+      <span class="q-text">(Latency — short message) Email = <strong>2.5 kbytes</strong>, BW = <strong>1 Gbps</strong>, distance = 12,000 km, speed = 2.4×10⁸ m/s. Find propagation and transmission times.</span>
+      <span class="q-arrow">▾</span>
+    </div>
+    <div class="card-ans">
+      <div class="ans-label">▸ Solution — Example 3.46</div>
+      <div class="fml">Propagation Time = 12,000,000 / (2.4 × 10⁸) = 0.05 s = 50 ms
+
+Message size     = 2.5 × 1024 × 8 = 20,480 bits
+Transmission Time = 20,480 / (1 × 10⁹) = 0.00002 s = 0.02 ms</div>
+      <div class="note">📌 Short message + high BW → Propagation time (50 ms) dominates. Transmission time (0.02 ms) is negligible.</div>
+      <span class="ans-box L3">Prop = 50 ms  ·  Trans = 0.02 ms</span>
+    </div>
+  </div>
+
+  <!-- 3-20 BOTH TIMES large -->
+  <div class="card border-L3" onclick="toggle(this)">
+    <div class="card-q">
+      <span class="q-badge L3">3.20 ★</span>
+      <span class="q-text">(Latency — large message) Image = <strong>5 Mbytes</strong>, BW = <strong>1 Mbps</strong>, distance = 12,000 km, speed = 2.4×10⁸ m/s. Find both times.</span>
+      <span class="q-arrow">▾</span>
+    </div>
+    <div class="card-ans">
+      <div class="ans-label">▸ Solution — Example 3.47</div>
+      <div class="fml">Propagation Time = 12,000,000 / (2.4 × 10⁸) = 0.05 s = 50 ms
+
+Message size      = 5 × 1024 × 1024 × 8 = 41,943,040 bits
+Transmission Time = 41,943,040 / (1 × 10⁶) ≈ 41.94 s</div>
+      <div class="note">📌 Large message + low BW → Transmission time (41.94 s) dominates. Propagation time (50 ms) is negligible.</div>
+      <span class="ans-box L3">Prop = 50 ms  ·  Trans ≈ 41.94 s</span>
+    </div>
+  </div>
+
+</section>
+
+<!-- ════════════════════════════════════════════════
+     LECTURE 4 — PROTOCOL / MULTIPLEXING
+════════════════════════════════════════════════ -->
+<section class="chapter" id="L4">
+  <div class="chapter-head">
+    <span class="ch-tag L4">LEC 04</span>
+    <span class="ch-title txt-L4">Multiplexing — FDM &amp; TDM Calculations</span>
+  </div>
+
+  <!-- 4-1 FDM allocation -->
+  <div class="card border-L4" onclick="toggle(this)">
+    <div class="card-q">
+      <span class="q-badge L4">4.1 ★</span>
+      <span class="q-text">(FDM) Three voice channels each <strong>4 kHz</strong> wide. Link bandwidth = 20–32 kHz. No guard bands. Show channel allocation.</span>
+      <span class="q-arrow">▾</span>
+    </div>
+    <div class="card-ans">
+      <div class="ans-label">▸ Solution — Example 4.1</div>
+      <div class="fml">Available BW = 32 − 20 = 12 kHz
+3 channels × 4 kHz = 12 kHz  ✓
+
+Channel 1 → 20 kHz to 24 kHz
+Channel 2 → 24 kHz to 28 kHz
+Channel 3 → 28 kHz to 32 kHz</div>
+      <span class="ans-box L4">Each channel gets 4 kHz in its own frequency band</span>
+    </div>
+  </div>
+
+  <!-- 4-2 Guard bands -->
+  <div class="card border-L4" onclick="toggle(this)">
+    <div class="card-q">
+      <span class="q-badge L4">4.2 ★</span>
+      <span class="q-text">(FDM) <strong>5 channels</strong>, each <strong>100 kHz</strong>. Guard band = <strong>10 kHz</strong> between each pair. Minimum link bandwidth?</span>
+      <span class="q-arrow">▾</span>
+    </div>
+    <div class="card-ans">
+      <div class="ans-label">▸ Solution — Example 4.2</div>
+      <div class="fml">5 channels → 4 guard bands (between consecutive channels)
+
+Min BW = (5 × 100 kHz) + (4 × 10 kHz)
+       = 500 + 40
+       = 540 kHz</div>
+      <div class="note">📌 Number of guard bands = number of channels − 1</div>
+      <span class="ans-box L4">Answer: 540 kHz</span>
+    </div>
+  </div>
+
+  <!-- 4-3 AMPS -->
+  <div class="card border-L4" onclick="toggle(this)">
+    <div class="card-q">
+      <span class="q-badge L4">4.3 ★</span>
+      <span class="q-text">(AMPS Cellular) Band = 824–849 MHz (25 MHz wide). Each user = <strong>30 kHz</strong>. 42 control channels. How many simultaneous users?</span>
+      <span class="q-arrow">▾</span>
+    </div>
+    <div class="card-ans">
+      <div class="ans-label">▸ Solution — Example 4.4</div>
+      <div class="fml">Total channels = 25 MHz / 30 kHz = 25,000 kHz / 30 kHz ≈ 833
+
+Control channels = 42
+Voice channels   = 833 − 42 − 1 (rounding) = 790</div>
+      <span class="ans-box L4">Answer: 790 simultaneous users</span>
+    </div>
+  </div>
+
+  <!-- 4-4 TDM 3-inputs -->
+  <div class="card border-L4" onclick="toggle(this)">
+    <div class="card-q">
+      <span class="q-badge L4">4.4 ★</span>
+      <span class="q-text">(Sync TDM) Three <strong>1-kbps</strong> connections multiplexed. Unit = 1 bit. Find: (a) input slot, (b) output slot, (c) frame duration.</span>
+      <span class="q-arrow">▾</span>
+    </div>
+    <div class="card-ans">
+      <div class="ans-label">▸ Solution — Example 4.5</div>
+      <div class="fml">n = 3 connections,  each at 1 kbps
+
+a. Input bit duration = 1 / 1000 = 1 ms
+   Input slot = 1 ms
+
+b. Output slot = Input slot / n = 1 ms / 3 = 1/3 ms ≈ 0.333 ms
+
+c. Frame = n × output slots = 3 × (1/3 ms) = 1 ms</div>
+      <div class="note">📌 Rule: Frame duration = Input slot duration (always equal)</div>
+      <span class="ans-box L4">Input: 1 ms · Output: 0.333 ms · Frame: 1 ms</span>
+    </div>
+  </div>
+
+  <!-- 4-5 TDM 4-inputs Mbps -->
+  <div class="card border-L4" onclick="toggle(this)">
+    <div class="card-q">
+      <span class="q-badge L4">4.5 ★</span>
+      <span class="q-text">(Sync TDM) Four <strong>1-Mbps</strong> connections multiplexed. Unit = 1 bit. Find: (a) input bit duration, (b) output bit duration, (c) output bit rate, (d) frame rate.</span>
+      <span class="q-arrow">▾</span>
+    </div>
+    <div class="card-ans">
+      <div class="ans-label">▸ Solution — Example 4.6</div>
+      <div class="fml">n = 4 connections,  each at 1 Mbps
+
+a. Input bit duration  = 1 / 1 Mbps = 1 μs
+
+b. Output bit duration = 1 μs / 4 = 0.25 μs (= ¼ μs)
+
+c. Output bit rate     = 1 / 0.25 μs = 4 Mbps
+   (also = 4 × 1 Mbps = 4 Mbps ✓)
+
+d. Frame rate = same as any input rate = 1,000,000 frames/s
+   Verify: 1,000,000 frames/s × 4 bits/frame = 4 Mbps ✓</div>
+      <span class="ans-box L4">In: 1 μs · Out: 0.25 μs · Rate: 4 Mbps · Frames: 1M/s</span>
+    </div>
+  </div>
+
+  <!-- 4-6 TDM 4-inputs kbps -->
+  <div class="card border-L4" onclick="toggle(this)">
+    <div class="card-q">
+      <span class="q-badge L4">4.6 ★</span>
+      <span class="q-text">(Sync TDM) Four <strong>1-kbps</strong> connections multiplexed. Unit = 1 bit. Find: (a) bit duration before MUX, (b) link rate, (c) time slot duration, (d) frame duration.</span>
+      <span class="q-arrow">▾</span>
+    </div>
+    <div class="card-ans">
+      <div class="ans-label">▸ Solution — Example 4.7</div>
+      <div class="fml">n = 4 connections,  each at 1 kbps
+
+a. Bit duration before MUX = 1 / 1 kbps = 1 ms
+
+b. Link rate = 4 × 1 kbps = 4 kbps
+
+c. Time slot = 1 ms / 4 = 0.25 ms = 250 μs
+   (also = 1 / 4 kbps = 250 μs ✓)
+
+d. Frame duration = 4 × 250 μs = 1 ms
+   (= input bit duration ✓)</div>
+      <span class="ans-box L4">Rate: 4 kbps · Slot: 250 μs · Frame: 1 ms</span>
+    </div>
+  </div>
+
+</section>
+
+<!-- ════════════════════════════════════════════════
+     LECTURE 6 — ERROR DETECTION
+════════════════════════════════════════════════ -->
+<section class="chapter" id="L6">
+  <div class="chapter-head">
+    <span class="ch-tag L6">LEC 06</span>
+    <span class="ch-title txt-L6">Error Detection — Checksum Calculations</span>
+  </div>
+
+  <!-- 6-1 basic checksum -->
+  <div class="card border-L6" onclick="toggle(this)">
+    <div class="card-q">
+      <span class="q-badge L6">6.1</span>
+      <span class="q-text">(Basic Checksum) Sender has data: <strong>(7, 11, 12, 0, 6)</strong>. Explain how the checksum works with positive sum and with negative sum.</span>
+      <span class="q-arrow">▾</span>
+    </div>
+    <div class="card-ans">
+      <div class="ans-label">▸ Solution — Examples 6.18 & 6.19</div>
+      <div class="fml">Sum = 7 + 11 + 12 + 0 + 6 = 36
+
+Method A (send positive sum):
+  Sender sends: (7, 11, 12, 0, 6, 36)
+  Receiver adds: 7+11+12+0+6 = 36 → matches → NO ERROR ✓
+
+Method B (send negative sum = checksum):
+  Sender sends: (7, 11, 12, 0, 6, −36)
+  Receiver adds ALL: 7+11+12+0+6+(−36) = 0 → result is 0 → NO ERROR ✓
+  If result ≠ 0 → ERROR!</div>
+      <div class="note">📌 Method B is preferred: receiver just checks if total = 0.</div>
+    </div>
+  </div>
+
+  <!-- 6-2 one's complement 21 -->
+  <div class="card border-L6" onclick="toggle(this)">
+    <div class="card-q">
+      <span class="q-badge L6">6.2 ★</span>
+      <span class="q-text">(One's Complement) Represent <strong>21</strong> in 4-bit one's complement arithmetic.</span>
+      <span class="q-arrow">▾</span>
+    </div>
+    <div class="card-ans">
+      <div class="ans-label">▸ Solution — Example 6.20</div>
+      <div class="fml">21 in binary = 10101 (needs 5 bits, too many!)
+
+Wrap the leftmost bit (carry wrap-around):
+  10101
+  ↓ split into 4-bit + leftover
+  0101  +  1 (the wrapped bit)
+= 0110  =  6</div>
+      <span class="ans-box L6">Answer: 21 → 0110 (= 6) in 4-bit one's complement</span>
+    </div>
+  </div>
+
+  <!-- 6-3 negative -->
+  <div class="card border-L6" onclick="toggle(this)">
+    <div class="card-q">
+      <span class="q-badge L6">6.3 ★</span>
+      <span class="q-text">(One's Complement) Represent <strong>−6</strong> in 4-bit one's complement.</span>
+      <span class="q-arrow">▾</span>
+    </div>
+    <div class="card-ans">
+      <div class="ans-label">▸ Solution — Example 6.21</div>
+      <div class="fml">+6 in 4-bit binary = 0110
+
+To negate: INVERT ALL BITS (0 ↔ 1)
+  0110  →  1001  =  9</div>
+      <div class="note">📌 In one's complement: −6 is represented as 1001 (= 9 unsigned). The complement of 6 is 9.</div>
+      <span class="ans-box L6">Answer: −6 → 1001 (= 9) in 4-bit one's complement</span>
+    </div>
+  </div>
+
+  <!-- 6-4 FULL CHECKSUM -->
+  <div class="card border-L6" onclick="toggle(this)">
+    <div class="card-q">
+      <span class="q-badge L6">6.4 ★★</span>
+      <span class="q-text">(Internet Checksum) Calculate the checksum for the text <strong>"Forouzan"</strong> (8 characters). Show sender and receiver sides.</span>
+      <span class="q-arrow">▾</span>
+    </div>
+    <div class="card-ans">
+      <div class="ans-label">▸ Solution — Example 6.23</div>
+      <div class="steps">
+        <div class="step"><span class="step-n L6">1</span><span>Convert each character to ASCII hex (2 bytes each, group into 16-bit words)</span></div>
+      </div>
+      <div class="fml">AT THE SENDER:
+──────────────────────────────────────────
+Word   Binary                    Hex
+Fo  =  0100 0110  0110 1111  =  46 6F
+ro  =  0111 0010  0110 1111  =  72 6F
+uz  =  0111 0101  0111 1010  =  75 7A
+an  =  0110 0001  0110 1110  =  61 6E
+──────────────────────────────────────────
+ChSum  0000 0000  0000 0000  =  00 00  ← start with 0
+
+SUM  = 1000 1111  1100 0111  =  8F C7
+1's C= 0111 0000  0011 1000  =  70 38  ← CHECKSUM SENT
+
+AT THE RECEIVER:
+──────────────────────────────────────────
+Fo + ro + uz + an + Checksum(70 38)
+
+SUM  = 1111 1111  1111 1111  =  FF FF
+1's C= 0000 0000  0000 0000  =  00 00  ← ALL ZEROS = NO ERROR ✓</div>
+      <span class="ans-box L6">Checksum = 0111 0000 0011 1000 (70 38 in hex)</span>
+    </div>
+  </div>
+
+</section>
+
+<!-- ════════════════════════════════════════════════
+     LECTURE 7 — ETHERNET
+════════════════════════════════════════════════ -->
+<section class="chapter" id="L7">
+  <div class="chapter-head">
+    <span class="ch-tag L7">LEC 07</span>
+    <span class="ch-title txt-L7">Ethernet — Address &amp; Frame Calculations</span>
+  </div>
+
+  <!-- 7-1 address type -->
+  <div class="card border-L7" onclick="toggle(this)">
+    <div class="card-q">
+      <span class="q-badge L7">7.1 ★</span>
+      <span class="q-text">(MAC Address Type) Identify the type of each address:<br>a) 4A:30:10:21:10:1A &nbsp;·&nbsp; b) 47:20:1B:2E:08:EE &nbsp;·&nbsp; c) FF:FF:FF:FF:FF:FF</span>
+      <span class="q-arrow">▾</span>
+    </div>
+    <div class="card-ans">
+      <div class="ans-label">▸ Solution — Example 7.1</div>
+      <div class="fml">RULE: Check the LSB (least significant bit) of the FIRST byte.
+  LSB = 0 (even last hex digit) → UNICAST
+  LSB = 1 (odd last hex digit)  → MULTICAST
+  All bits = 1 (FF:FF:FF:FF:FF:FF)  → BROADCAST
+
+a. 4A:30:... → first byte = 4A
+   'A' in binary = 1010  → LSB = 0 (even) → UNICAST
+
+b. 47:20:... → first byte = 47
+   '7' in binary = 0111  → LSB = 1 (odd)  → MULTICAST
+
+c. FF:FF:FF:FF:FF:FF → all 1s  → BROADCAST</div>
+      <span class="ans-box L7">a=Unicast · b=Multicast · c=Broadcast</span>
+    </div>
+  </div>
+
+  <!-- 7-2 bit order -->
+  <div class="card border-L7" onclick="toggle(this)">
+    <div class="card-q">
+      <span class="q-badge L7">7.2 ★</span>
+      <span class="q-text">(Bit Transmission) Show how <strong>47:20:1B:2E:08:EE</strong> is sent on the line, bit by bit.</span>
+      <span class="q-arrow">▾</span>
+    </div>
+    <div class="card-ans">
+      <div class="ans-label">▸ Solution — Example 7.2</div>
+      <div class="fml">RULE: Bytes sent LEFT → RIGHT
+       Within each byte: bits sent RIGHT → LEFT (LSB first)
+
+47 = 0100 0111  → sent: 1 1 1 0  0 0 1 0
+20 = 0010 0000  → sent: 0 0 0 0  0 1 0 0
+1B = 0001 1011  → sent: 1 1 0 1  1 0 0 0
+2E = 0010 1110  → sent: 0 1 1 1  0 1 0 0
+08 = 0000 1000  → sent: 0 0 0 1  0 0 0 0
+EE = 1110 1110  → sent: 0 1 1 1  0 1 1 1
+
+Full bit stream:
+11100010 00000100 11011000 01110100 00010000 01110111</div>
+      <div class="note">📌 Each byte's bits are reversed before sending (LSB first). Bytes themselves go in the normal left-to-right order.</div>
+    </div>
+  </div>
+
+  <!-- 7-3 frame size -->
+  <div class="card border-L7" onclick="toggle(this)">
+    <div class="card-q">
+      <span class="q-badge L7">7.3</span>
+      <span class="q-text">(Frame Size) What is the minimum and maximum size of an Ethernet 802.3 MAC frame? Show the calculation.</span>
+      <span class="q-arrow">▾</span>
+    </div>
+    <div class="card-ans">
+      <div class="ans-label">▸ Solution</div>
+      <div class="fml">Overhead (fixed fields):
+  Preamble        = 7 bytes
+  SFD             = 1 byte
+  Destination MAC = 6 bytes
+  Source MAC      = 6 bytes
+  Length/Type     = 2 bytes
+  CRC             = 4 bytes
+  Total overhead  = 26 bytes
+
+Data field: 46 bytes (min) to 1500 bytes (max)
+
+Minimum frame = 26 + 46  =   72 bytes  (= 64 bytes without preamble+SFD)
+Maximum frame = 26 + 1500 = 1526 bytes  (= 1518 bytes without preamble+SFD)</div>
+      <span class="ans-box L7">Min: 64 bytes · Max: 1518 bytes (excl. preamble)</span>
+    </div>
+  </div>
+
+  <!-- 7-4 10Base naming -->
+  <div class="card border-L7" onclick="toggle(this)">
+    <div class="card-q">
+      <span class="q-badge L7">7.4 ★</span>
+      <span class="q-text">(Naming) What does <strong>10Base5</strong> mean? Decode each part. Also explain 10Base2, 10BaseT, 10BaseF.</span>
+      <span class="q-arrow">▾</span>
+    </div>
+    <div class="card-ans">
+      <div class="ans-label">▸ Solution</div>
+      <div class="fml">Format:  [Speed] [Transmission] [Segment]
+         10       Base            5
+
+Part 1 "10"    → Data rate = 10 Mbps
+Part 2 "Base"  → Baseband transmission
+Part 3 "5"     → Max segment = 5 × 100 = 500 m
+
+─────────────────────────────────────────────────
+Name      Speed   Cable Type          Max Segment
+─────────────────────────────────────────────────
+10Base5   10 Mbps Thick coax           500 m
+10Base2   10 Mbps Thin coax            200 m
+10BaseT   10 Mbps Twisted Pair (T=TP)  not in name
+10BaseF   10 Mbps Fiber Optic (F=FO)   not in name
+─────────────────────────────────────────────────</div>
+      <span class="ans-box L7">10Base5 = 10 Mbps, Baseband, 500m max</span>
+    </div>
+  </div>
+
+</section>
+
+</main>
+
+<script>
+function toggle(el) { el.classList.toggle('open'); }
+function go(id) {
+  document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+document.addEventListener('keydown', e => {
+  if (e.key==='e'||e.key==='E') document.querySelectorAll('.card').forEach(c=>c.classList.add('open'));
+  if (e.key==='c'||e.key==='C') document.querySelectorAll('.card').forEach(c=>c.classList.remove('open'));
+});
+window.addEventListener('scroll', () => {
+  const prog = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
+  document.getElementById('prog').style.width = prog + '%';
+});
+</script>
+</body>
+</html>

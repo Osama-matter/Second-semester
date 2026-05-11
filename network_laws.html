@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Network Laws & Formulas — Complete Reference</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0D0F14;
+  --surface: #13161D;
+  --surface2: #1A1E28;
+  --border: #252A38;
+  --text: #E8ECF5;
+  --muted: #6B7494;
+  --L3: #FF6B35;
+  --L4: #3B9EFF;
+  --L6: #36D399;
+  --L7: #C084FC;
+  --gold: #F0C040;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.65;
+}
+
+/* PROGRESS BAR */
+#prog {
+  position: fixed; top: 0; left: 0; height: 2px;
+  background: linear-gradient(90deg, var(--L3), var(--L4), var(--L6), var(--L7));
+  width: 0; z-index: 9999; transition: width 0.1s;
+}
+
+/* NAV */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(13,15,20,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  display: flex; align-items: center; gap: 0;
+  overflow-x: auto; scrollbar-width: none;
+}
+nav::-webkit-scrollbar { display: none; }
+.nav-logo {
+  font-weight: 800; font-size: 0.75rem;
+  letter-spacing: 3px; text-transform: uppercase;
+  color: var(--gold);
+  padding: 14px 0;
+  margin-right: 32px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.nav-link {
+  padding: 14px 18px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--muted);
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+  flex-shrink: 0;
+}
+.nav-link:hover, .nav-link.active { color: var(--text); }
+.nav-link.L3 { border-bottom-color: var(--L3); color: var(--L3); }
+.nav-link.L4 { border-bottom-color: var(--L4); color: var(--L4); }
+.nav-link.L6 { border-bottom-color: var(--L6); color: var(--L6); }
+.nav-link.L7 { border-bottom-color: var(--L7); color: var(--L7); }
+
+/* HEADER */
+header {
+  padding: 80px 40px 60px;
+  max-width: 1000px;
+  margin: 0 auto;
+  position: relative;
+}
+header::before {
+  content: 'Σ';
+  position: absolute; right: 40px; top: 40px;
+  font-size: 220px; font-weight: 800;
+  color: rgba(255,255,255,0.015);
+  font-family: 'DM Mono', monospace;
+  line-height: 1; pointer-events: none;
+}
+.tag-line {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem; letter-spacing: 4px;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+header h1 {
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 800;
+  letter-spacing: -2px;
+  line-height: 1.05;
+  margin-bottom: 16px;
+}
+header h1 span { color: var(--gold); }
+header p {
+  color: var(--muted);
+  font-size: 0.95rem;
+  max-width: 560px;
+  font-weight: 400;
+}
+
+/* MAIN */
+main { max-width: 1000px; margin: 0 auto; padding: 0 24px 120px; }
+
+/* SECTION */
+.law-section {
+  margin-bottom: 72px;
+  scroll-margin-top: 56px;
+}
+.section-header {
+  display: flex; align-items: center; gap: 16px;
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.section-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem; font-weight: 600;
+  letter-spacing: 3px; text-transform: uppercase;
+  padding: 5px 12px; border-radius: 3px;
+  flex-shrink: 0;
+}
+.section-tag.L3 { background: rgba(255,107,53,0.15); color: var(--L3); border: 1px solid rgba(255,107,53,0.3); }
+.section-tag.L4 { background: rgba(59,158,255,0.15); color: var(--L4); border: 1px solid rgba(59,158,255,0.3); }
+.section-tag.L6 { background: rgba(54,211,153,0.15); color: var(--L6); border: 1px solid rgba(54,211,153,0.3); }
+.section-tag.L7 { background: rgba(192,132,252,0.15); color: var(--L7); border: 1px solid rgba(192,132,252,0.3); }
+.section-title {
+  font-size: 1.5rem; font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+/* LAW CARD */
+.law-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 16px;
+  overflow: hidden;
+  transition: border-color 0.2s, transform 0.15s;
+}
+.law-card:hover {
+  transform: translateY(-1px);
+}
+.law-card.L3 { border-left: 3px solid var(--L3); }
+.law-card.L4 { border-left: 3px solid var(--L4); }
+.law-card.L6 { border-left: 3px solid var(--L6); }
+.law-card.L7 { border-left: 3px solid var(--L7); }
+
+.law-head {
+  display: flex; align-items: flex-start;
+  gap: 16px; padding: 20px 24px;
+  cursor: pointer; user-select: none;
+}
+.law-name-col { flex: 1; }
+.law-name {
+  font-size: 1rem; font-weight: 700;
+  letter-spacing: -0.3px;
+  margin-bottom: 4px;
+}
+.law-subtitle {
+  font-size: 0.8rem; color: var(--muted);
+  font-weight: 400;
+}
+.law-formula-preview {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.82rem; font-weight: 600;
+  padding: 6px 14px; border-radius: 6px;
+  flex-shrink: 0;
+  align-self: center;
+  white-space: nowrap;
+}
+.law-formula-preview.L3 { background: rgba(255,107,53,0.12); color: var(--L3); }
+.law-formula-preview.L4 { background: rgba(59,158,255,0.12); color: var(--L4); }
+.law-formula-preview.L6 { background: rgba(54,211,153,0.12); color: var(--L6); }
+.law-formula-preview.L7 { background: rgba(192,132,252,0.12); color: var(--L7); }
+
+.law-arrow {
+  color: var(--muted); font-size: 0.9rem;
+  align-self: center; flex-shrink: 0;
+  transition: transform 0.2s;
+}
+.law-card.open .law-arrow { transform: rotate(180deg); }
+
+/* LAW BODY */
+.law-body {
+  display: none;
+  padding: 0 24px 24px;
+  border-top: 1px solid var(--border);
+}
+.law-card.open .law-body { display: block; }
+
+.law-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 20px;
+}
+@media (max-width: 620px) { .law-grid { grid-template-columns: 1fr; } }
+
+.formula-box {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 18px;
+}
+.formula-box.full { grid-column: 1 / -1; }
+.formula-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem; letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+.formula-math {
+  font-family: 'DM Mono', monospace;
+  font-size: 1.1rem; font-weight: 600;
+  color: var(--gold);
+  line-height: 1.8;
+}
+.vars-list {
+  margin-top: 12px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.var-row {
+  display: flex; align-items: baseline; gap: 10px;
+  font-size: 0.82rem;
+}
+.var-sym {
+  font-family: 'DM Mono', monospace;
+  font-weight: 600; font-size: 0.85rem;
+  min-width: 60px; flex-shrink: 0;
+}
+.var-sym.L3 { color: var(--L3); }
+.var-sym.L4 { color: var(--L4); }
+.var-sym.L6 { color: var(--L6); }
+.var-sym.L7 { color: var(--L7); }
+.var-desc { color: var(--muted); line-height: 1.5; }
+
+.tip-box {
+  margin-top: 14px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 0.83rem;
+  line-height: 1.6;
+}
+.tip-box.note {
+  background: rgba(240,192,64,0.06);
+  border: 1px solid rgba(240,192,64,0.2);
+  color: #D4A843;
+}
+.tip-box.warn {
+  background: rgba(255,107,53,0.06);
+  border: 1px solid rgba(255,107,53,0.2);
+  color: #FF8A65;
+}
+
+.steps-list {
+  margin-top: 14px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.step-item {
+  display: flex; gap: 12px; align-items: flex-start;
+  font-size: 0.88rem;
+}
+.step-num {
+  width: 22px; height: 22px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.65rem; font-weight: 700;
+  font-family: 'DM Mono', monospace;
+  flex-shrink: 0; margin-top: 1px;
+}
+.step-num.L3 { background: rgba(255,107,53,0.2); color: var(--L3); }
+.step-num.L4 { background: rgba(59,158,255,0.2); color: var(--L4); }
+.step-num.L6 { background: rgba(54,211,153,0.2); color: var(--L6); }
+.step-num.L7 { background: rgba(192,132,252,0.2); color: var(--L7); }
+
+/* QUICK REF TABLE */
+.qref-table {
+  width: 100%; border-collapse: collapse;
+  margin-top: 14px; font-size: 0.85rem;
+}
+.qref-table th {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--muted); font-weight: 600;
+  padding: 8px 12px; text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.qref-table td {
+  padding: 9px 12px;
+  border-bottom: 1px solid rgba(37,42,56,0.5);
+  color: var(--text);
+  vertical-align: top;
+}
+.qref-table tr:last-child td { border-bottom: none; }
+.qref-table tr:hover td { background: rgba(255,255,255,0.02); }
+.mono { font-family: 'DM Mono', monospace; font-size: 0.82rem; }
+
+/* BIG FORMULA DISPLAY */
+.big-formula {
+  text-align: center;
+  padding: 24px;
+  margin-top: 16px;
+}
+.big-formula .eq {
+  font-family: 'DM Mono', monospace;
+  font-size: clamp(1.1rem, 3vw, 1.8rem);
+  font-weight: 600;
+  color: var(--gold);
+  word-break: break-all;
+}
+
+/* MASTER TABLE at top */
+.master-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 32px;
+  margin-bottom: 60px;
+}
+.master-title {
+  font-size: 0.65rem; letter-spacing: 4px;
+  text-transform: uppercase; color: var(--gold);
+  font-family: 'DM Mono', monospace;
+  font-weight: 600; margin-bottom: 20px;
+}
+.formula-strip-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+.fs-item {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+.fs-item-label {
+  font-size: 0.68rem; letter-spacing: 1px;
+  color: var(--muted); margin-bottom: 6px;
+  text-transform: uppercase;
+  font-family: 'DM Mono', monospace;
+}
+.fs-item-eq {
+  font-family: 'DM Mono', monospace;
+  font-weight: 600; font-size: 0.9rem; color: var(--gold);
+}
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 768px) {
+    nav { padding: 0 16px; }
+    .nav-logo { margin-right: 16px; font-size: 0.65rem; }
+    .nav-link { padding: 12px 10px; font-size: 0.7rem; }
+    
+    header { padding: 40px 20px 30px; }
+    header::before { font-size: 120px; right: 20px; top: 20px; }
+    header h1 { font-size: 2.5rem; }
+    
+    main { padding: 0 16px 60px; }
+    .master-section { padding: 20px; margin-bottom: 40px; }
+    .formula-strip-grid { grid-template-columns: 1fr 1fr; }
+    
+    .law-head { padding: 16px; gap: 12px; }
+    .law-name { font-size: 0.95rem; }
+    .law-subtitle { font-size: 0.75rem; }
+    .law-formula-preview { font-size: 0.75rem; padding: 4px 10px; }
+    
+    .law-body { padding: 0 16px 16px; }
+    .formula-math { font-size: 0.95rem; }
+    .big-formula .eq { font-size: 1.1rem; }
+    
+    table { display: block; overflow-x: auto; white-space: nowrap; }
+  }
+
+  @media (max-width: 480px) {
+    header h1 { font-size: 2rem; }
+    .formula-strip-grid { grid-template-columns: 1fr; }
+    .law-head { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .law-formula-preview { align-self: flex-start; }
+    .nav-logo { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="prog"></div>
+
+<nav>
+  <div class="nav-logo">NET LAWS</div>
+  <a class="nav-link" href="#master">All Formulas</a>
+  <a class="nav-link L3" href="#L3">Lec 3 · Signals</a>
+  <a class="nav-link L4" href="#L4">Lec 4 · Multiplexing</a>
+  <a class="nav-link L6" href="#L6">Lec 6 · Error Detection</a>
+  <a class="nav-link L7" href="#L7">Lec 7 · Ethernet</a>
+</nav>
+
+<header>
+  <div class="tag-line">Network Course — Lectures 3, 4, 6, 7</div>
+  <h1>All Laws &amp;<br><span>Formulas</span></h1>
+  <p>Every formula, law, and rule from the course — with full explanation, variables, and key notes. Click any card to expand.</p>
+</header>
+
+<main>
+
+<!-- ══════════════════════════════════════════
+     MASTER QUICK REFERENCE
+══════════════════════════════════════════ -->
+<div class="master-section" id="master">
+  <div class="master-title">▸ Master Formula Sheet — All Laws at a Glance</div>
+  <div class="formula-strip-grid">
+    <div class="fs-item">
+      <div class="fs-item-label">Bits per Level</div>
+      <div class="fs-item-eq">n = log₂ L</div>
+    </div>
+    <div class="fs-item">
+      <div class="fs-item-label">Nyquist (Noiseless)</div>
+      <div class="fs-item-eq">BR = 2 × B × log₂ L</div>
+    </div>
+    <div class="fs-item">
+      <div class="fs-item-label">Shannon Capacity</div>
+      <div class="fs-item-eq">C = B × log₂(1+SNR)</div>
+    </div>
+    <div class="fs-item">
+      <div class="fs-item-label">Decibel (dB)</div>
+      <div class="fs-item-eq">dB = 10·log₁₀(P₂/P₁)</div>
+    </div>
+    <div class="fs-item">
+      <div class="fs-item-label">dBm (ref 1 mW)</div>
+      <div class="fs-item-eq">dBm = 10·log₁₀(Pm)</div>
+    </div>
+    <div class="fs-item">
+      <div class="fs-item-label">Propagation Time</div>
+      <div class="fs-item-eq">Tp = Distance / Speed</div>
+    </div>
+    <div class="fs-item">
+      <div class="fs-item-label">Transmission Time</div>
+      <div class="fs-item-eq">Tt = Size / Bandwidth</div>
+    </div>
+    <div class="fs-item">
+      <div class="fs-item-label">Throughput</div>
+      <div class="fs-item-eq">T = Frames×Size / time</div>
+    </div>
+    <div class="fs-item">
+      <div class="fs-item-label">FDM Min Bandwidth</div>
+      <div class="fs-item-eq">BW = n×ch + (n−1)×g</div>
+    </div>
+    <div class="fs-item">
+      <div class="fs-item-label">TDM Output Slot</div>
+      <div class="fs-item-eq">out_slot = in_slot / n</div>
+    </div>
+    <div class="fs-item">
+      <div class="fs-item-label">TDM Link Rate</div>
+      <div class="fs-item-eq">Rate = n × input_rate</div>
+    </div>
+    <div class="fs-item">
+      <div class="fs-item-label">MAC Address Type</div>
+      <div class="fs-item-eq">LSB of byte 1 → 0/1/FF</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     LECTURE 3 — DATA & SIGNALS
+══════════════════════════════════════════ -->
+<section class="law-section" id="L3">
+  <div class="section-header">
+    <span class="section-tag L3">LEC 03</span>
+    <span class="section-title" style="color:var(--L3)">Data &amp; Signals — Laws</span>
+  </div>
+
+  <!-- L3.1 Bits per Level -->
+  <div class="law-card L3" onclick="toggle(this)">
+    <div class="law-head">
+      <div class="law-name-col">
+        <div class="law-name">Bits per Signal Level</div>
+        <div class="law-subtitle">How many bits can one signal level carry</div>
+      </div>
+      <div class="law-formula-preview L3">n = log₂ L</div>
+      <div class="law-arrow">▾</div>
+    </div>
+    <div class="law-body">
+      <div class="big-formula"><div class="eq">n = log₂ L</div></div>
+      <div class="law-grid">
+        <div class="formula-box">
+          <div class="formula-label">Variables</div>
+          <div class="vars-list">
+            <div class="var-row"><span class="var-sym L3">n</span><span class="var-desc">Number of bits per level</span></div>
+            <div class="var-row"><span class="var-sym L3">L</span><span class="var-desc">Number of signal levels</span></div>
+          </div>
+        </div>
+        <div class="formula-box">
+          <div class="formula-label">Key Rules</div>
+          <div class="vars-list">
+            <div class="var-row"><span class="var-sym L3">⚠</span><span class="var-desc">Result must be a whole number (power of 2). If not — round UP to next power of 2</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="tip-box note">📌 8 levels → log₂ 8 = 3 bits. 9 levels → log₂ 9 ≈ 3.17 → round up → 4 bits.</div>
+    </div>
+  </div>
+
+  <!-- L3.2 Nyquist -->
+  <div class="law-card L3" onclick="toggle(this)">
+    <div class="law-head">
+      <div class="law-name-col">
+        <div class="law-name">Nyquist Theorem — Noiseless Channel</div>
+        <div class="law-subtitle">Maximum bit rate of a noiseless channel</div>
+      </div>
+      <div class="law-formula-preview L3">BR = 2 · B · log₂ L</div>
+      <div class="law-arrow">▾</div>
+    </div>
+    <div class="law-body">
+      <div class="big-formula"><div class="eq">BitRate = 2 × B × log₂ L</div></div>
+      <div class="law-grid">
+        <div class="formula-box">
+          <div class="formula-label">Variables</div>
+          <div class="vars-list">
+            <div class="var-row"><span class="var-sym L3">BR</span><span class="var-desc">Bit Rate (bps)</span></div>
+            <div class="var-row"><span class="var-sym L3">B</span><span class="var-desc">Bandwidth of channel (Hz)</span></div>
+            <div class="var-row"><span class="var-sym L3">L</span><span class="var-desc">Number of signal levels</span></div>
+          </div>
+        </div>
+        <div class="formula-box">
+          <div class="formula-label">Rearranged — Find L</div>
+          <div class="formula-math" style="font-size:0.9rem">log₂ L = BR / (2 × B)<br>L = 2^(BR / 2B)</div>
+        </div>
+        <div class="formula-box full">
+          <div class="formula-label">Examples</div>
+          <div class="formula-math" style="font-size:0.82rem; color:var(--text)">
+            B=3000 Hz, L=2  →  BR = 2×3000×1 = 6,000 bps<br>
+            B=3000 Hz, L=4  →  BR = 2×3000×2 = 12,000 bps<br>
+            B=20 kHz, BR=265 kbps  →  L = 2^6.625 ≈ 98.7  →  use L=64 or L=128
+          </div>
+        </div>
+      </div>
+      <div class="tip-box note">📌 Nyquist gives a THEORETICAL maximum for a NOISELESS channel. Real channels have noise, so use Shannon too.</div>
+    </div>
+  </div>
+
+  <!-- L3.3 Shannon -->
+  <div class="law-card L3" onclick="toggle(this)">
+    <div class="law-head">
+      <div class="law-name-col">
+        <div class="law-name">Shannon Capacity — Noisy Channel</div>
+        <div class="law-subtitle">Absolute maximum rate regardless of signal levels</div>
+      </div>
+      <div class="law-formula-preview L3">C = B · log₂(1+SNR)</div>
+      <div class="law-arrow">▾</div>
+    </div>
+    <div class="law-body">
+      <div class="big-formula"><div class="eq">C = B × log₂(1 + SNR)</div></div>
+      <div class="law-grid">
+        <div class="formula-box">
+          <div class="formula-label">Variables</div>
+          <div class="vars-list">
+            <div class="var-row"><span class="var-sym L3">C</span><span class="var-desc">Channel Capacity (bps) — the CEILING</span></div>
+            <div class="var-row"><span class="var-sym L3">B</span><span class="var-desc">Bandwidth (Hz)</span></div>
+            <div class="var-row"><span class="var-sym L3">SNR</span><span class="var-desc">Signal-to-Noise Ratio (linear, not dB)</span></div>
+          </div>
+        </div>
+        <div class="formula-box">
+          <div class="formula-label">SNR Conversion from dB</div>
+          <div class="formula-math" style="font-size:0.88rem">
+            SNR_dB = 10·log₁₀(SNR)<br>
+            SNR = 10^(SNR_dB / 10)
+          </div>
+        </div>
+        <div class="formula-box full">
+          <div class="formula-label">Special Cases</div>
+          <div class="formula-math" style="font-size:0.82rem; color:var(--text)">
+            SNR = 0  →  C = B × log₂(1) = 0 bps  (pure noise = no data)<br>
+            SNR = 3162, B = 3000  →  C = 3000 × 11.62 ≈ 34.86 kbps<br>
+            SNR_dB = 36, B = 2 MHz  →  SNR ≈ 3981  →  C ≈ 23.9 Mbps
+          </div>
+        </div>
+      </div>
+      <div class="tip-box note">📌 Shannon = CEILING. Nyquist = HOW MANY LEVELS to reach your chosen rate. Use both together: Shannon first, Nyquist second.</div>
+    </div>
+  </div>
+
+  <!-- L3.4 Decibel -->
+  <div class="law-card L3" onclick="toggle(this)">
+    <div class="law-head">
+      <div class="law-name-col">
+        <div class="law-name">Decibel (dB) — Power Loss / Gain</div>
+        <div class="law-subtitle">Measure signal attenuation or amplification</div>
+      </div>
+      <div class="law-formula-preview L3">10·log₁₀(P₂/P₁)</div>
+      <div class="law-arrow">▾</div>
+    </div>
+    <div class="law-body">
+      <div class="big-formula"><div class="eq">dB = 10 × log₁₀(P₂ / P₁)</div></div>
+      <div class="law-grid">
+        <div class="formula-box">
+          <div class="formula-label">Variables</div>
+          <div class="vars-list">
+            <div class="var-row"><span class="var-sym L3">P₁</span><span class="var-desc">Input power</span></div>
+            <div class="var-row"><span class="var-sym L3">P₂</span><span class="var-desc">Output power</span></div>
+            <div class="var-row"><span class="var-sym L3">dB &lt; 0</span><span class="var-desc">Attenuation (loss)</span></div>
+            <div class="var-row"><span class="var-sym L3">dB &gt; 0</span><span class="var-desc">Amplification (gain)</span></div>
+          </div>
+        </div>
+        <div class="formula-box">
+          <div class="formula-label">Quick Reference Values</div>
+          <div class="formula-math" style="font-size:0.82rem; color:var(--text)">
+            P₂ = P₁/2   →  −3 dB<br>
+            P₂ = P₁×2   →  +3 dB<br>
+            P₂ = P₁×10  →  +10 dB<br>
+            P₂ = P₁/10  →  −10 dB
+          </div>
+        </div>
+        <div class="formula-box">
+          <div class="formula-label">dBm (Reference = 1 mW)</div>
+          <div class="formula-math" style="font-size:0.88rem">dBm = 10 × log₁₀(Pm)<br>Pm = 10^(dBm/10)</div>
+          <div class="vars-list" style="margin-top:8px">
+            <div class="var-row"><span class="var-sym L3">Pm</span><span class="var-desc">Power in milliwatts</span></div>
+          </div>
+        </div>
+        <div class="formula-box">
+          <div class="formula-label">Cascading Rule</div>
+          <div class="formula-math" style="font-size:0.88rem; color:var(--text)">−3 + 7 + (−5) = −1 dB</div>
+          <div class="tip-box note" style="margin-top:8px; font-size:0.78rem">dB values are simply ADDED when cascading amplifiers/cables</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- L3.5 Propagation & Transmission Time -->
+  <div class="law-card L3" onclick="toggle(this)">
+    <div class="law-head">
+      <div class="law-name-col">
+        <div class="law-name">Propagation &amp; Transmission Time</div>
+        <div class="law-subtitle">Two types of delay in a network link</div>
+      </div>
+      <div class="law-formula-preview L3">Tp = d/v · Tt = s/BW</div>
+      <div class="law-arrow">▾</div>
+    </div>
+    <div class="law-body">
+      <div class="law-grid">
+        <div class="formula-box">
+          <div class="formula-label">Propagation Time</div>
+          <div class="formula-math">Tp = Distance / Speed</div>
+          <div class="vars-list" style="margin-top:10px">
+            <div class="var-row"><span class="var-sym L3">Tp</span><span class="var-desc">Time for a signal to travel the medium</span></div>
+            <div class="var-row"><span class="var-sym L3">d</span><span class="var-desc">Distance (meters)</span></div>
+            <div class="var-row"><span class="var-sym L3">v</span><span class="var-desc">Propagation speed (m/s)</span></div>
+          </div>
+        </div>
+        <div class="formula-box">
+          <div class="formula-label">Transmission Time</div>
+          <div class="formula-math">Tt = Message Size / Bandwidth</div>
+          <div class="vars-list" style="margin-top:10px">
+            <div class="var-row"><span class="var-sym L3">Tt</span><span class="var-desc">Time to push all bits onto the wire</span></div>
+            <div class="var-row"><span class="var-sym L3">Size</span><span class="var-desc">Message size (bits)</span></div>
+            <div class="var-row"><span class="var-sym L3">BW</span><span class="var-desc">Bandwidth (bps)</span></div>
+          </div>
+        </div>
+        <div class="formula-box full">
+          <div class="formula-label">When Each Dominates</div>
+          <div class="formula-math" style="font-size:0.82rem; color:var(--text)">
+            Short msg + high BW  →  Propagation dominates  (2.5 KB @ 1 Gbps: Tt=0.02ms, Tp=50ms)<br>
+            Large msg + low BW  →  Transmission dominates  (5 MB @ 1 Mbps: Tt=41.94s, Tp=50ms)
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- L3.6 Throughput -->
+  <div class="law-card L3" onclick="toggle(this)">
+    <div class="law-head">
+      <div class="law-name-col">
+        <div class="law-name">Throughput</div>
+        <div class="law-subtitle">Actual data transfer rate (always ≤ bandwidth)</div>
+      </div>
+      <div class="law-formula-preview L3">T = (frames × bits) / time</div>
+      <div class="law-arrow">▾</div>
+    </div>
+    <div class="law-body">
+      <div class="big-formula"><div class="eq">Throughput = (Frames/sec × Bits/frame)</div></div>
+      <div class="law-grid">
+        <div class="formula-box full">
+          <div class="formula-label">Example</div>
+          <div class="formula-math" style="font-size:0.85rem; color:var(--text)">
+            12,000 frames/min × 10,000 bits/frame ÷ 60 s = 2,000,000 bps = 2 Mbps<br>
+            (even though bandwidth = 10 Mbps — overhead reduces actual throughput)
+          </div>
+        </div>
+      </div>
+      <div class="tip-box note">📌 Throughput ≤ Bandwidth always. Network overhead (headers, retransmissions) reduces throughput below the stated bandwidth.</div>
+    </div>
+  </div>
+
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     LECTURE 4 — MULTIPLEXING
+══════════════════════════════════════════ -->
+<section class="law-section" id="L4">
+  <div class="section-header">
+    <span class="section-tag L4">LEC 04</span>
+    <span class="section-title" style="color:var(--L4)">Multiplexing — FDM &amp; TDM Laws</span>
+  </div>
+
+  <!-- L4.1 FDM -->
+  <div class="law-card L4" onclick="toggle(this)">
+    <div class="law-head">
+      <div class="law-name-col">
+        <div class="law-name">FDM — Frequency Division Multiplexing</div>
+        <div class="law-subtitle">Minimum bandwidth with guard bands</div>
+      </div>
+      <div class="law-formula-preview L4">BW = n·ch + (n−1)·g</div>
+      <div class="law-arrow">▾</div>
+    </div>
+    <div class="law-body">
+      <div class="big-formula"><div class="eq">Min BW = (n × ch_BW) + ((n−1) × guard)</div></div>
+      <div class="law-grid">
+        <div class="formula-box">
+          <div class="formula-label">Variables</div>
+          <div class="vars-list">
+            <div class="var-row"><span class="var-sym L4">n</span><span class="var-desc">Number of channels</span></div>
+            <div class="var-row"><span class="var-sym L4">ch_BW</span><span class="var-desc">Bandwidth of each channel (Hz)</span></div>
+            <div class="var-row"><span class="var-sym L4">guard</span><span class="var-desc">Guard band width (Hz)</span></div>
+            <div class="var-row"><span class="var-sym L4">n−1</span><span class="var-desc">Number of guard bands (between channels)</span></div>
+          </div>
+        </div>
+        <div class="formula-box">
+          <div class="formula-label">Example</div>
+          <div class="formula-math" style="font-size:0.85rem; color:var(--text)">
+            5 channels × 100 kHz<br>
+            Guard band = 10 kHz<br><br>
+            Min BW = (5×100) + (4×10)<br>
+            = 500 + 40 = <span style="color:var(--L4);font-weight:700">540 kHz</span>
+          </div>
+        </div>
+      </div>
+      <div class="tip-box note">📌 Guard bands = channels − 1. They prevent interference between adjacent channels.</div>
+    </div>
+  </div>
+
+  <!-- L4.2 AMPS -->
+  <div class="law-card L4" onclick="toggle(this)">
+    <div class="law-head">
+      <div class="law-name-col">
+        <div class="law-name">AMPS — Channel Count Formula</div>
+        <div class="law-subtitle">Number of users from total bandwidth</div>
+      </div>
+      <div class="law-formula-preview L4">channels = BW / ch_BW</div>
+      <div class="law-arrow">▾</div>
+    </div>
+    <div class="law-body">
+      <div class="law-grid">
+        <div class="formula-box full">
+          <div class="formula-label">Formula</div>
+          <div class="formula-math">Total channels = Total BW / Per-user BW<br>Voice channels = Total − Control channels − rounding</div>
+        </div>
+        <div class="formula-box full">
+          <div class="formula-label">AMPS Example</div>
+          <div class="formula-math" style="font-size:0.85rem; color:var(--text)">
+            Band 824–849 MHz → 25 MHz total ÷ 30 kHz per user = 833 channels<br>
+            − 42 control channels − 1 rounding = <span style="color:var(--L4);font-weight:700">790 voice channels</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- L4.3 TDM -->
+  <div class="law-card L4" onclick="toggle(this)">
+    <div class="law-head">
+      <div class="law-name-col">
+        <div class="law-name">TDM — Time Division Multiplexing Laws</div>
+        <div class="law-subtitle">Slot, frame, and rate calculations</div>
+      </div>
+      <div class="law-formula-preview L4">out_slot = in_slot / n</div>
+      <div class="law-arrow">▾</div>
+    </div>
+    <div class="law-body">
+      <div class="law-grid">
+        <div class="formula-box">
+          <div class="formula-label">Core Formulas</div>
+          <div class="formula-math" style="font-size:0.88rem">
+            Output slot  =  Input slot / n<br>
+            Link rate     =  n × input rate<br>
+            Frame rate    =  any input rate<br>
+            Frame size    =  n × slot size
+          </div>
+        </div>
+        <div class="formula-box">
+          <div class="formula-label">Variables</div>
+          <div class="vars-list">
+            <div class="var-row"><span class="var-sym L4">n</span><span class="var-desc">Number of input connections</span></div>
+            <div class="var-row"><span class="var-sym L4">slot</span><span class="var-desc">Duration of one time slot</span></div>
+            <div class="var-row"><span class="var-sym L4">frame</span><span class="var-desc">One cycle containing n slots</span></div>
+          </div>
+        </div>
+        <div class="formula-box full">
+          <div class="formula-label">Examples</div>
+          <div class="formula-math" style="font-size:0.82rem; color:var(--text)">
+            3 × 1-kbps: Input slot = 1ms  →  Output slot = 1ms/3 ≈ 0.333ms  →  Frame = 1ms<br>
+            4 × 1-Mbps: Input dur = 1μs  →  Output dur = 0.25μs  →  Rate = 4 Mbps  →  Frames = 1M/s<br>
+            4 × 1-kbps: Rate = 4 kbps  →  Slot = 250 μs  →  Frame = 1 ms
+          </div>
+        </div>
+      </div>
+      <div class="tip-box note">📌 Golden rule: Frame duration = Input bit duration (they are always equal). This is how you verify your calculation.</div>
+    </div>
+  </div>
+
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     LECTURE 6 — ERROR DETECTION
+══════════════════════════════════════════ -->
+<section class="law-section" id="L6">
+  <div class="section-header">
+    <span class="section-tag L6">LEC 06</span>
+    <span class="section-title" style="color:var(--L6)">Error Detection — Checksum Laws</span>
+  </div>
+
+  <!-- L6.1 Checksum -->
+  <div class="law-card L6" onclick="toggle(this)">
+    <div class="law-head">
+      <div class="law-name-col">
+        <div class="law-name">Basic Checksum Rule</div>
+        <div class="law-subtitle">Detect errors using sum of data values</div>
+      </div>
+      <div class="law-formula-preview L6">Σdata + checksum = 0</div>
+      <div class="law-arrow">▾</div>
+    </div>
+    <div class="law-body">
+      <div class="law-grid">
+        <div class="formula-box">
+          <div class="formula-label">Method A — Send Positive Sum</div>
+          <div class="formula-math" style="font-size:0.85rem; color:var(--text)">
+            Sender sends: (data, sum)<br>
+            Receiver: adds data → must equal sum<br>
+            If equal → NO ERROR ✓
+          </div>
+        </div>
+        <div class="formula-box">
+          <div class="formula-label">Method B — Send Negative Sum (Preferred)</div>
+          <div class="formula-math" style="font-size:0.85rem; color:var(--text)">
+            Sender sends: (data, −sum)<br>
+            Receiver: adds ALL values<br>
+            Result = 0 → NO ERROR ✓<br>
+            Result ≠ 0 → ERROR ✗
+          </div>
+        </div>
+      </div>
+      <div class="tip-box note">📌 Method B is always preferred: receiver just checks if sum of ALL values (data + checksum) = 0.</div>
+    </div>
+  </div>
+
+  <!-- L6.2 One's Complement -->
+  <div class="law-card L6" onclick="toggle(this)">
+    <div class="law-head">
+      <div class="law-name-col">
+        <div class="law-name">One's Complement Arithmetic</div>
+        <div class="law-subtitle">The math behind the Internet checksum</div>
+      </div>
+      <div class="law-formula-preview L6">invert all bits</div>
+      <div class="law-arrow">▾</div>
+    </div>
+    <div class="law-body">
+      <div class="law-grid">
+        <div class="formula-box">
+          <div class="formula-label">Represent Positive Number</div>
+          <div class="formula-math" style="font-size:0.85rem; color:var(--text)">
+            Convert to binary<br>
+            If more bits than word size:<br>
+            Add carry bit back (wrap-around)<br><br>
+            21 → 10101 (5 bits)<br>
+            Split: 0101 + 1 = 0110 = 6
+          </div>
+        </div>
+        <div class="formula-box">
+          <div class="formula-label">Represent Negative Number</div>
+          <div class="formula-math" style="font-size:0.85rem; color:var(--text)">
+            Take positive representation<br>
+            INVERT ALL BITS (0↔1)<br><br>
+            +6 = 0110<br>
+            −6 = 1001 (= 9 unsigned)
+          </div>
+        </div>
+        <div class="formula-box full">
+          <div class="formula-label">Internet Checksum Process (Sender → Receiver)</div>
+          <div class="steps-list">
+            <div class="step-item"><span class="step-num L6">1</span><span>Convert data to binary; group into 16-bit words</span></div>
+            <div class="step-item"><span class="step-num L6">2</span><span>Add all words using one's complement addition (wrap any carry)</span></div>
+            <div class="step-item"><span class="step-num L6">3</span><span>Complement the sum (invert all bits) → this is the CHECKSUM</span></div>
+            <div class="step-item"><span class="step-num L6">4</span><span>Receiver adds data + checksum → result must = all 1s (FFFF) → complement → 0000 = NO ERROR</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     LECTURE 7 — ETHERNET
+══════════════════════════════════════════ -->
+<section class="law-section" id="L7">
+  <div class="section-header">
+    <span class="section-tag L7">LEC 07</span>
+    <span class="section-title" style="color:var(--L7)">Ethernet — Address &amp; Frame Laws</span>
+  </div>
+
+  <!-- L7.1 MAC Type -->
+  <div class="law-card L7" onclick="toggle(this)">
+    <div class="law-head">
+      <div class="law-name-col">
+        <div class="law-name">MAC Address Type — Identification Rule</div>
+        <div class="law-subtitle">Unicast / Multicast / Broadcast</div>
+      </div>
+      <div class="law-formula-preview L7">LSB of byte 1</div>
+      <div class="law-arrow">▾</div>
+    </div>
+    <div class="law-body">
+      <div class="big-formula"><div class="eq">Check LSB (bit 0) of the FIRST byte</div></div>
+      <div class="law-grid">
+        <div class="formula-box">
+          <div class="formula-label">Decision Rule</div>
+          <div class="formula-math" style="font-size:0.85rem; color:var(--text)">
+            LSB = 0 (even hex digit)  →  UNICAST<br>
+            LSB = 1 (odd hex digit)   →  MULTICAST<br>
+            All bytes = FF            →  BROADCAST
+          </div>
+        </div>
+        <div class="formula-box">
+          <div class="formula-label">Examples</div>
+          <div class="formula-math" style="font-size:0.82rem; color:var(--text)">
+            4A:... → 'A'=1010 → LSB=0 → UNICAST<br>
+            47:... → '7'=0111 → LSB=1 → MULTICAST<br>
+            FF:FF:FF:FF:FF:FF → BROADCAST
+          </div>
+        </div>
+      </div>
+      <div class="tip-box note">📌 Only look at the LAST binary digit of the FIRST byte's last hex digit. Even = Unicast, Odd = Multicast.</div>
+    </div>
+  </div>
+
+  <!-- L7.2 Bit Transmission Order -->
+  <div class="law-card L7" onclick="toggle(this)">
+    <div class="law-head">
+      <div class="law-name-col">
+        <div class="law-name">Ethernet Bit Transmission Order</div>
+        <div class="law-subtitle">How MAC address bits are sent on the wire</div>
+      </div>
+      <div class="law-formula-preview L7">LSB first per byte</div>
+      <div class="law-arrow">▾</div>
+    </div>
+    <div class="law-body">
+      <div class="law-grid">
+        <div class="formula-box full">
+          <div class="formula-label">The Two Rules</div>
+          <div class="formula-math" style="font-size:0.88rem; color:var(--text)">
+            Rule 1: Bytes are sent LEFT → RIGHT (normal order)<br>
+            Rule 2: Within each byte, bits are sent RIGHT → LEFT (LSB first = reversed)
+          </div>
+        </div>
+        <div class="formula-box full">
+          <div class="formula-label">Example: First byte = 47 = 0100 0111</div>
+          <div class="formula-math" style="font-size:0.85rem; color:var(--text)">
+            Written:  0 1 0 0  0 1 1 1<br>
+            Sent:     1 1 1 0  0 0 1 0   ← bits reversed (right to left)
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- L7.3 Frame Size -->
+  <div class="law-card L7" onclick="toggle(this)">
+    <div class="law-head">
+      <div class="law-name-col">
+        <div class="law-name">Ethernet 802.3 Frame Size</div>
+        <div class="law-subtitle">Minimum and maximum frame calculation</div>
+      </div>
+      <div class="law-formula-preview L7">64 – 1518 bytes</div>
+      <div class="law-arrow">▾</div>
+    </div>
+    <div class="law-body">
+      <div class="law-grid">
+        <div class="formula-box">
+          <div class="formula-label">Frame Fields (Overhead)</div>
+          <div class="formula-math" style="font-size:0.82rem; color:var(--text)">
+            Preamble:       7 bytes<br>
+            SFD:            1 byte<br>
+            Dest MAC:       6 bytes<br>
+            Source MAC:     6 bytes<br>
+            Length/Type:    2 bytes<br>
+            CRC:            4 bytes<br>
+            ─────────────────────<br>
+            Total overhead: 26 bytes
+          </div>
+        </div>
+        <div class="formula-box">
+          <div class="formula-label">Data Field + Total</div>
+          <div class="formula-math" style="font-size:0.85rem; color:var(--text)">
+            Data: 46 (min) – 1500 (max) bytes<br><br>
+            Min total = 26 + 46 = 72 bytes<br>
+            → without preamble+SFD = <span style="color:var(--L7);font-weight:700">64 bytes</span><br><br>
+            Max total = 26 + 1500 = 1526 bytes<br>
+            → without preamble+SFD = <span style="color:var(--L7);font-weight:700">1518 bytes</span>
+          </div>
+        </div>
+      </div>
+      <div class="tip-box note">📌 Standard sizes quoted exclude preamble & SFD: Min = 64 bytes, Max = 1518 bytes.</div>
+    </div>
+  </div>
+
+  <!-- L7.4 Naming -->
+  <div class="law-card L7" onclick="toggle(this)">
+    <div class="law-head">
+      <div class="law-name-col">
+        <div class="law-name">Ethernet Naming Convention</div>
+        <div class="law-subtitle">Decoding 10Base5, 10Base2, 10BaseT, 10BaseF</div>
+      </div>
+      <div class="law-formula-preview L7">[Speed][Base][Segment]</div>
+      <div class="law-arrow">▾</div>
+    </div>
+    <div class="law-body">
+      <div class="law-grid">
+        <div class="formula-box">
+          <div class="formula-label">Format Breakdown</div>
+          <div class="formula-math" style="font-size:0.88rem; color:var(--text)">
+            [Speed] [Transmission] [Segment]<br>
+              10         Base            5<br><br>
+            Part 1: Speed in Mbps<br>
+            Part 2: Baseband transmission<br>
+            Part 3: Number × 100 = max meters<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;T = Twisted Pair<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;F = Fiber Optic
+          </div>
+        </div>
+        <div class="formula-box">
+          <div class="formula-label">Common Standards</div>
+          <table class="qref-table" style="margin-top:0">
+            <tr><th>Name</th><th>Cable</th><th>Max</th></tr>
+            <tr><td class="mono">10Base5</td><td>Thick coax</td><td>500 m</td></tr>
+            <tr><td class="mono">10Base2</td><td>Thin coax</td><td>200 m</td></tr>
+            <tr><td class="mono">10BaseT</td><td>Twisted Pair</td><td>—</td></tr>
+            <tr><td class="mono">10BaseF</td><td>Fiber Optic</td><td>—</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+</main>
+
+<script>
+function toggle(el) { el.classList.toggle('open'); }
+
+window.addEventListener('scroll', () => {
+  const prog = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
+  document.getElementById('prog').style.width = prog + '%';
+});
+
+// Keyboard shortcuts
+document.addEventListener('keydown', e => {
+  if (e.key==='e'||e.key==='E') document.querySelectorAll('.law-card').forEach(c=>c.classList.add('open'));
+  if (e.key==='c'||e.key==='C') document.querySelectorAll('.law-card').forEach(c=>c.classList.remove('open'));
+});
+</script>
+</body>
+</html>
