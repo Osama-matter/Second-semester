@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS210 – SAD Practice Exams</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #13161e;
+    --card: #1a1e29;
+    --border: #252a38;
+    --accent: #e8b84b;
+    --accent2: #5b8dee;
+    --accent3: #e05c6b;
+    --text: #e8eaf0;
+    --muted: #8890a4;
+    --correct: #3dba7a;
+    --wrong: #e05c6b;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Source Serif 4', serif;
+    min-height: 100vh;
+  }
+
+  /* ── TOP HEADER ── */
+  .site-header {
+    background: var(--surface);
+    border-bottom: 2px solid var(--accent);
+    padding: 28px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .site-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.7rem;
+    color: var(--accent);
+    letter-spacing: .5px;
+  }
+  .site-header p { color: var(--muted); font-size: .9rem; margin-top: 4px; }
+  .badge {
+    background: var(--accent);
+    color: #000;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .75rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  /* ── EXAM SELECTOR TABS ── */
+  .tab-bar {
+    display: flex;
+    gap: 8px;
+    padding: 24px 40px 0;
+    flex-wrap: wrap;
+  }
+  .tab-btn {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    color: var(--muted);
+    font-family: 'Source Serif 4', serif;
+    font-size: .9rem;
+    padding: 10px 22px;
+    border-radius: 8px 8px 0 0;
+    cursor: pointer;
+    transition: all .2s;
+    position: relative;
+    bottom: -2px;
+  }
+  .tab-btn:hover { color: var(--text); border-color: var(--accent2); }
+  .tab-btn.active {
+    background: var(--surface);
+    border-color: var(--accent);
+    border-bottom-color: var(--surface);
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  /* ── EXAM CONTAINER ── */
+  .exams-wrap {
+    border-top: 2px solid var(--accent);
+    background: var(--surface);
+    padding: 0 40px 60px;
+  }
+
+  .exam-panel { display: none; }
+  .exam-panel.active { display: block; }
+
+  /* ── EXAM META HEADER ── */
+  .exam-meta {
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 22px 28px;
+    margin: 32px 0 28px;
+    background: var(--card);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 40px;
+    font-size: .88rem;
+  }
+  .exam-meta .row { display: flex; gap: 8px; }
+  .exam-meta .label { color: var(--muted); min-width: 140px; }
+  .exam-meta .value { color: var(--text); font-weight: 600; }
+  .exam-meta .case-study {
+    grid-column: 1 / -1;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+    line-height: 1.7;
+  }
+  .exam-meta .case-study strong { color: var(--accent2); }
+
+  /* ── QUESTION BLOCKS ── */
+  .question-block {
+    margin-bottom: 28px;
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .q-header {
+    background: var(--bg);
+    padding: 14px 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    user-select: none;
+    transition: background .15s;
+  }
+  .q-header:hover { background: #111420; }
+  .q-header h3 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--accent2);
+  }
+  .q-meta { display: flex; align-items: center; gap: 12px; }
+  .q-marks {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .8rem;
+    background: var(--accent);
+    color: #000;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-weight: 600;
+  }
+  .toggle-icon {
+    color: var(--muted);
+    font-size: 1.1rem;
+    transition: transform .25s;
+  }
+  .question-block.open .toggle-icon { transform: rotate(180deg); }
+
+  .q-body {
+    display: none;
+    padding: 22px;
+  }
+  .question-block.open .q-body { display: block; }
+
+  /* ── SUB-QUESTIONS ── */
+  .sub-q {
+    margin-bottom: 22px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--border);
+  }
+  .sub-q:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+  .sub-q-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .8rem;
+    color: var(--accent3);
+    font-weight: 600;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+  }
+  .sub-q p { line-height: 1.7; color: var(--text); font-size: .95rem; margin-bottom: 10px; }
+
+  /* ── ANSWER INPUT ── */
+  .answer-box {
+    width: 100%;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'Source Serif 4', serif;
+    font-size: .93rem;
+    padding: 12px 16px;
+    resize: vertical;
+    min-height: 90px;
+    transition: border-color .2s;
+    line-height: 1.6;
+  }
+  .answer-box:focus {
+    outline: none;
+    border-color: var(--accent2);
+  }
+  .answer-box::placeholder { color: var(--muted); font-style: italic; }
+
+  /* ── REVEAL ANSWER BUTTON ── */
+  .reveal-btn {
+    margin-top: 10px;
+    background: transparent;
+    border: 1.5px solid var(--border);
+    color: var(--muted);
+    font-family: 'Source Serif 4', serif;
+    font-size: .85rem;
+    padding: 7px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .reveal-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .model-answer {
+    display: none;
+    margin-top: 14px;
+    background: #0f1a10;
+    border: 1.5px solid #2a4a2e;
+    border-radius: 8px;
+    padding: 14px 18px;
+  }
+  .model-answer.visible { display: block; }
+  .model-answer .ma-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .75rem;
+    color: var(--correct);
+    font-weight: 600;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+  }
+  .model-answer ul { padding-left: 20px; }
+  .model-answer li { margin-bottom: 5px; line-height: 1.6; font-size: .93rem; color: #c8e6c9; }
+  .model-answer p { font-size: .93rem; color: #c8e6c9; line-height: 1.7; }
+
+  /* ── FOOTER ACTIONS ── */
+  .exam-actions {
+    display: flex;
+    gap: 14px;
+    justify-content: flex-end;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #000;
+    border: none;
+    padding: 11px 28px;
+    border-radius: 8px;
+    font-family: 'Source Serif 4', serif;
+    font-size: .95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity .2s;
+  }
+  .btn-primary:hover { opacity: .85; }
+  .btn-secondary {
+    background: transparent;
+    color: var(--muted);
+    border: 1.5px solid var(--border);
+    padding: 11px 28px;
+    border-radius: 8px;
+    font-family: 'Source Serif 4', serif;
+    font-size: .95rem;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .btn-secondary:hover { border-color: var(--accent3); color: var(--accent3); }
+
+  /* ── EXPAND ALL bar ── */
+  .expand-bar {
+    display: flex;
+    gap: 10px;
+    margin: 0 0 18px;
+    align-items: center;
+  }
+  .expand-bar span { color: var(--muted); font-size: .85rem; }
+
+  /* ── PROGRESS ── */
+  .progress-row {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .prog-pip {
+    height: 6px;
+    border-radius: 3px;
+    background: var(--border);
+    flex: 1;
+    min-width: 30px;
+    transition: background .3s;
+  }
+  .prog-pip.done { background: var(--correct); }
+
+  @media (max-width: 700px) {
+    .site-header, .tab-bar, .exams-wrap { padding-left: 16px; padding-right: 16px; }
+    .exam-meta { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div>
+    <h1>CS210 — System Analysis &amp; Design</h1>
+    <p>El-Shorouk Academy · 5 Practice Exams · Based on Final 2024/2025 Structure</p>
+  </div>
+  <div class="badge">60 Marks · 120 Min</div>
+</header>
+
+<div class="tab-bar" id="tabBar">
+  <button class="tab-btn active" onclick="switchExam(0)">Exam 1</button>
+  <button class="tab-btn" onclick="switchExam(1)">Exam 2</button>
+  <button class="tab-btn" onclick="switchExam(2)">Exam 3</button>
+  <button class="tab-btn" onclick="switchExam(3)">Exam 4</button>
+  <button class="tab-btn" onclick="switchExam(4)">Exam 5</button>
+</div>
+
+<div class="exams-wrap" id="examsWrap">
+<!-- ═══════════════════════════════════════════════════
+     EXAM 1
+════════════════════════════════════════════════════ -->
+<div class="exam-panel active" id="exam0">
+  <div class="exam-meta">
+    <div class="row"><span class="label">Course:</span><span class="value">CS210 System Analysis &amp; Design</span></div>
+    <div class="row"><span class="label">Academic Year:</span><span class="value">2025/2026</span></div>
+    <div class="row"><span class="label">Department:</span><span class="value">Computer Sciences</span></div>
+    <div class="row"><span class="label">Time Allowed:</span><span class="value">120 Min &nbsp;|&nbsp; Total: 60 Marks</span></div>
+    <div class="case-study">
+      <strong>Case Study — Practice Exam 1:</strong><br>
+      <strong>EduTech Academy, ETA</strong>, is an Egyptian company that operates private language-learning centres across 18 governorates. Each centre contains four departments: registration, scheduling, finance, and student services. The ETA Head Quarter (HQ) is in Cairo. ETA is facing difficulties tracking student enrolments and payments manually. Management has decided to automate the <strong>Registration Department</strong> and establish an <strong>Information System Centre (ISC)</strong> at HQ to provide technical support to all branches. Each branch will be equipped with one computer and one printer connected to servers in ISC via a network. The automated system should allow staff to register students from any branch.<br><br>
+      <strong>Registration Department roles:</strong> Receive student application, Validate student application, Forward validated application to the finance department.<br><br>
+      <strong>Automated Registration System (ARS) functionalities:</strong> Register student application, Validate application, Print application receipt, Send validated application to Finance Department.<br>
+      <strong>Data attributes:</strong> Application No., Application Date, Student Name, Student Address, Chosen Courses (Course name, Level, up to 4 courses per application).
+    </div>
+  </div>
+
+  <div class="expand-bar">
+    <span>Questions:</span>
+    <button class="btn-secondary" style="padding:5px 14px;font-size:.82rem" onclick="expandAll('exam0')">Expand All</button>
+    <button class="btn-secondary" style="padding:5px 14px;font-size:.82rem" onclick="collapseAll('exam0')">Collapse All</button>
+  </div>
+
+  <!-- Q1 -->
+  <div class="question-block" onclick="toggleQ(this)">
+    <div class="q-header">
+      <h3>Q1 — Fundamentals of System Analysis and Design</h3>
+      <div class="q-meta"><span class="q-marks">9 Marks</span><span class="toggle-icon">▼</span></div>
+    </div>
+    <div class="q-body" onclick="stopProp(event)">
+      <div class="sub-q">
+        <div class="sub-q-label">Part A</div>
+        <p>Define the term <strong>"Information System (IS)"</strong>.</p>
+        <textarea class="answer-box" placeholder="Write your answer here…"></textarea>
+        <button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button>
+        <div class="model-answer">
+          <div class="ma-label">Model Answer</div>
+          <p>An Information System (IS) is a set of interrelated components that collect, process, store, and distribute data and information to support decision making, coordination, and control in an organisation. It combines technology, people, and processes to serve organisational goals.</p>
+        </div>
+      </div>
+      <div class="sub-q">
+        <div class="sub-q-label">Part B</div>
+        <p>State <strong>two types of Information Systems (IS)</strong> and explain one of them in no more than three lines.</p>
+        <textarea class="answer-box" placeholder="Write your answer here…"></textarea>
+        <button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button>
+        <div class="model-answer">
+          <div class="ma-label">Model Answer</div>
+          <ul>
+            <li><strong>TPS (Transaction Processing System)</strong> – records and processes day-to-day business transactions (e.g., orders, payments). It ensures fast, accurate recording of high-volume routine activities.</li>
+            <li><strong>MIS (Management Information System)</strong> – provides regular structured reports to middle management for operational decisions.</li>
+            <li><strong>DSS (Decision Support System)</strong> – supports complex, non-routine decisions.</li>
+            <li><strong>ES (Expert System)</strong> – captures expert knowledge to assist non-experts.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="sub-q">
+        <div class="sub-q-label">Part C</div>
+        <p>State <strong>two roles of the System Analyst</strong> and explain one in no more than three lines.</p>
+        <textarea class="answer-box" placeholder="Write your answer here…"></textarea>
+        <button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button>
+        <div class="model-answer">
+          <div class="ma-label">Model Answer</div>
+          <ul>
+            <li><strong>Systems Analyst</strong> – analyses current system problems and proposes solutions by gathering requirements and modelling the system using tools like DFDs.</li>
+            <li><strong>Requirements Analyst</strong> – focuses specifically on eliciting and documenting what the system must do.</li>
+            <li><strong>Project Manager</strong> – plans, monitors, and controls project scope, time, and cost.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="question-block" onclick="toggleQ(this)">
+    <div class="q-header">
+      <h3>Q2 — Analysis/Design Approaches &amp; Information Requirements</h3>
+      <div class="q-meta"><span class="q-marks">12 Marks</span><span class="toggle-icon">▼</span></div>
+    </div>
+    <div class="q-body" onclick="stopProp(event)">
+      <div class="sub-q">
+        <div class="sub-q-label">Part A</div>
+        <p>Define <strong>System Development Methodology</strong> and state its relationship to SDLC.</p>
+        <textarea class="answer-box" placeholder="Write your answer here…"></textarea>
+        <button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button>
+        <div class="model-answer">
+          <div class="ma-label">Model Answer</div>
+          <p>A System Development Methodology is the <strong>physical implementation of the logical lifecycle (SDLC)</strong>. While SDLC defines the logical phases (what to do), a methodology prescribes how to execute those phases in practice (procedures, tools, rules). Examples include Waterfall, Agile, Spiral, and Prototyping models.</p>
+        </div>
+      </div>
+      <div class="sub-q">
+        <div class="sub-q-label">Part B</div>
+        <p>State <strong>three SDLC phases</strong>.</p>
+        <textarea class="answer-box" placeholder="Write your answer here…"></textarea>
+        <button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button>
+        <div class="model-answer">
+          <div class="ma-label">Model Answer</div>
+          <ul>
+            <li>Planning</li><li>Analysis</li><li>Design and Prototyping</li>
+            <li>Implementation (SW Development, Testing, Integration)</li>
+            <li>Configuration</li><li>Deployment, Operations, and Maintenance</li>
+          </ul>
+        </div>
+      </div>
+      <div class="sub-q">
+        <div class="sub-q-label">Part C</div>
+        <p>Define <strong>Business Requirements</strong> and state <strong>two types</strong>.</p>
+        <textarea class="answer-box" placeholder="Write your answer here…"></textarea>
+        <button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button>
+        <div class="model-answer">
+          <div class="ma-label">Model Answer</div>
+          <p>A <strong>system requirement</strong> is a statement of what the system must do or what characteristics it needs to have. Business requirements can be classified as:</p>
+          <ul><li><strong>Functional Requirements</strong> – what the system must do (e.g., register a student).</li><li><strong>Nonfunctional Requirements</strong> – performance, security, availability constraints.</li><li><strong>User Requirements</strong> – usability and user interface requirements.</li></ul>
+        </div>
+      </div>
+      <div class="sub-q">
+        <div class="sub-q-label">Part D</div>
+        <p>Mention <strong>two Analysis Strategies</strong> and explain one in no more than three lines.</p>
+        <textarea class="answer-box" placeholder="Write your answer here…"></textarea>
+        <button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button>
+        <div class="model-answer">
+          <div class="ma-label">Model Answer</div>
+          <ul>
+            <li><strong>Root Cause Analysis</strong> – digs beneath surface symptoms to identify the fundamental reason for a problem, preventing recurrence by addressing the true cause rather than its effects.</li>
+            <li><strong>Problem Analysis</strong> – evaluates the current system to identify shortcomings and improvement opportunities.</li>
+            <li><strong>Technology Analysis</strong> – identifies how emerging technologies may solve existing business problems.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="question-block" onclick="toggleQ(this)">
+    <div class="q-header">
+      <h3>Q3 — System Analysis Approaches (Planning &amp; Analysis Phases)</h3>
+      <div class="q-meta"><span class="q-marks">6 Marks</span><span class="toggle-icon">▼</span></div>
+    </div>
+    <div class="q-body" onclick="stopProp(event)">
+      <div class="sub-q">
+        <div class="sub-q-label">Part A</div>
+        <p>State <strong>two sub-phases of the Planning Phase</strong> and explain one.</p>
+        <textarea class="answer-box" placeholder="Write your answer here…"></textarea>
+        <button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button>
+        <div class="model-answer">
+          <div class="ma-label">Model Answer</div>
+          <ul>
+            <li><strong>Feasibility Analysis</strong> – assesses whether the proposed project is technically, economically, and operationally viable before resources are committed.</li>
+            <li><strong>Project Identification</strong> – recognises and documents a business problem or opportunity that justifies developing a new system.</li>
+            <li><strong>Project Selection</strong> – chooses which identified project to pursue based on priority and available resources.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="sub-q">
+        <div class="sub-q-label">Part B</div>
+        <p>State <strong>two sub-phases of the Analysis Phase</strong> and explain one.</p>
+        <textarea class="answer-box" placeholder="Write your answer here…"></textarea>
+        <button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button>
+        <div class="model-answer">
+          <div class="ma-label">Model Answer</div>
+          <ul>
+            <li><strong>Survey Sub-Phase</strong> – provides a broad overview of the existing system, identifying scope and key stakeholders.</li>
+            <li><strong>Detailed Study Sub-Phase</strong> – performs in-depth investigation using fact-finding techniques to fully understand current processes and problems.</li>
+            <li><strong>Definition Sub-Phase</strong> – documents the requirements for the new system.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="question-block" onclick="toggleQ(this)">
+    <div class="q-header">
+      <h3>Q4 — Fact Finding Techniques &amp; System Modelling</h3>
+      <div class="q-meta"><span class="q-marks">15 Marks</span><span class="toggle-icon">▼</span></div>
+    </div>
+    <div class="q-body" onclick="stopProp(event)">
+      <div class="sub-q">
+        <div class="sub-q-label">Part A</div>
+        <p>State the conditions when <strong>Questionnaires</strong> are the best fact-finding technique to use.</p>
+        <textarea class="answer-box" placeholder="Write your answer here…"></textarea>
+        <button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button>
+        <div class="model-answer">
+          <div class="ma-label">Model Answer</div>
+          <ul>
+            <li>When a large number of staff members need to be surveyed.</li>
+            <li>When staff are located over a widely spread geographical area (e.g., ETA's 18 branches).</li>
+            <li>When the purpose is to verify or confirm data already collected by other means.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="sub-q">
+        <div class="sub-q-label">Part B</div>
+        <p>State the fact-finding techniques used to collect data and investigate problems in <strong>ETA HQ and its individual branches</strong>. Justify each choice.</p>
+        <textarea class="answer-box" placeholder="Write your answer here…"></textarea>
+        <button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button>
+        <div class="model-answer">
+          <div class="ma-label">Model Answer</div>
+          <ul>
+            <li><strong>Interviewing</strong> – used at HQ to gather detailed information from managers about the existing problems and requirements.</li>
+            <li><strong>Questionnaires</strong> – distributed to registration staff across all 18 branches due to geographical spread.</li>
+            <li><strong>Observation</strong> – conducted at HQ to study personal relations, document flow timing, and how registration tasks are executed.</li>
+            <li><strong>Sampling &amp; Record Inspection</strong> – used at HQ to review existing application forms and records to identify trends and workload patterns.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="sub-q">
+        <div class="sub-q-label">Part C</div>
+        <p>Draw the <strong>Context Level DFD</strong> of the ETA Registration System (ARS).</p>
+        <textarea class="answer-box" style="min-height:120px" placeholder="Describe or sketch the Context Level DFD: identify the single process, external entities, and data flows…"></textarea>
+        <button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button>
+        <div class="model-answer">
+          <div class="ma-label">Model Answer</div>
+          <p><strong>Process:</strong> "0 — Automated Registration System (ARS)"</p>
+          <p><strong>External Entities &amp; Flows:</strong></p>
+          <ul>
+            <li><strong>Student</strong> → [Student Application] → ARS → [Application Receipt] → Student</li>
+            <li><strong>Finance Dept.</strong> ← [Validated Application] ← ARS</li>
+          </ul>
+        </div>
+      </div>
+      <div class="sub-q">
+        <div class="sub-q-label">Part D</div>
+        <p>Draw the <strong>Level-0 DFD</strong> of the ETA Registration System.</p>
+        <textarea class="answer-box" style="min-height:140px" placeholder="Describe the main processes, data stores, and flows at Level-0…"></textarea>
+        <button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button>
+        <div class="model-answer">
+          <div class="ma-label">Model Answer</div>
+          <p><strong>Main Processes (from block diagram):</strong></p>
+          <ul>
+            <li>1.0 — Registration Dept. (receives application, validates, archives)</li>
+            <li>2.0 — Finance Dept. (receives validated application, generates receipt)</li>
+            <li>3.0 — Scheduling Dept.</li>
+            <li>4.0 — Student Services Dept.</li>
+          </ul>
+          <p><strong>Key flows:</strong> Student Application → 1.0 → [Archive], Validated Application → 2.0, Application Receipt ← 2.0 → Student</p>
+        </div>
+      </div>
+      <div class="sub-q">
+        <div class="sub-q-label">Part E</div>
+        <p>Draw the <strong>Level-1 (Detailed) DFD</strong> of the Registration Department in ETA.</p>
+        <textarea class="answer-box" style="min-height:140px" placeholder="Describe the detailed sub-processes within the Registration Department…"></textarea>
+        <button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button>
+        <div class="model-answer">
+          <div class="ma-label">Model Answer</div>
+          <p><strong>Sub-processes of Process 1.0 — Registration Dept.:</strong></p>
+          <ul>
+            <li>1.1 — Receive Student Application (Input: Student Application → Output: Received Application)</li>
+            <li>1.2 — Validate Application (Input: Received Application → Output: Validated Application / Rejection Notice)</li>
+            <li>1.3 — Print Application Receipt (Input: Validated Application → Output: Printed Receipt)</li>
+            <li>1.4 — Send Validated Application to Finance (Input: Validated Application → Output to Finance Dept.)</li>
+          </ul>
+          <p><strong>Data Store D1:</strong> Registration Archive (read/write by 1.1 and 1.2)</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="question-block" onclick="toggleQ(this)">
+    <div class="q-header">
+      <h3>Q5 — System Design &amp; Technical Architecture</h3>
+      <div class="q-meta"><span class="q-marks">6 Marks</span><span class="toggle-icon">▼</span></div>
+    </div>
+    <div class="q-body" onclick="stopProp(event)">
+      <div class="sub-q">
+        <div class="sub-q-label">Part A</div>
+        <p>Define <strong>"System Technical Architecture (STA)"</strong> in no more than three lines.</p>
+        <textarea class="answer-box" placeholder="Write your answer here…"></textarea>
+        <button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button>
+        <div class="model-answer">
+          <div class="ma-label">Model Answer</div>
+          <p>STA is the fundamental functional organisation of a system embodied in its components, their relationships with each other and with the environment, and the principles guiding its design and evolution. It defines the technologies used in terms of data, processes, interfaces, and network components, providing the general design framework.</p>
+        </div>
+      </div>
+      <div class="sub-q">
+        <div class="sub-q-label">Part B</div>
+        <p>Using a drawing/diagram, design the <strong>Technical Architecture for ETA's ARS system</strong>.</p>
+        <textarea class="answer-box" style="min-height:130px" placeholder="Describe the technical architecture components: branches (PCs, printers), ISC/HQ (servers), communication network links…"></textarea>
+        <button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button>
+        <div class="model-answer">
+          <div class="ma-label">Model Answer</div>
+          <p><strong>Components:</strong></p>
+          <ul>
+            <li><strong>ISC at HQ (Cairo):</strong> Central Server(s) hosting the ARS application and database</li>
+            <li><strong>Each of 18 Branches:</strong> 1 PC + 1 Printer connected via Communication Network to ISC</li>
+            <li><strong>Network:</strong> WAN/Internet connecting all branches to HQ servers</li>
+            <li><strong>Architecture Model:</strong> Client-Server (2-Tier) — branches are clients, ISC contains the server</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="question-block" onclick="toggleQ(this)">
+    <div class="q-header">
+      <h3>Q6 — Interface Design (Inputs, Outputs, Navigation) <em>— Answer any TWO</em></h3>
+      <div class="q-meta"><span class="q-marks">6 Marks</span><span class="toggle-icon">▼</span></div>
+    </div>
+    <div class="q-body" onclick="stopProp(event)">
+      <div class="sub-q">
+        <div class="sub-q-label">Part A (Optional)</div>
+        <p>Explain how to <strong>assure accurate input completion</strong> (internal and external controls).</p>
+        <textarea class="answer-box" placeholder="Write your answer here…"></textarea>
+        <button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button>
+        <div class="model-answer">
+          <div class="ma-label">Model Answer</div>
+          <p><strong>External Controls:</strong> Text box facility, Radio button, Check box, Drop-down menus to restrict invalid entries.</p>
+          <p><strong>Internal Controls:</strong></p>
+          <ul>
+            <li>Completeness check – ensure no required field is left blank</li>
+            <li>Limit and range check – validate numerical values within acceptable bounds</li>
+            <li>Combination checks – verify that combinations of fields are logically consistent</li>
+            <li>Self-checking digits – validate codes like student IDs</li>
+          </ul>
+        </div>
+      </div>
+      <div class="sub-q">
+        <div class="sub-q-label">Part B (Optional)</div>
+        <p>Design the <strong>input screen</strong> for the Student Application in ETA's ARS system.</p>
+        <textarea class="answer-box" style="min-height:130px" placeholder="Describe/sketch the input screen fields: Application No., Date, Student Name, Address, Courses (up to 4)…"></textarea>
+        <button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button>
+        <div class="model-answer">
+          <div class="ma-label">Model Answer</div>
+          <p><strong>Screen: Student Application Entry</strong></p>
+          <ul>
+            <li>Application No.: [Auto-generated, read-only]</li>
+            <li>Application Date: [Date Picker — default today]</li>
+            <li>Student Name: [Text Box, max 100 chars]</li>
+            <li>Student Address: [Text Box]</li>
+            <li>Courses Section (repeat up to 4 rows): Course Name [Dropdown] | Level [Radio: Beginner/Intermediate/Advanced]</li>
+            <li>Buttons: [Save] [Validate] [Print] [Cancel]</li>
+          </ul>
+        </div>
+      </div>
+      <div class="sub-q">
+        <div class="sub-q-label">Part C (Optional)</div>
+        <p>Design the <strong>output report</strong> for the Student Application in ETA's ARS system.</p>
+        <textarea class="answer-box" style="min-height:130px" placeholder="Describe/sketch the output report layout…"></textarea>
+        <button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button>
+        <div class="model-answer">
+          <div class="ma-label">Model Answer</div>
+          <p><strong>Report: Student Application Receipt</strong></p>
+          <ul>
+            <li><strong>Header:</strong> ETA Logo | Branch Name | Report Title: "Application Receipt" | Date | Page No.</li>
+            <li><strong>Body:</strong> Application No. | Date | Student Name | Student Address</li>
+            <li><strong>Courses Table:</strong> # | Course Name | Level</li>
+            <li><strong>Footer:</strong> Staff Signature | Stamp | "Thank you for choosing ETA"</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="question-block" onclick="toggleQ(this)">
+    <div class="q-header">
+      <h3>Q7 — Data Storage &amp; Program Design</h3>
+      <div class="q-meta"><span class="q-marks">6 Marks</span><span class="toggle-icon">▼</span></div>
+    </div>
+    <div class="q-body" onclick="stopProp(event)">
+      <div class="sub-q">
+        <div class="sub-q-label">Part A</div>
+        <p>State <strong>two disadvantages of the Flat File</strong> storage approach and explain one in no more than three lines.</p>
+        <textarea class="answer-box" placeholder="Write your answer here…"></textarea>
+        <button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button>
+        <div class="model-answer">
+          <div class="ma-label">Model Answer</div>
+          <ul>
+            <li><strong>Data Duplication</strong> – the same data item may be stored in multiple files, causing redundancy, storage waste, and inconsistency when updates are not applied everywhere.</li>
+            <li><strong>Data Dependence</strong> – programs are tightly coupled to file structures; any change in file layout requires modifying all programs that use it.</li>
+            <li><strong>Concurrency Problems</strong> – flat files do not support simultaneous access by multiple users efficiently.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="sub-q">
+        <div class="sub-q-label">Part B</div>
+        <p>In <strong>Modern Structured Program Design</strong>, explain the <strong>Bottom-up strategy</strong>.</p>
+        <textarea class="answer-box" placeholder="Write your answer here…"></textarea>
+        <button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button>
+        <div class="model-answer">
+          <div class="ma-label">Model Answer</div>
+          <p>In the <strong>Bottom-up strategy</strong>, program design starts from the lowest-level, most detailed modules and builds upward toward higher-level modules. Individual sub-components are designed and tested in isolation first, then integrated progressively. This approach is useful when reusable low-level components already exist, but it can be harder to maintain overall system coherence compared to top-down.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exam-actions">
+    <button class="btn-secondary" onclick="clearAll('exam0')">Clear All Answers</button>
+    <button class="btn-primary" onclick="revealAll('exam0')">Reveal All Answers</button>
+  </div>
+</div><!-- /exam0 -->
+
+<!-- ═══════════════════════════════════════════════════
+     EXAM 2
+════════════════════════════════════════════════════ -->
+<div class="exam-panel" id="exam1">
+  <div class="exam-meta">
+    <div class="row"><span class="label">Course:</span><span class="value">CS210 System Analysis &amp; Design</span></div>
+    <div class="row"><span class="label">Academic Year:</span><span class="value">2025/2026</span></div>
+    <div class="row"><span class="label">Department:</span><span class="value">Computer Sciences</span></div>
+    <div class="row"><span class="label">Time Allowed:</span><span class="value">120 Min &nbsp;|&nbsp; Total: 60 Marks</span></div>
+    <div class="case-study">
+      <strong>Case Study — Practice Exam 2:</strong><br>
+      <strong>QuickMed Pharmacy Chain, QPC</strong>, is an Egyptian company that owns 30 pharmacy branches across multiple governorates. HQ is in Giza. Each branch has four departments: dispensing, stock management, cashier, and customer service. QPC faces challenges in tracking prescriptions and inventory manually. Management decided to automate the <strong>Dispensing Department</strong> and create an <strong>Information System Centre (ISC)</strong> at HQ. Each branch will have one computer and one printer connected to ISC servers via a WAN.<br><br>
+      <strong>Dispensing Department roles:</strong> Receive customer prescription, Validate prescription, Send validated prescription to stock management.<br><br>
+      <strong>Automated Dispensing System (ADS) functionalities:</strong> Register prescription, Validate prescription, Print dispensing label, Send validated prescription to Stock Management.<br>
+      <strong>Data attributes:</strong> Prescription No., Prescription Date, Patient Name, Patient Address, Medicines (Medicine name, Dosage, Qty — up to 6 items per prescription).
+    </div>
+  </div>
+  <div class="expand-bar">
+    <button class="btn-secondary" style="padding:5px 14px;font-size:.82rem" onclick="expandAll('exam1')">Expand All</button>
+    <button class="btn-secondary" style="padding:5px 14px;font-size:.82rem" onclick="collapseAll('exam1')">Collapse All</button>
+  </div>
+
+  <div class="question-block" onclick="toggleQ(this)">
+    <div class="q-header"><h3>Q1 — Fundamentals of System Analysis and Design</h3><div class="q-meta"><span class="q-marks">9 Marks</span><span class="toggle-icon">▼</span></div></div>
+    <div class="q-body" onclick="stopProp(event)">
+      <div class="sub-q">
+        <div class="sub-q-label">Part A</div>
+        <p>Define the term <strong>"Data"</strong> and distinguish it from <strong>"Information"</strong>.</p>
+        <textarea class="answer-box" placeholder="Write your answer here…"></textarea>
+        <button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button>
+        <div class="model-answer"><div class="ma-label">Model Answer</div><p><strong>Data</strong> is raw, unprocessed facts and figures (e.g., "1200", "Paracetamol") without context. <strong>Information</strong> is data that has been processed, organised, and given context so it becomes meaningful for decision-making (e.g., "Patient X was prescribed 1200mg of Paracetamol on 14/5/2026").</p></div>
+      </div>
+      <div class="sub-q">
+        <div class="sub-q-label">Part B</div>
+        <p>State <strong>two technical components of an Information System</strong> and explain one in no more than three lines.</p>
+        <textarea class="answer-box" placeholder="Write your answer here…"></textarea>
+        <button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button>
+        <div class="model-answer"><div class="ma-label">Model Answer</div><ul><li><strong>Application Software</strong> – software designed to support a specific organisational function (e.g., a pharmacy dispensing application). It runs on top of system software and directly serves the end users' needs.</li><li><strong>Supporting Database</strong> – stores data required by application software persistently.</li><li><strong>Networks</strong> – enable data exchange between system components.</li></ul></div>
+      </div>
+      <div class="sub-q">
+        <div class="sub-q-label">Part C</div>
+        <p>State <strong>two roles of the System Analyst/Designer</strong> and explain one in no more than three lines.</p>
+        <textarea class="answer-box" placeholder="Write your answer here…"></textarea>
+        <button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button>
+        <div class="model-answer"><div class="ma-label">Model Answer</div><ul><li><strong>Infrastructure Analyst</strong> – focuses on the hardware, network, and platform components needed to run the system reliably and securely.</li><li><strong>Change Management Analyst</strong> – manages the organisational transition to the new system, including training and resistance management.</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="question-block" onclick="toggleQ(this)">
+    <div class="q-header"><h3>Q2 — Analysis/Design Approaches &amp; Information Requirements</h3><div class="q-meta"><span class="q-marks">12 Marks</span><span class="toggle-icon">▼</span></div></div>
+    <div class="q-body" onclick="stopProp(event)">
+      <div class="sub-q"><div class="sub-q-label">Part A</div><p>Define <strong>SDLC</strong> and state its abbreviation.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><p><strong>SDLC = System Development Life Cycle.</strong> It is the logical process by which system analysts, software engineers, programmers, and end users build information systems and computer applications to solve business problems and needs.</p></div></div>
+      <div class="sub-q"><div class="sub-q-label">Part B</div><p>State <strong>three SDLC phases</strong>.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li>Planning</li><li>Analysis</li><li>Design and Prototyping</li><li>Implementation (Development, Testing, Integration)</li><li>Deployment, Operations, and Maintenance</li></ul></div></div>
+      <div class="sub-q"><div class="sub-q-label">Part C</div><p>Define <strong>Functional Requirements</strong> and give an example from the QPC case study.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><p><strong>Functional Requirements</strong> describe what a system must do — its specific behaviours, functions, or services. Example from QPC: "The system shall validate a patient prescription before forwarding it to stock management."</p></div></div>
+      <div class="sub-q"><div class="sub-q-label">Part D</div><p>Mention <strong>two Analysis Strategies</strong> and explain one in no more than three lines.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li><strong>Duration Analysis</strong> – measures how long activities take and identifies where time is wasted, enabling process optimisation.</li><li><strong>Outcome Analysis</strong> – examines the desired outputs and works backward to define the processes needed.</li></ul></div></div>
+    </div>
+  </div>
+
+  <div class="question-block" onclick="toggleQ(this)">
+    <div class="q-header"><h3>Q3 — System Analysis Approaches (Planning &amp; Analysis Phases)</h3><div class="q-meta"><span class="q-marks">6 Marks</span><span class="toggle-icon">▼</span></div></div>
+    <div class="q-body" onclick="stopProp(event)">
+      <div class="sub-q"><div class="sub-q-label">Part A</div><p>State <strong>two sub-phases of the Planning Phase</strong> and explain one.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li><strong>Project Initiation</strong> – formally starts the project by obtaining management approval, assigning a project sponsor, and defining initial scope.</li><li><strong>Project Management</strong> – plans, schedules, and controls the project to ensure it is delivered on time and within budget.</li></ul></div></div>
+      <div class="sub-q"><div class="sub-q-label">Part B</div><p>State <strong>two sub-phases of the Analysis Phase</strong> and explain one.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li><strong>Definition Sub-Phase</strong> – produces the requirements specification document, clearly defining what the new system must deliver.</li><li><strong>Survey Sub-Phase</strong> – identifies the scope and key stakeholders of the existing system.</li></ul></div></div>
+    </div>
+  </div>
+
+  <div class="question-block" onclick="toggleQ(this)">
+    <div class="q-header"><h3>Q4 — Fact Finding Techniques &amp; System Modelling</h3><div class="q-meta"><span class="q-marks">15 Marks</span><span class="toggle-icon">▼</span></div></div>
+    <div class="q-body" onclick="stopProp(event)">
+      <div class="sub-q"><div class="sub-q-label">Part A</div><p>State the conditions when <strong>Sampling and Record Inspection</strong> should be applied.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li>When the analyst needs to <strong>deduce trends</strong> such as workload increasing or decreasing over time.</li><li>To determine the ratio of credits, errors, or rejections in existing records.</li><li>When existing documents need to be inspected to understand the current data structures and volumes.</li></ul></div></div>
+      <div class="sub-q"><div class="sub-q-label">Part B</div><p>State the fact-finding techniques for collecting data in <strong>QPC HQ and its 30 branches</strong>. Justify each.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li><strong>Interviewing</strong> – at HQ to interview senior management and dispensing supervisors for detailed requirements.</li><li><strong>Questionnaires</strong> – across all 30 branches due to wide geographic distribution.</li><li><strong>Observation</strong> – at HQ to observe personal relations, document transfer timing, and task execution methods.</li><li><strong>Sampling &amp; Record Inspection</strong> – at HQ to review prescription records and identify workload trends.</li></ul></div></div>
+      <div class="sub-q"><div class="sub-q-label">Part C</div><p>Draw the <strong>Context Level DFD</strong> of the QPC Dispensing System (ADS).</p><textarea class="answer-box" style="min-height:120px" placeholder="Describe the Context Level DFD…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><p><strong>Process:</strong> "0 — Automated Dispensing System (ADS)"</p><ul><li>Patient → [Prescription] → ADS → [Dispensing Label / Receipt] → Patient</li><li>ADS → [Validated Prescription] → Stock Management Dept.</li></ul></div></div>
+      <div class="sub-q"><div class="sub-q-label">Part D</div><p>Draw the <strong>Level-0 DFD</strong> of the QPC ADS System.</p><textarea class="answer-box" style="min-height:140px" placeholder="Describe Level-0 processes, data stores, and flows…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li>1.0 — Dispensing Dept.: receives, validates, and archives prescriptions</li><li>2.0 — Stock Management Dept.: checks availability, updates stock</li><li>3.0 — Cashier Dept.: processes payment</li><li>4.0 — Customer Service Dept.: handles queries</li></ul></div></div>
+      <div class="sub-q"><div class="sub-q-label">Part E</div><p>Draw the <strong>Level-1 DFD</strong> of the Dispensing Department in QPC.</p><textarea class="answer-box" style="min-height:140px" placeholder="Describe the detailed sub-processes within the Dispensing Department…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li>1.1 — Receive Prescription (Patient → Received Prescription)</li><li>1.2 — Validate Prescription (→ Validated / Rejected)</li><li>1.3 — Print Dispensing Label (→ Printed Label → Patient)</li><li>1.4 — Send to Stock Management (→ Validated Prescription → Stock Mgmt.)</li><li>D1 — Dispensing Archive</li></ul></div></div>
+    </div>
+  </div>
+
+  <div class="question-block" onclick="toggleQ(this)">
+    <div class="q-header"><h3>Q5 — System Design &amp; Technical Architecture</h3><div class="q-meta"><span class="q-marks">6 Marks</span><span class="toggle-icon">▼</span></div></div>
+    <div class="q-body" onclick="stopProp(event)">
+      <div class="sub-q"><div class="sub-q-label">Part A</div><p>State the <strong>decisions taken during STA development</strong>.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li>Centralised or distributed computing</li><li>Data stores centralised or distributed</li><li>Data storage technology to use</li><li>Whether software will be purchased, built in-house, or both</li><li>Technology platform and stack to be used</li></ul></div></div>
+      <div class="sub-q"><div class="sub-q-label">Part B</div><p>Design the <strong>Technical Architecture for QPC's ADS</strong>.</p><textarea class="answer-box" style="min-height:130px" placeholder="Describe architecture components and connections…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li><strong>ISC at HQ (Giza):</strong> Application Server + Database Server</li><li><strong>30 Branch Clients:</strong> 1 PC + 1 Printer each</li><li><strong>Network:</strong> WAN connecting all branches to ISC</li><li><strong>Model:</strong> Client-Server 2-Tier or 3-Tier</li></ul></div></div>
+    </div>
+  </div>
+
+  <div class="question-block" onclick="toggleQ(this)">
+    <div class="q-header"><h3>Q6 — Interface Design (Answer any TWO)</h3><div class="q-meta"><span class="q-marks">6 Marks</span><span class="toggle-icon">▼</span></div></div>
+    <div class="q-body" onclick="stopProp(event)">
+      <div class="sub-q"><div class="sub-q-label">Part A (Optional)</div><p>Explain the guidelines for <strong>Minimal User Action</strong> in interface design.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li>Key codes instead of full words on entry screens</li><li>Only enter the minimum data required</li><li>Supply editing characters automatically</li><li>Use default values for fields on every screen</li><li>Inquiry program needs only first few characters of a name</li><li>Provide pull-down and pop-up menus</li></ul></div></div>
+      <div class="sub-q"><div class="sub-q-label">Part B (Optional)</div><p>Design the <strong>input screen</strong> for the Prescription Entry in QPC's ADS.</p><textarea class="answer-box" style="min-height:130px" placeholder="Describe the input screen…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li>Prescription No.: [Auto-generated]</li><li>Date: [Date Picker]</li><li>Patient Name: [Text Box]</li><li>Patient Address: [Text Box]</li><li>Medicines (up to 6 rows): Medicine Name [Dropdown] | Dosage [Text] | Qty [Numeric]</li><li>Buttons: [Save] [Validate] [Print Label] [Cancel]</li></ul></div></div>
+      <div class="sub-q"><div class="sub-q-label">Part C (Optional)</div><p>Design the <strong>output report</strong> for the Dispensing Label/Receipt.</p><textarea class="answer-box" style="min-height:130px" placeholder="Describe the output report…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li><strong>Header:</strong> QPC Logo | Branch | "Dispensing Receipt" | Date | Page</li><li><strong>Body:</strong> Prescription No. | Date | Patient Name | Patient Address</li><li><strong>Medicines Table:</strong> # | Medicine | Dosage | Qty</li><li><strong>Footer:</strong> Pharmacist Name | Signature | "Store in a cool, dry place"</li></ul></div></div>
+    </div>
+  </div>
+
+  <div class="question-block" onclick="toggleQ(this)">
+    <div class="q-header"><h3>Q7 — Data Storage &amp; Program Design</h3><div class="q-meta"><span class="q-marks">6 Marks</span><span class="toggle-icon">▼</span></div></div>
+    <div class="q-body" onclick="stopProp(event)">
+      <div class="sub-q"><div class="sub-q-label">Part A</div><p>State <strong>two advantages of the Database approach</strong> over flat files and explain one.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li><strong>Controlling Redundancy</strong> – a DBMS stores each data item in one place, eliminating duplicate copies that cause inconsistency and wasted storage.</li><li><strong>Data can be shared</strong> – multiple users and applications can access the same data concurrently.</li><li><strong>Restricting unauthorised access</strong> – DBMSs enforce security at field and record level.</li></ul></div></div>
+      <div class="sub-q"><div class="sub-q-label">Part B</div><p>In <strong>Modern Structured Program Design</strong>, explain the <strong>Top-down strategy</strong>.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><p>In the <strong>Top-down strategy</strong>, the main program module is designed first, then progressively decomposed into sub-modules of increasing detail. The design begins with a high-level overview (e.g., the main dispensing process) and breaks it down into smaller, manageable components (e.g., validate prescription, print label). This ensures the overall system logic is defined before detail, improving clarity and maintainability.</p></div></div>
+    </div>
+  </div>
+
+  <div class="exam-actions">
+    <button class="btn-secondary" onclick="clearAll('exam1')">Clear All Answers</button>
+    <button class="btn-primary" onclick="revealAll('exam1')">Reveal All Answers</button>
+  </div>
+</div><!-- /exam1 -->
+
+<!-- ═══════════════════════════════════════════════════
+     EXAM 3 — Compact version (same structure, new case)
+════════════════════════════════════════════════════ -->
+<div class="exam-panel" id="exam2">
+  <div class="exam-meta">
+    <div class="row"><span class="label">Course:</span><span class="value">CS210 System Analysis &amp; Design</span></div>
+    <div class="row"><span class="label">Academic Year:</span><span class="value">2025/2026</span></div>
+    <div class="row"><span class="label">Time Allowed:</span><span class="value">120 Min &nbsp;|&nbsp; Total: 60 Marks</span></div>
+    <div class="case-study">
+      <strong>Case Study — Practice Exam 3:</strong><br>
+      <strong>NileAir Travel Agency, NTA</strong>, is an Egyptian travel company with 20 branches nationwide. HQ is in Alexandria. Each branch has: reservations, ticketing, payment, and customer service departments. NTA faces problems handling flight reservations manually. Management decided to automate the <strong>Reservations Department</strong> and create an <strong>ISC at HQ</strong>. Each branch has 1 computer + 1 printer linked to HQ servers via a network.<br><br>
+      <strong>Reservations Department roles:</strong> Receive travel request from customer, Validate travel request, Send validated request to Ticketing Department.<br><br>
+      <strong>Automated Reservation System (ARS) functionalities:</strong> Register travel request, Validate request, Print reservation confirmation, Send to Ticketing.<br>
+      <strong>Data attributes:</strong> Reservation No., Date, Passenger Name, Passenger Address, Flights (Flight No., Destination, Date — up to 3 flights).
+    </div>
+  </div>
+  <div class="expand-bar">
+    <button class="btn-secondary" style="padding:5px 14px;font-size:.82rem" onclick="expandAll('exam2')">Expand All</button>
+    <button class="btn-secondary" style="padding:5px 14px;font-size:.82rem" onclick="collapseAll('exam2')">Collapse All</button>
+  </div>
+
+  <div class="question-block" onclick="toggleQ(this)"><div class="q-header"><h3>Q1 — Fundamentals of System Analysis and Design</h3><div class="q-meta"><span class="q-marks">9 Marks</span><span class="toggle-icon">▼</span></div></div><div class="q-body" onclick="stopProp(event)">
+    <div class="sub-q"><div class="sub-q-label">Part A</div><p>Define <strong>"Information Technology (IT)"</strong>.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><p>The contemporary combination of computer technology (hardware and software) with telecommunication technology (data, image, and voice networks).</p></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part B</div><p>State <strong>two IS Technical Components</strong> and explain one in ≤ 3 lines.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li><strong>Hardware</strong> – the physical devices (servers, PCs, printers, networks) that run system and application software. Without adequate hardware, the software cannot function.</li><li><strong>Human Resources (People)</strong> – the staff who operate, maintain, and manage the IS.</li><li><strong>Documentation</strong> – manuals and guides that describe how the system works.</li></ul></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part C</div><p>State <strong>two roles of the System Analyst/Designer</strong> and explain one in ≤ 3 lines.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li><strong>Programmer/Analyst</strong> – a hybrid role that both analyses requirements and writes the code to implement the system, bridging the gap between analysis and development.</li><li><strong>System Architect</strong> – designs the overall high-level technical architecture of the system.</li></ul></div></div>
+  </div></div>
+
+  <div class="question-block" onclick="toggleQ(this)"><div class="q-header"><h3>Q2 — Analysis/Design Approaches &amp; Information Requirements</h3><div class="q-meta"><span class="q-marks">12 Marks</span><span class="toggle-icon">▼</span></div></div><div class="q-body" onclick="stopProp(event)">
+    <div class="sub-q"><div class="sub-q-label">Part A</div><p>Define <strong>SDLC</strong> and state its abbreviation.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><p><strong>SDLC = System Development Life Cycle.</strong> The logical process by which analysts, engineers, programmers, and end-users build IS to solve business problems.</p></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part B</div><p>State <strong>three SDLC phases</strong>.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li>Planning</li><li>Analysis</li><li>Design and Prototyping</li><li>Implementation</li><li>Maintenance</li></ul></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part C</div><p>Define <strong>Nonfunctional Requirements</strong> and give an example from NTA.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><p><strong>Nonfunctional Requirements</strong> define quality attributes the system must possess (performance, security, availability, scalability) rather than specific functions. Example from NTA: "The ARS must process a reservation confirmation within 3 seconds 99% of the time."</p></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part D</div><p>Mention <strong>two Analysis Strategies</strong> and explain one in ≤ 3 lines.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li><strong>Activity-Based Costing</strong> – assigns costs to each activity in the system to identify which processes are expensive and where savings can be made.</li><li><strong>Informal Benchmarking</strong> – compares the organisation's processes with similar organisations to identify best practices.</li></ul></div></div>
+  </div></div>
+
+  <div class="question-block" onclick="toggleQ(this)"><div class="q-header"><h3>Q3 — Planning &amp; Analysis Phases</h3><div class="q-meta"><span class="q-marks">6 Marks</span><span class="toggle-icon">▼</span></div></div><div class="q-body" onclick="stopProp(event)">
+    <div class="sub-q"><div class="sub-q-label">Part A</div><p>State <strong>two Planning Phase sub-phases</strong> and explain one.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li><strong>Feasibility Analysis</strong> – evaluates technical, economic, and operational viability of the project before committing resources.</li><li><strong>Project Selection</strong> – chooses which project to fund from competing candidates.</li></ul></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part B</div><p>State <strong>two Analysis Phase sub-phases</strong> and explain one.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li><strong>Detailed Study Sub-Phase</strong> – in-depth investigation of the existing system using interviews, observation, and record inspection to fully document processes, data, and problems.</li><li><strong>Definition Sub-Phase</strong> – documents the requirements for the proposed system.</li></ul></div></div>
+  </div></div>
+
+  <div class="question-block" onclick="toggleQ(this)"><div class="q-header"><h3>Q4 — Fact Finding &amp; System Modelling</h3><div class="q-meta"><span class="q-marks">15 Marks</span><span class="toggle-icon">▼</span></div></div><div class="q-body" onclick="stopProp(event)">
+    <div class="sub-q"><div class="sub-q-label">Part A</div><p>State the conditions when <strong>Joint Application Development (JAD)</strong> is used.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><p>JAD is used when the analyst needs to <strong>finalise the investigation process rapidly</strong>. It brings key stakeholders (users, analysts, management) together in structured workshops to collectively define requirements, resolving disagreements quickly and reducing interview time.</p></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part B</div><p>State the fact-finding techniques for <strong>NTA HQ and its 20 branches</strong>. Justify each.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li><strong>Interviewing</strong> – at HQ with managers and reservations supervisors for detailed requirements.</li><li><strong>Questionnaires</strong> – distributed to all 20 branches due to geographic spread.</li><li><strong>Observation</strong> – at HQ to observe document timing and task execution.</li><li><strong>Sampling &amp; Record Inspection</strong> – at HQ to review reservation forms and workload trends.</li></ul></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part C</div><p>Draw the <strong>Context Level DFD</strong> of NTA's Automated Reservation System.</p><textarea class="answer-box" style="min-height:120px" placeholder="Describe the Context Level DFD…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li>Process: "0 — Automated Reservation System (ARS)"</li><li>Passenger → [Travel Request] → ARS → [Reservation Confirmation] → Passenger</li><li>ARS → [Validated Request] → Ticketing Dept.</li></ul></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part D</div><p>Draw the <strong>Level-0 DFD</strong> of NTA's ARS.</p><textarea class="answer-box" style="min-height:140px" placeholder="Describe Level-0…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li>1.0 Reservations Dept. ← Travel Request (Passenger), → Validated Request (Ticketing), Archive</li><li>2.0 Ticketing Dept. → Ticket (Passenger)</li><li>3.0 Payment Dept. ← Payment (Passenger)</li><li>4.0 Customer Service Dept.</li></ul></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part E</div><p>Draw the <strong>Level-1 DFD</strong> of the Reservations Department.</p><textarea class="answer-box" style="min-height:140px" placeholder="Describe Level-1 sub-processes…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li>1.1 Receive Travel Request → Received Request</li><li>1.2 Validate Request → Validated / Rejected</li><li>1.3 Print Confirmation → Confirmation → Passenger</li><li>1.4 Send to Ticketing → Validated Request → Ticketing</li><li>D1 Reservations Archive</li></ul></div></div>
+  </div></div>
+
+  <div class="question-block" onclick="toggleQ(this)"><div class="q-header"><h3>Q5 — System Technical Architecture</h3><div class="q-meta"><span class="q-marks">6 Marks</span><span class="toggle-icon">▼</span></div></div><div class="q-body" onclick="stopProp(event)">
+    <div class="sub-q"><div class="sub-q-label">Part A</div><p>State the <strong>Architecture Models</strong> used in system design.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li><strong>Server-Based</strong> – all processing on the server; clients are thin.</li><li><strong>Client-Server 2-Tier</strong> – client handles UI, server handles data.</li><li><strong>Client-Server 3-Tier</strong> – UI tier, application/logic tier, data tier.</li><li><strong>n-Tier</strong> – multiple specialised layers.</li><li><strong>Mobile Applications</strong> – lightweight client on mobile device.</li></ul></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part B</div><p>Design the <strong>Technical Architecture for NTA's ARS</strong>.</p><textarea class="answer-box" style="min-height:130px" placeholder="Describe architecture…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li>ISC at HQ (Alexandria): Web/App Server + DB Server</li><li>20 Branch Clients: 1 PC + 1 Printer each</li><li>WAN connecting branches to ISC</li><li>3-Tier Client-Server recommended (UI at branch, logic and DB at ISC)</li></ul></div></div>
+  </div></div>
+
+  <div class="question-block" onclick="toggleQ(this)"><div class="q-header"><h3>Q6 — Interface Design (Answer any TWO)</h3><div class="q-meta"><span class="q-marks">6 Marks</span><span class="toggle-icon">▼</span></div></div><div class="q-body" onclick="stopProp(event)">
+    <div class="sub-q"><div class="sub-q-label">Part A (Optional)</div><p>Explain how to make <strong>input completion easy and efficient</strong>.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li><strong>Minimise volume of data:</strong> capture only variable data, only base data, no derived data calculable by the system.</li><li>Include instructions on source documents.</li><li>Minimise handwritten fields (use radio buttons, checkboxes, dropdowns).</li><li>Sequence data entry top-down, right-to-left (for Arabic contexts).</li></ul></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part B (Optional)</div><p>Design the <strong>input screen</strong> for the Reservation Request in NTA's ARS.</p><textarea class="answer-box" style="min-height:130px" placeholder="Describe the input screen…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li>Reservation No.: [Auto]</li><li>Date: [Date Picker]</li><li>Passenger Name: [Text]</li><li>Passenger Address: [Text]</li><li>Flights (3 rows): Flight No. [Text] | Destination [Dropdown] | Date [Date Picker]</li><li>Buttons: [Save] [Validate] [Print Confirmation] [Cancel]</li></ul></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part C (Optional)</div><p>Design the <strong>output report</strong> for the Reservation Confirmation.</p><textarea class="answer-box" style="min-height:130px" placeholder="Describe the output report…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li>Header: NTA Logo | Branch | "Reservation Confirmation" | Date | Page</li><li>Body: Reservation No. | Date | Passenger Name | Address</li><li>Flights Table: # | Flight No. | Destination | Departure Date</li><li>Footer: Agent Signature | "Have a safe journey!"</li></ul></div></div>
+  </div></div>
+
+  <div class="question-block" onclick="toggleQ(this)"><div class="q-header"><h3>Q7 — Data Storage &amp; Program Design</h3><div class="q-meta"><span class="q-marks">6 Marks</span><span class="toggle-icon">▼</span></div></div><div class="q-body" onclick="stopProp(event)">
+    <div class="sub-q"><div class="sub-q-label">Part A</div><p>State <strong>two advantages of the Flat File</strong> approach and explain one in ≤ 3 lines.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li><strong>Simplicity of building the system's files</strong> – flat files are easy to create and maintain; no DBMS software is needed, making them suitable for small-scale, single-user systems.</li><li><strong>Lower cost</strong> – no expensive DBMS licence required.</li></ul></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part B</div><p>In Modern Structured Design, explain the <strong>Top-down strategy</strong>.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><p>Start with the highest-level module (the main program) and decompose it into sub-modules repeatedly until all functions are defined at the lowest level. This ensures overall system logic is established before detail, improving traceability and maintainability.</p></div></div>
+  </div></div>
+
+  <div class="exam-actions">
+    <button class="btn-secondary" onclick="clearAll('exam2')">Clear All Answers</button>
+    <button class="btn-primary" onclick="revealAll('exam2')">Reveal All Answers</button>
+  </div>
+</div><!-- /exam2 -->
+
+<!-- ═══════════════════════════════════════════════════
+     EXAM 4
+════════════════════════════════════════════════════ -->
+<div class="exam-panel" id="exam3">
+  <div class="exam-meta">
+    <div class="row"><span class="label">Course:</span><span class="value">CS210 System Analysis &amp; Design</span></div>
+    <div class="row"><span class="label">Time Allowed:</span><span class="value">120 Min &nbsp;|&nbsp; Total: 60 Marks</span></div>
+    <div class="case-study">
+      <strong>Case Study — Practice Exam 4:</strong><br>
+      <strong>ElNour Hospital Group, EHG</strong>, operates 15 hospitals across Egypt. HQ is in Cairo. Each hospital has: outpatient, inpatient, laboratory, and billing departments. EHG needs to automate the <strong>Outpatient Department</strong> and create an <strong>ISC at HQ</strong>. Each hospital: 1 computer + 1 printer connected to ISC servers.<br><br>
+      <strong>Outpatient Dept. roles:</strong> Receive patient visit request, Validate visit request, Send validated request to billing.<br><br>
+      <strong>Automated Outpatient System (AOS) functionalities:</strong> Register visit request, Validate request, Print visit ticket, Send to Billing.<br>
+      <strong>Data attributes:</strong> Visit No., Visit Date, Patient Name, Patient Address, Complaints (Complaint description, Priority — up to 3 complaints).
+    </div>
+  </div>
+  <div class="expand-bar">
+    <button class="btn-secondary" style="padding:5px 14px;font-size:.82rem" onclick="expandAll('exam3')">Expand All</button>
+    <button class="btn-secondary" style="padding:5px 14px;font-size:.82rem" onclick="collapseAll('exam3')">Collapse All</button>
+  </div>
+
+  <div class="question-block" onclick="toggleQ(this)"><div class="q-header"><h3>Q1 — Fundamentals of System Analysis and Design</h3><div class="q-meta"><span class="q-marks">9 Marks</span><span class="toggle-icon">▼</span></div></div><div class="q-body" onclick="stopProp(event)">
+    <div class="sub-q"><div class="sub-q-label">Part A</div><p>Define <strong>"Computer Application"</strong>.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><p>A computer application is a software program designed to perform a specific task or set of tasks for end users within an organisational context (e.g., a hospital visit registration application). It runs on hardware using system software and may access a database.</p></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part B</div><p>State <strong>two IS Technical Components</strong> and explain one in ≤ 3 lines.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li><strong>System Software</strong> – software that manages the hardware and provides a platform for application software (e.g., operating systems, DBMS packages). It is invisible to end users but essential for the system to run.</li><li><strong>Networks</strong> – enable data and information exchange between components.</li></ul></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part C</div><p>State <strong>two roles of the System Analyst</strong> and explain one in ≤ 3 lines.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li><strong>Business Analyst</strong> – focuses on understanding and improving business processes rather than technical details, bridging the gap between business needs and IT solutions.</li><li><strong>System Designer</strong> – translates analysis findings into a detailed technical design specification.</li></ul></div></div>
+  </div></div>
+
+  <div class="question-block" onclick="toggleQ(this)"><div class="q-header"><h3>Q2 — Analysis/Design Approaches &amp; Requirements</h3><div class="q-meta"><span class="q-marks">12 Marks</span><span class="toggle-icon">▼</span></div></div><div class="q-body" onclick="stopProp(event)">
+    <div class="sub-q"><div class="sub-q-label">Part A</div><p>Define <strong>SDLC</strong> and state its abbreviation.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><p>SDLC = System Development Life Cycle. The logical process used by analysts, engineers, and users to build IS and applications to solve business problems.</p></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part B</div><p>State <strong>three SDLC phases</strong>.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li>Planning</li><li>Analysis</li><li>Design and Prototyping</li><li>Implementation (Development, Testing, Integration)</li><li>Deployment, Operations, Maintenance</li></ul></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part C</div><p>Define <strong>User Requirements</strong> and state its two sub-types.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><p><strong>User Requirements</strong> specify how end users interact with the system. Sub-types: <strong>Usability Requirements</strong> (ease of use, learnability) and <strong>User Interface Requirements</strong> (screen layouts, navigation, accessibility).</p></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part D</div><p>Mention <strong>two Analysis Strategies</strong> and explain one in ≤ 3 lines.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li><strong>Activity Elimination Analysis</strong> – identifies unnecessary activities in the current system that can be eliminated entirely in the new system to save time and cost.</li><li><strong>Technology Analysis</strong> – evaluates new technologies that could solve current problems.</li></ul></div></div>
+  </div></div>
+
+  <div class="question-block" onclick="toggleQ(this)"><div class="q-header"><h3>Q3 — Planning &amp; Analysis Phases</h3><div class="q-meta"><span class="q-marks">6 Marks</span><span class="toggle-icon">▼</span></div></div><div class="q-body" onclick="stopProp(event)">
+    <div class="sub-q"><div class="sub-q-label">Part A</div><p>State <strong>two Planning Phase sub-phases</strong> and explain one.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li><strong>Approval by Steering Committee</strong> – the project proposal is reviewed and formally approved by a steering committee before resources are allocated.</li><li><strong>Project Management</strong> – ongoing planning, monitoring, and control of scope, budget, and schedule.</li></ul></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part B</div><p>State <strong>two Analysis Phase sub-phases</strong> and explain one.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li><strong>Survey Sub-Phase</strong> – broad overview of the existing system; identifies the project scope, external entities, and key stakeholders.</li><li><strong>Definition Sub-Phase</strong> – produces the requirements spec for the new system.</li></ul></div></div>
+  </div></div>
+
+  <div class="question-block" onclick="toggleQ(this)"><div class="q-header"><h3>Q4 — Fact Finding &amp; System Modelling</h3><div class="q-meta"><span class="q-marks">15 Marks</span><span class="toggle-icon">▼</span></div></div><div class="q-body" onclick="stopProp(event)">
+    <div class="sub-q"><div class="sub-q-label">Part A</div><p>State the conditions when <strong>Interviewing</strong> is the most appropriate fact-finding technique.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><p>Interviewing is best when: the analyst needs <strong>detailed, in-depth information</strong> from key individuals; the subject matter is complex and requires clarification and follow-up; or the number of stakeholders is small and accessible (e.g., HQ managers).</p></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part B</div><p>State the fact-finding techniques for <strong>EHG HQ and its 15 hospitals</strong>. Justify each.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li><strong>Interviewing</strong> – at HQ with administrators for detailed requirements.</li><li><strong>Questionnaires</strong> – across 15 hospitals due to geographic spread.</li><li><strong>Observation</strong> – at HQ to observe document timing and patient flow execution.</li><li><strong>Sampling &amp; Record Inspection</strong> – at HQ to review visit records and workload trends.</li></ul></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part C</div><p>Draw the <strong>Context Level DFD</strong> of EHG's AOS.</p><textarea class="answer-box" style="min-height:110px" placeholder="Describe Context Level DFD…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li>Process: "0 — Automated Outpatient System (AOS)"</li><li>Patient → [Visit Request] → AOS → [Visit Ticket] → Patient</li><li>AOS → [Validated Request] → Billing Dept.</li></ul></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part D</div><p>Draw the <strong>Level-0 DFD</strong> of EHG's AOS.</p><textarea class="answer-box" style="min-height:130px" placeholder="Describe Level-0…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li>1.0 Outpatient Dept. ← Visit Request, → Validated Request, Archive</li><li>2.0 Billing Dept. → Invoice → Patient</li><li>3.0 Laboratory Dept.</li><li>4.0 Inpatient Dept.</li></ul></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part E</div><p>Draw the <strong>Level-1 DFD</strong> of the Outpatient Department.</p><textarea class="answer-box" style="min-height:140px" placeholder="Describe Level-1…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li>1.1 Receive Visit Request → Received Request</li><li>1.2 Validate Request → Validated / Rejected</li><li>1.3 Print Visit Ticket → Ticket → Patient</li><li>1.4 Send to Billing → Validated Request → Billing</li><li>D1 Outpatient Archive</li></ul></div></div>
+  </div></div>
+
+  <div class="question-block" onclick="toggleQ(this)"><div class="q-header"><h3>Q5 — System Technical Architecture</h3><div class="q-meta"><span class="q-marks">6 Marks</span><span class="toggle-icon">▼</span></div></div><div class="q-body" onclick="stopProp(event)">
+    <div class="sub-q"><div class="sub-q-label">Part A</div><p>Define <strong>"System Technical Architecture"</strong> in ≤ 3 lines.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><p>STA is the fundamental functional organisation of a system embodied in its components, their relationships, and the principles guiding its design. It defines the technologies used (data, processes, interfaces, network) and provides the framework for general design.</p></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part B</div><p>Design the <strong>Technical Architecture for EHG's AOS</strong>.</p><textarea class="answer-box" style="min-height:130px" placeholder="Describe components and connections…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li>ISC at HQ (Cairo): Application Server + DB Server</li><li>15 Hospital Clients: 1 PC + 1 Printer each</li><li>WAN/VPN connecting all hospitals to ISC</li><li>3-Tier Client-Server architecture</li></ul></div></div>
+  </div></div>
+
+  <div class="question-block" onclick="toggleQ(this)"><div class="q-header"><h3>Q6 — Interface Design (Answer any TWO)</h3><div class="q-meta"><span class="q-marks">6 Marks</span><span class="toggle-icon">▼</span></div></div><div class="q-body" onclick="stopProp(event)">
+    <div class="sub-q"><div class="sub-q-label">Part A (Optional)</div><p>Explain how to achieve <strong>Standard Options and Consistency</strong> in interface design.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li>Place titles, dates, feedback messages in the same location on all screens</li><li>Exit all programs using the same key/method</li><li>Cancel transactions consistently (same function key)</li><li>Standardise colours, icons, terminology, font size and alignment across all screens</li><li>Provide consistent navigation through the dialogue</li></ul></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part B (Optional)</div><p>Design the <strong>input screen</strong> for the Patient Visit Request in EHG's AOS.</p><textarea class="answer-box" style="min-height:130px" placeholder="Describe the input screen…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li>Visit No.: [Auto]</li><li>Visit Date: [Date Picker]</li><li>Patient Name: [Text]</li><li>Patient Address: [Text]</li><li>Complaints (3 rows): Complaint [Text] | Priority [Dropdown: High/Medium/Low]</li><li>Buttons: [Register] [Validate] [Print Ticket] [Cancel]</li></ul></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part C (Optional)</div><p>Design the <strong>output report</strong> for the Visit Ticket in EHG's AOS.</p><textarea class="answer-box" style="min-height:130px" placeholder="Describe the output report…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li>Header: EHG Logo | Hospital Name | "Patient Visit Ticket" | Date | Page</li><li>Body: Visit No. | Date | Patient Name | Address</li><li>Complaints Table: # | Complaint | Priority</li><li>Footer: Receptionist Signature | "We care for your health"</li></ul></div></div>
+  </div></div>
+
+  <div class="question-block" onclick="toggleQ(this)"><div class="q-header"><h3>Q7 — Data Storage &amp; Program Design</h3><div class="q-meta"><span class="q-marks">6 Marks</span><span class="toggle-icon">▼</span></div></div><div class="q-body" onclick="stopProp(event)">
+    <div class="sub-q"><div class="sub-q-label">Part A</div><p>State <strong>two disadvantages of the Database approach</strong> and explain one in ≤ 3 lines.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li><strong>Complexity</strong> – a DBMS is a sophisticated software system requiring skilled administrators and developers to design, maintain, and optimise, adding organisational overhead.</li><li><strong>Cost of DBMS</strong> – commercial DBMS licences can be expensive, especially for large-scale deployments.</li><li><strong>Higher impact of a failure</strong> – a DBMS failure can affect all applications that depend on it simultaneously.</li></ul></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part B</div><p>In Modern Structured Design, explain the <strong>Top-down strategy</strong>.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><p>Design starts at the highest-level main module and is progressively decomposed into lower-level sub-modules until all detailed functions are defined. This approach ensures the overall program structure and logic are clear before detail is added, improving readability and maintainability.</p></div></div>
+  </div></div>
+
+  <div class="exam-actions">
+    <button class="btn-secondary" onclick="clearAll('exam3')">Clear All Answers</button>
+    <button class="btn-primary" onclick="revealAll('exam3')">Reveal All Answers</button>
+  </div>
+</div><!-- /exam3 -->
+
+<!-- ═══════════════════════════════════════════════════
+     EXAM 5
+════════════════════════════════════════════════════ -->
+<div class="exam-panel" id="exam4">
+  <div class="exam-meta">
+    <div class="row"><span class="label">Course:</span><span class="value">CS210 System Analysis &amp; Design</span></div>
+    <div class="row"><span class="label">Time Allowed:</span><span class="value">120 Min &nbsp;|&nbsp; Total: 60 Marks</span></div>
+    <div class="case-study">
+      <strong>Case Study — Practice Exam 5:</strong><br>
+      <strong>ZamaZama Sports Club Network, ZSC</strong>, is an Egyptian sports organisation managing 12 athletic clubs across governorates. HQ is in Port Said. Each club has: membership, training, equipment, and events departments. ZSC struggles with manual membership registration. Management decided to automate the <strong>Membership Department</strong> and establish an <strong>ISC at HQ</strong>. Each club: 1 computer + 1 printer connected to ISC servers.<br><br>
+      <strong>Membership Dept. roles:</strong> Receive membership application, Validate application, Forward to training department.<br><br>
+      <strong>Automated Membership System (AMS) functionalities:</strong> Register membership application, Validate application, Print membership card, Send to Training Dept.<br>
+      <strong>Data attributes:</strong> Membership No., Registration Date, Member Name, Member Address, Sports Activities (Activity Name, Level, Schedule — up to 4 activities).
+    </div>
+  </div>
+  <div class="expand-bar">
+    <button class="btn-secondary" style="padding:5px 14px;font-size:.82rem" onclick="expandAll('exam4')">Expand All</button>
+    <button class="btn-secondary" style="padding:5px 14px;font-size:.82rem" onclick="collapseAll('exam4')">Collapse All</button>
+  </div>
+
+  <div class="question-block" onclick="toggleQ(this)"><div class="q-header"><h3>Q1 — Fundamentals of System Analysis and Design</h3><div class="q-meta"><span class="q-marks">9 Marks</span><span class="toggle-icon">▼</span></div></div><div class="q-body" onclick="stopProp(event)">
+    <div class="sub-q"><div class="sub-q-label">Part A</div><p>Define <strong>"Project Sponsor"</strong> and explain their role in IS development.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><p>A <strong>Project Sponsor</strong> is a senior manager or executive who champions the IS development project, provides funding and authority, and ensures alignment with organisational goals. They are accountable for the project's business outcomes and approve key decisions throughout the SDLC.</p></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part B</div><p>State <strong>two IS Technical Components</strong> and explain one in ≤ 3 lines.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li><strong>Supporting Database</strong> – stores all data needed by the application software persistently and consistently. It allows multiple users to access shared data concurrently, supporting both operational and reporting needs.</li><li><strong>Documentation</strong> – system manuals, user guides, and technical specs that support operation, training, and maintenance.</li></ul></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part C</div><p>State <strong>two roles of the System Analyst/Designer</strong> and explain one in ≤ 3 lines.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li><strong>Business-Oriented Functional Specialist</strong> – an expert in a specific business domain (e.g., sports management) who provides domain knowledge to ensure the system meets real operational needs.</li><li><strong>Change Management Analyst</strong> – manages the human side of system implementation, preparing staff for new processes.</li></ul></div></div>
+  </div></div>
+
+  <div class="question-block" onclick="toggleQ(this)"><div class="q-header"><h3>Q2 — Analysis/Design Approaches &amp; Requirements</h3><div class="q-meta"><span class="q-marks">12 Marks</span><span class="toggle-icon">▼</span></div></div><div class="q-body" onclick="stopProp(event)">
+    <div class="sub-q"><div class="sub-q-label">Part A</div><p>Define <strong>SDLC</strong> and state its abbreviation.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><p>SDLC = System Development Life Cycle. The logical process by which system analysts, software engineers, programmers, and end users build IS and computer applications to solve business problems and needs.</p></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part B</div><p>State <strong>three SDLC phases</strong>.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li>Planning</li><li>Analysis</li><li>Design and Prototyping</li><li>Implementation</li><li>Deployment, Operations, Maintenance</li></ul></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part C</div><p>Differentiate between <strong>Functional</strong> and <strong>Nonfunctional Requirements</strong> with an example from ZSC.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><p><strong>Functional:</strong> what the system does. Example: "The AMS shall register a new member application and validate it within the same session." <br><strong>Nonfunctional:</strong> how well the system performs. Example: "The AMS shall be available 99.5% of the time during business hours."</p></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part D</div><p>Mention <strong>two Analysis Strategies</strong> and explain one in ≤ 3 lines.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li><strong>Outcome Analysis</strong> – defines what outcomes the system must produce (e.g., a valid membership card) and works backward to identify the processes and data needed to achieve them.</li><li><strong>Informal Benchmarking</strong> – compares current processes with similar organisations to discover improvement opportunities.</li></ul></div></div>
+  </div></div>
+
+  <div class="question-block" onclick="toggleQ(this)"><div class="q-header"><h3>Q3 — Planning &amp; Analysis Phases</h3><div class="q-meta"><span class="q-marks">6 Marks</span><span class="toggle-icon">▼</span></div></div><div class="q-body" onclick="stopProp(event)">
+    <div class="sub-q"><div class="sub-q-label">Part A</div><p>State <strong>two Planning Phase sub-phases</strong> and explain one.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li><strong>Project Identification</strong> – the recognition of a business problem or opportunity that can be addressed by an IS project. For ZSC, this is the manual membership registration problem causing delays.</li><li><strong>Feasibility Analysis</strong> – assesses whether the project is viable technically, economically, and operationally.</li></ul></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part B</div><p>State <strong>two Analysis Phase sub-phases</strong> and explain one.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li><strong>Survey Sub-Phase</strong> – provides a high-level overview of the current system, identifies scope, external entities, and key stakeholders across ZSC's 12 clubs.</li><li><strong>Definition Sub-Phase</strong> – produces the formal requirements specification document.</li></ul></div></div>
+  </div></div>
+
+  <div class="question-block" onclick="toggleQ(this)"><div class="q-header"><h3>Q4 — Fact Finding &amp; System Modelling</h3><div class="q-meta"><span class="q-marks">15 Marks</span><span class="toggle-icon">▼</span></div></div><div class="q-body" onclick="stopProp(event)">
+    <div class="sub-q"><div class="sub-q-label">Part A</div><p>State the conditions when <strong>Observation</strong> is the best fact-finding technique.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li>When studying <strong>personal relations between individual employees</strong>.</li><li>When the analyst needs to observe the <strong>timing of document transfers</strong> between sections/departments.</li><li>When examining <strong>job execution timing and methods</strong> (how tasks are actually done vs. how they are supposed to be done).</li></ul></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part B</div><p>State the fact-finding techniques for <strong>ZSC HQ and its 12 clubs</strong>. Justify each.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li><strong>Interviewing</strong> – at HQ to gather detailed information from management about requirements.</li><li><strong>Questionnaires</strong> – across 12 clubs due to geographic distribution.</li><li><strong>Observation</strong> – at HQ to observe personal relations, document timing, and task execution.</li><li><strong>Sampling &amp; Record Inspection</strong> – at HQ to inspect membership records and identify workload trends.</li></ul></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part C</div><p>Draw the <strong>Context Level DFD</strong> of ZSC's AMS.</p><textarea class="answer-box" style="min-height:110px" placeholder="Describe Context Level DFD…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li>Process: "0 — Automated Membership System (AMS)"</li><li>Member → [Application] → AMS → [Membership Card] → Member</li><li>AMS → [Validated Application] → Training Dept.</li></ul></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part D</div><p>Draw the <strong>Level-0 DFD</strong> of ZSC's AMS.</p><textarea class="answer-box" style="min-height:130px" placeholder="Describe Level-0…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li>1.0 Membership Dept. ← Application (Member), → Validated Application, Archive</li><li>2.0 Training Dept. ← Validated Application, → Schedule → Member</li><li>3.0 Equipment Dept.</li><li>4.0 Events Dept.</li></ul></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part E</div><p>Draw the <strong>Level-1 DFD</strong> of the Membership Department.</p><textarea class="answer-box" style="min-height:140px" placeholder="Describe Level-1 sub-processes…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li>1.1 Receive Application (Member → Received App)</li><li>1.2 Validate Application (→ Validated / Rejected)</li><li>1.3 Print Membership Card (→ Card → Member)</li><li>1.4 Send to Training (→ Validated App → Training)</li><li>D1 Membership Archive</li></ul></div></div>
+  </div></div>
+
+  <div class="question-block" onclick="toggleQ(this)"><div class="q-header"><h3>Q5 — System Technical Architecture</h3><div class="q-meta"><span class="q-marks">6 Marks</span><span class="toggle-icon">▼</span></div></div><div class="q-body" onclick="stopProp(event)">
+    <div class="sub-q"><div class="sub-q-label">Part A</div><p>State the <strong>components of System Technical Architecture</strong>.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li><strong>Software (SW)</strong> – system and application software</li><li><strong>Hardware (HW)</strong> – servers, PCs, printers, and other devices</li><li><strong>Network</strong> – communication infrastructure connecting components</li></ul></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part B</div><p>Design the <strong>Technical Architecture for ZSC's AMS</strong>.</p><textarea class="answer-box" style="min-height:130px" placeholder="Describe architecture components and connections…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li>ISC at HQ (Port Said): Application Server + DB Server</li><li>12 Club Clients: 1 PC + 1 Printer each</li><li>WAN connecting all clubs to ISC</li><li>Client-Server 2-Tier: clients handle UI, ISC handles data and logic</li></ul></div></div>
+  </div></div>
+
+  <div class="question-block" onclick="toggleQ(this)"><div class="q-header"><h3>Q6 — Interface Design (Answer any TWO)</h3><div class="q-meta"><span class="q-marks">6 Marks</span><span class="toggle-icon">▼</span></div></div><div class="q-body" onclick="stopProp(event)">
+    <div class="sub-q"><div class="sub-q-label">Part A (Optional)</div><p>Explain the guidelines for <strong>Meaningful Communications</strong> in interface design.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li>Each screen must have a clear, descriptive title</li><li>Minimise the use of abbreviations</li><li>Provide clear user feedback messages (success, error, warning)</li><li>Inquiry programs should display code meanings in human-readable format</li><li>User instructions must be supplied on each screen</li></ul></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part B (Optional)</div><p>Design the <strong>input screen</strong> for Membership Application in ZSC's AMS.</p><textarea class="answer-box" style="min-height:130px" placeholder="Describe the input screen…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li>Membership No.: [Auto-generated]</li><li>Registration Date: [Date Picker]</li><li>Member Name: [Text]</li><li>Member Address: [Text]</li><li>Activities (4 rows): Activity Name [Dropdown] | Level [Radio: Beginner/Intermediate/Advanced] | Schedule [Dropdown: Mon/Wed/Fri etc.]</li><li>Buttons: [Register] [Validate] [Print Card] [Cancel]</li></ul></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part C (Optional)</div><p>Design the <strong>output report</strong> for the Membership Card.</p><textarea class="answer-box" style="min-height:130px" placeholder="Describe the output report…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li>Header: ZSC Logo | Club Name | "Membership Card" | Date</li><li>Body: Membership No. | Member Name | Address | Photo placeholder</li><li>Activities Table: # | Activity | Level | Schedule</li><li>Footer: "Valid for one year" | Club Manager Signature</li></ul></div></div>
+  </div></div>
+
+  <div class="question-block" onclick="toggleQ(this)"><div class="q-header"><h3>Q7 — Data Storage &amp; Program Design</h3><div class="q-meta"><span class="q-marks">6 Marks</span><span class="toggle-icon">▼</span></div></div><div class="q-body" onclick="stopProp(event)">
+    <div class="sub-q"><div class="sub-q-label">Part A</div><p>State <strong>two advantages of the Flat File</strong> approach and explain one in ≤ 3 lines.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li><strong>Simple organisation and accessing methods</strong> – flat files use straightforward sequential or indexed access methods that are easy to implement and understand, without requiring complex query languages or schema design.</li><li><strong>Cheap</strong> – no DBMS software licence costs.</li></ul></div></div>
+    <div class="sub-q"><div class="sub-q-label">Part B</div><p>State the <strong>three Program Design Architectures</strong> and briefly describe each.</p><textarea class="answer-box" placeholder="Write your answer here…"></textarea><button class="reveal-btn" onclick="revealAnswer(this)">Show Model Answer</button><div class="model-answer"><div class="ma-label">Model Answer</div><ul><li><strong>Traditional Monolith</strong> – single deployment unit, shared database, centralised codebase. Simple but hard to scale independently.</li><li><strong>Microservices</strong> – multiple independent services, each with its own database and deployment. Highly scalable but complex.</li><li><strong>Modular Monolith</strong> – modular design within a single deployment unit, providing maintainability benefits without distributed system complexity.</li></ul></div></div>
+  </div></div>
+
+  <div class="exam-actions">
+    <button class="btn-secondary" onclick="clearAll('exam4')">Clear All Answers</button>
+    <button class="btn-primary" onclick="revealAll('exam4')">Reveal All Answers</button>
+  </div>
+</div><!-- /exam4 -->
+
+</div><!-- /exams-wrap -->
+
+<script>
+function switchExam(idx) {
+  document.querySelectorAll('.exam-panel').forEach((p, i) => p.classList.toggle('active', i === idx));
+  document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
+}
+
+function toggleQ(block) {
+  block.classList.toggle('open');
+}
+
+function stopProp(e) { e.stopPropagation(); }
+
+function revealAnswer(btn) {
+  const ma = btn.nextElementSibling;
+  ma.classList.toggle('visible');
+  btn.textContent = ma.classList.contains('visible') ? 'Hide Answer' : 'Show Model Answer';
+}
+
+function expandAll(examId) {
+  document.getElementById(examId).querySelectorAll('.question-block').forEach(b => b.classList.add('open'));
+}
+
+function collapseAll(examId) {
+  document.getElementById(examId).querySelectorAll('.question-block').forEach(b => b.classList.remove('open'));
+}
+
+function revealAll(examId) {
+  document.getElementById(examId).querySelectorAll('.model-answer').forEach(ma => {
+    ma.classList.add('visible');
+    const btn = ma.previousElementSibling;
+    if (btn && btn.classList.contains('reveal-btn')) btn.textContent = 'Hide Answer';
+  });
+  expandAll(examId);
+}
+
+function clearAll(examId) {
+  if (!confirm('Clear all your answers in this exam?')) return;
+  document.getElementById(examId).querySelectorAll('.answer-box').forEach(t => t.value = '');
+  document.getElementById(examId).querySelectorAll('.model-answer').forEach(ma => {
+    ma.classList.remove('visible');
+    const btn = ma.previousElementSibling;
+    if (btn && btn.classList.contains('reveal-btn')) btn.textContent = 'Show Model Answer';
+  });
+}
+</script>
+</body>
+</html>
