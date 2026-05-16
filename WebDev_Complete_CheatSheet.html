@@ -1,0 +1,1859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web Dev — Complete Exam Cheat Sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+  --bg: #08090a;
+  --surface: #111214;
+  --surface-hover: #1a1b1e;
+  --card-bg: rgba(255, 255, 255, 0.03);
+  --card-border: rgba(255, 255, 255, 0.08);
+  --text: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+  
+  --html: #ff7e33;
+  --css: #3b82f6;
+  --js: #facc15;
+  --php: #8b5cf6;
+  --success: #22c55e;
+  --error: #ef4444;
+  --warning: #f59e0b;
+  
+  --r-xl: 24px;
+  --r-lg: 16px;
+  --r-md: 12px;
+  
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'Plus Jakarta Sans', -apple-system, sans-serif;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="light"] {
+  --bg: #f1f5f9;
+  --surface: #ffffff;
+  --surface-hover: #f8fafc;
+  --card-bg: rgba(0, 0, 0, 0.02);
+  --card-border: rgba(0, 0, 0, 0.08);
+  --text: #0f172a;
+  --text-muted: #475569;
+  --text-dim: #64748b;
+  
+  --html: #ea580c;
+  --css: #2563eb;
+  --js: #ca8a04;
+  --php: #7c3aed;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* --- Premium Background Effects --- */
+.mesh-gradient {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  z-index: -1;
+  background: 
+    radial-gradient(circle at 0% 0%, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 100% 100%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+  opacity: 0.8;
+}
+
+/* --- Scrollbar --- */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { 
+  background: var(--card-border); 
+  border-radius: 10px; 
+}
+::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+
+/* --- Navigation --- */
+.topnav {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(8, 9, 10, 0.8);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--card-border);
+  display: flex;
+  align-items: center;
+  padding: 0 1.5rem;
+  overflow-x: auto;
+  gap: 0.5rem;
+  scrollbar-width: none;
+}
+.topnav::-webkit-scrollbar { display: none; }
+
+.brand {
+  font-weight: 800;
+  font-size: 1.1rem;
+  padding-right: 1.5rem;
+  margin-right: 1rem;
+  border-right: 1px solid var(--card-border);
+  white-space: nowrap;
+  background: linear-gradient(135deg, var(--html), var(--php));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.nav-tab {
+  padding: 1.2rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  white-space: nowrap;
+  transition: var(--transition);
+  position: relative;
+}
+
+.nav-tab:hover { color: var(--text); }
+.nav-tab.active { color: var(--text); }
+.nav-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 1rem; right: 1rem;
+  height: 3px;
+  background: currentColor;
+  border-radius: 3px 3px 0 0;
+}
+
+.nav-tab.t-html { color: var(--html); }
+.nav-tab.t-css { color: var(--css); }
+.nav-tab.t-js { color: var(--js); }
+.nav-tab.t-php { color: var(--php); }
+.nav-tab.t-php2 { color: #a855f7; }
+.nav-tab.t-phpf { color: var(--success); }
+.nav-tab.t-final { color: var(--error); }
+
+/* --- Sections --- */
+.section {
+  display: none;
+  padding: 2rem 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  animation: fadeIn 0.4s ease;
+}
+.section.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Section Headers --- */
+.sh {
+  margin-bottom: 2.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.sh-icon {
+  font-size: 2.5rem;
+}
+.sh h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+.sh .sub {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+/* --- Grid System --- */
+.grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+.grid-auto { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; }
+
+@media (max-width: 1024px) {
+  .grid3 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .grid2, .grid3 { grid-template-columns: 1fr; }
+  .sh h2 { font-size: 1.5rem; }
+}
+
+/* --- Cards --- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+  padding: 1.5rem;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.card:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+  background: var(--surface-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+
+.card-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.card.highlight { border-left: 4px solid var(--error); }
+.card.tip { border-left: 4px solid var(--success); }
+.card.warn { border-left: 4px solid var(--warning); }
+.card.info { border-left: 4px solid var(--css); }
+
+/* --- Tables Responsive Wrapper --- */
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: var(--r-md);
+  border: 1px solid var(--card-border);
+  margin: 1rem 0;
+  scrollbar-width: thin;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+th {
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--card-border);
+}
+td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--card-border);
+  vertical-align: top;
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(255, 255, 255, 0.01); }
+
+/* --- Code Styling --- */
+code {
+  font-family: var(--mono);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--card-border);
+  border-radius: 6px;
+  padding: 0.2em 0.4em;
+  font-size: 0.9em;
+  color: var(--js);
+}
+
+pre {
+  font-family: var(--mono);
+  background: #0d0e10;
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-md);
+  padding: 1.25rem;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.7;
+  margin: 1rem 0;
+  color: #e2e8f0;
+}
+
+/* --- Badges --- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  font-family: var(--mono);
+}
+.b-yes { background: rgba(34, 197, 94, 0.1); color: var(--success); border: 1px solid rgba(34, 197, 94, 0.2); }
+.b-no { background: rgba(239, 68, 68, 0.1); color: var(--error); border: 1px solid rgba(239, 68, 68, 0.2); }
+.b-warn { background: rgba(245, 158, 11, 0.1); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.2); }
+.b-info { background: rgba(59, 130, 246, 0.1); color: var(--css); border: 1px solid rgba(59, 130, 246, 0.2); }
+
+/* --- Lists --- */
+ul.pts { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+ul.pts li { font-size: 0.95rem; padding-left: 1.5rem; position: relative; }
+ul.pts li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--text-dim);
+  font-weight: 700;
+}
+
+/* --- Boxes --- */
+.trap, .tip-box {
+  padding: 1rem 1.25rem;
+  border-radius: var(--r-md);
+  margin: 1rem 0;
+  font-size: 0.9rem;
+  border: 1px solid transparent;
+}
+.trap { background: rgba(239, 68, 68, 0.05); border-color: rgba(239, 68, 68, 0.15); border-left: 4px solid var(--error); }
+.trap strong { color: var(--error); }
+.tip-box { background: rgba(34, 197, 94, 0.05); border-color: rgba(34, 197, 94, 0.15); border-left: 4px solid var(--success); }
+.tip-box strong { color: var(--success); }
+
+/* --- Spacing --- */
+.gap { margin-bottom: 1.5rem; }
+.gap2 { margin-bottom: 2rem; }
+h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.8rem; color: var(--text-muted); }
+
+/* --- Final Exam UI --- */
+.final-q {
+  background: var(--surface);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-md);
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+.final-q .qn { font-size: 0.75rem; color: var(--text-dim); font-family: var(--mono); margin-bottom: 0.5rem; }
+.final-q .qt { font-size: 1rem; font-weight: 500; margin-bottom: 1rem; }
+.final-q .opts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+@media (max-width: 640px) { .final-q .opts { grid-template-columns: 1fr; } }
+.final-q .opt {
+  font-size: 0.9rem;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  display: flex;
+  gap: 0.5rem;
+  transition: var(--transition);
+}
+.final-q .opt:hover { background: rgba(255, 255, 255, 0.05); border-color: var(--text-dim); }
+.final-q .opt span { color: var(--text-muted); font-weight: 700; }
+
+.answer-key {
+  background: #0d0e10;
+  border-radius: var(--r-md);
+  padding: 1.5rem;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  line-height: 1.8;
+  border: 1px solid var(--card-border);
+}
+.answer-key .a { color: var(--success); font-weight: 700; }
+
+.model-header {
+  padding: 1.5rem;
+  background: linear-gradient(135deg, var(--surface), #1a1b1e);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-lg);
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+[data-theme="light"] .model-header {
+  background: linear-gradient(135deg, #fff, #f1f5f9);
+}
+
+.theme-toggle {
+  margin-right: auto;
+  background: var(--surface);
+  border: 1px solid var(--card-border);
+  color: var(--text);
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+.theme-toggle:hover {
+  background: var(--surface-hover);
+  border-color: var(--text-muted);
+}
+.model-title { font-size: 1.25rem; font-weight: 800; }
+.model-meta { font-size: 0.85rem; color: var(--text-muted); }
+.section-divider{
+  font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;
+  color:var(--muted);padding:0.5rem 0;border-bottom:1px solid var(--border);
+  margin:1rem 0 0.75rem;
+}
+</style>
+</head>
+<body>
+  <div class="mesh-gradient"></div>
+
+<!-- TOP NAV -->
+<nav class="topnav">
+  <div class="brand">⚡ WebDev Exam</div>
+  <button class="nav-tab t-html active" onclick="show('html')">🟠 HTML</button>
+  <button class="nav-tab t-css" onclick="show('css')">🟣 CSS</button>
+  <button class="nav-tab t-js" onclick="show('js')">🟡 JavaScript</button>
+  <button class="nav-tab t-php" onclick="show('php')">🔵 PHP Core</button>
+  <button class="nav-tab t-php2" onclick="show('cookies')">🟣 Cookies & Sessions</button>
+  <button class="nav-tab t-phpf" onclick="show('fileio')">🟢 PHP File I/O</button>
+  <button class="nav-tab t-final" onclick="show('finals')">🔴 FINAL EXAMS</button>
+  <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Light/Dark Mode">
+    <i class="fas fa-moon"></i>
+  </button>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- HTML -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section class="section active" id="s-html">
+<div class="sh"><span class="sh-icon">🟠</span><div><h2 style="color:var(--html)">HTML — Complete Summary</h2><div class="sub">Structure · Tags · Forms · Tables · Links · Media</div></div></div>
+
+<div class="grid2 gap2">
+  <div class="card">
+    <div class="card-title" style="color:var(--html)">📄 Page Structure</div>
+    <pre>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Page Title&lt;/title&gt;
+    &lt;link rel="stylesheet" href="style.css"&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;!-- content here --&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</pre>
+    <div class="trap"><strong>⚠ Exam Trap:</strong> <code>&lt;!DOCTYPE html&gt;</code> MUST be the very first line. Void elements (<code>&lt;br&gt; &lt;hr&gt; &lt;img&gt; &lt;input&gt;</code>) have NO closing tag.</div>
+  </div>
+  <div class="card">
+    <div class="card-title" style="color:var(--html)">🏷 Key Tags Quick Reference</div>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Tag</th><th>Use</th><th>Type</th></tr>
+      <tr><td><code>&lt;h1&gt;–&lt;h6&gt;</code></td><td>Headings (h1=biggest)</td><td>Block</td></tr>
+      <tr><td><code>&lt;p&gt;</code></td><td>Paragraph</td><td>Block</td></tr>
+      <tr><td><code>&lt;div&gt;</code></td><td>Container/group</td><td>Block</td></tr>
+      <tr><td><code>&lt;span&gt;</code></td><td>Inline container</td><td>Inline</td></tr>
+      <tr><td><code>&lt;strong&gt;</code></td><td>Bold / important</td><td>Inline</td></tr>
+      <tr><td><code>&lt;em&gt;</code></td><td>Italic / emphasis</td><td>Inline</td></tr>
+      <tr><td><code>&lt;pre&gt;</code></td><td>Preserve whitespace</td><td>Block</td></tr>
+      <tr><td><code>&lt;br&gt;</code></td><td>Line break (void)</td><td>Inline</td></tr>
+      <tr><td><code>&lt;hr&gt;</code></td><td>Horizontal rule (void)</td><td>Block</td></tr>
+      <tr><td><code>&lt;iframe&gt;</code></td><td>Embed another page</td><td>Inline</td></tr>
+    </table>
+</div>
+  </div>
+</div>
+
+<div class="grid3 gap2">
+  <div class="card">
+    <div class="card-title" style="color:var(--html)">🔗 Links</div>
+    <pre>&lt;!-- External --&gt;
+&lt;a href="https://google.com"&gt;Go&lt;/a&gt;
+
+&lt;!-- New tab --&gt;
+&lt;a href="..." target="_blank"&gt;New Tab&lt;/a&gt;
+
+&lt;!-- Email --&gt;
+&lt;a href="mailto:x@y.com"&gt;Email&lt;/a&gt;
+
+&lt;!-- Anchor/bookmark --&gt;
+&lt;h2 id="top"&gt;Top&lt;/h2&gt;
+&lt;a href="#top"&gt;Go to Top&lt;/a&gt;</pre>
+  </div>
+  <div class="card">
+    <div class="card-title" style="color:var(--html)">🖼 Images</div>
+    <pre>&lt;img src="photo.jpg"
+     alt="Description"
+     width="200"
+     height="150"&gt;
+
+&lt;!-- Figure with caption --&gt;
+&lt;figure&gt;
+  &lt;img src="x.jpg" alt="X"&gt;
+  &lt;figcaption&gt;Caption&lt;/figcaption&gt;
+&lt;/figure&gt;</pre>
+    <div class="tip-box"><strong>alt</strong> = screen readers + SEO + fallback when image fails</div>
+  </div>
+  <div class="card">
+    <div class="card-title" style="color:var(--html)">📋 Lists</div>
+    <pre>&lt;!-- Unordered (bullets) --&gt;
+&lt;ul&gt;
+  &lt;li&gt;HTML&lt;/li&gt;
+  &lt;li&gt;CSS&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;!-- Ordered (numbers) --&gt;
+&lt;ol type="1"&gt; &lt;!-- A a I i --&gt;
+  &lt;li&gt;First&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;!-- Nested: put &lt;ul&gt; INSIDE &lt;li&gt; --&gt;</pre>
+  </div>
+</div>
+
+<div class="grid2 gap2">
+  <div class="card">
+    <div class="card-title" style="color:var(--html)">📊 Tables</div>
+    <pre>&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;&lt;th&gt;Name&lt;/th&gt;&lt;th&gt;Grade&lt;/th&gt;&lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;&lt;td&gt;Ali&lt;/td&gt;&lt;td&gt;A&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tbody&gt;
+  &lt;tfoot&gt;
+    &lt;tr&gt;&lt;td colspan="2"&gt;Avg: A&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tfoot&gt;
+&lt;/table&gt;</pre>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Attr</th><th>Effect</th></tr>
+      <tr><td><code>colspan="2"</code></td><td>Cell spans 2 columns</td></tr>
+      <tr><td><code>rowspan="2"</code></td><td>Cell spans 2 rows</td></tr>
+      <tr><td><code>&lt;caption&gt;</code></td><td>Table title (after &lt;table&gt;)</td></tr>
+    </table>
+</div>
+  </div>
+  <div class="card">
+    <div class="card-title" style="color:var(--html)">📝 Forms</div>
+    <pre>&lt;form action="submit.php" method="POST"&gt;
+
+  &lt;input type="text"    placeholder="Name"&gt;
+  &lt;input type="password" placeholder="Pass"&gt;
+  &lt;input type="email"   required&gt;
+  &lt;input type="radio"   name="sex" value="M"&gt;
+  &lt;input type="checkbox" name="agree"&gt;
+  &lt;input type="hidden"  value="secret"&gt;
+  &lt;input type="reset"&gt;
+  &lt;input type="submit"  value="Send"&gt;
+
+  &lt;select&gt;
+    &lt;option&gt;Option 1&lt;/option&gt;
+  &lt;/select&gt;
+
+  &lt;textarea rows="4"&gt;&lt;/textarea&gt;
+&lt;/form&gt;</pre>
+  </div>
+</div>
+
+<div class="grid3 gap2">
+  <div class="card highlight">
+    <div class="card-title" style="color:var(--red)">🔥 GET vs POST — EXAM CRITICAL</div>
+    <div class="table-wrap">
+    <table>
+      <tr><th></th><th>GET</th><th>POST</th></tr>
+      <tr><td>Data visible?</td><td><span class="badge b-warn">URL ✓</span></td><td><span class="badge b-yes">Hidden</span></td></tr>
+      <tr><td>Security</td><td><span class="badge b-no">Lower</span></td><td><span class="badge b-yes">Higher</span></td></tr>
+      <tr><td>Passwords?</td><td><span class="badge b-no">Never</span></td><td><span class="badge b-yes">Yes</span></td></tr>
+      <tr><td>Default?</td><td><span class="badge b-yes">Yes</span></td><td><span class="badge b-no">Must specify</span></td></tr>
+      <tr><td>Cached?</td><td>Yes</td><td>No</td></tr>
+    </table>
+</div>
+  </div>
+  <div class="card highlight">
+    <div class="card-title" style="color:var(--red)">🔥 readonly vs disabled</div>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Attribute</th><th>Can Edit?</th><th>Submitted?</th></tr>
+      <tr><td><code>readonly</code></td><td><span class="badge b-no">No</span></td><td><span class="badge b-yes">✓ YES</span></td></tr>
+      <tr><td><code>disabled</code></td><td><span class="badge b-no">No</span></td><td><span class="badge b-no">✗ NO</span></td></tr>
+    </table>
+</div>
+    <div class="trap" style="margin-top:0.5rem"><strong>Trap:</strong> disabled fields are NOT submitted with the form!</div>
+  </div>
+  <div class="card">
+    <div class="card-title" style="color:var(--html)">🧩 Block vs Inline</div>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Block</th><th>Inline</th></tr>
+      <tr><td>New line ✓</td><td>Same line ✓</td></tr>
+      <tr><td>Full width</td><td>Content width</td></tr>
+      <tr><td>Respects w/h</td><td>Ignores w/h</td></tr>
+    </table>
+</div>
+    <div style="margin-top:0.5rem;font-size:0.8rem">
+      <strong>Block:</strong> <code>p div h1–h6 ul ol table</code><br>
+      <strong>Inline:</strong> <code>a span strong em img</code>
+    </div>
+  </div>
+</div>
+
+<div class="card gap2">
+  <div class="card-title" style="color:var(--html)">📌 Key Attributes Reference</div>
+  <div class="table-wrap">
+    <table>
+    <tr><th>Attribute</th><th>Tag</th><th>Purpose</th></tr>
+    <tr><td><code>href</code></td><td><code>&lt;a&gt;</code></td><td>Link destination URL</td></tr>
+    <tr><td><code>src</code></td><td><code>&lt;img&gt;&lt;script&gt;</code></td><td>File path / URL</td></tr>
+    <tr><td><code>alt</code></td><td><code>&lt;img&gt;</code></td><td>Alternate text (accessibility)</td></tr>
+    <tr><td><code>target="_blank"</code></td><td><code>&lt;a&gt;</code></td><td>Open in new tab</td></tr>
+    <tr><td><code>action</code></td><td><code>&lt;form&gt;</code></td><td>URL where form sends data</td></tr>
+    <tr><td><code>method</code></td><td><code>&lt;form&gt;</code></td><td>GET or POST</td></tr>
+    <tr><td><code>required</code></td><td><code>&lt;input&gt;</code></td><td>Field cannot be empty</td></tr>
+    <tr><td><code>placeholder</code></td><td><code>&lt;input&gt;</code></td><td>Hint text inside field</td></tr>
+    <tr><td><code>colspan/rowspan</code></td><td><code>&lt;td&gt;&lt;th&gt;</code></td><td>Span multiple columns/rows</td></tr>
+    <tr><td><code>id</code></td><td>Any</td><td>Unique identifier (JS + CSS)</td></tr>
+    <tr><td><code>class</code></td><td>Any</td><td>CSS class name</td></tr>
+  </table>
+</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- CSS -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section class="section" id="s-css">
+<div class="sh"><span class="sh-icon">🟣</span><div><h2 style="color:var(--css)">CSS — Complete Summary</h2><div class="sub">Selectors · Box Model · Flexbox · Grid · Animations · Transforms</div></div></div>
+
+<div class="grid3 gap2">
+  <div class="card">
+    <div class="card-title" style="color:var(--css)">3 Ways to Apply CSS</div>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Type</th><th>Where</th><th>Priority</th></tr>
+      <tr><td>Inline</td><td><code>style=""</code></td><td><span class="badge b-warn">HIGHEST</span></td></tr>
+      <tr><td>Internal</td><td><code>&lt;style&gt;</code> in head</td><td>Medium</td></tr>
+      <tr><td>External</td><td><code>.css</code> file</td><td>Lowest</td></tr>
+    </table>
+</div>
+    <pre style="margin-top:0.6rem">&lt;link rel="stylesheet" href="style.css"&gt;</pre>
+  </div>
+  <div class="card highlight">
+    <div class="card-title" style="color:var(--red)">🔥 Specificity — EXAM FAV</div>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Type</th><th>Priority</th></tr>
+      <tr><td>Inline <code>style=""</code></td><td><span class="badge b-no">1st (HIGHEST)</span></td></tr>
+      <tr><td>ID <code>#id</code></td><td><span class="badge b-warn">2nd</span></td></tr>
+      <tr><td>Class <code>.class</code></td><td><span class="badge b-info">3rd</span></td></tr>
+      <tr><td>Element <code>p h1 div</code></td><td><span class="badge b-yes">4th (lowest)</span></td></tr>
+    </table>
+</div>
+  </div>
+  <div class="card">
+    <div class="card-title" style="color:var(--css)">Selectors Quick Ref</div>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Selector</th><th>Targets</th></tr>
+      <tr><td><code>*</code></td><td>ALL elements</td></tr>
+      <tr><td><code>p</code></td><td>All &lt;p&gt; tags</td></tr>
+      <tr><td><code>.box</code></td><td>class="box"</td></tr>
+      <tr><td><code>#main</code></td><td>id="main"</td></tr>
+      <tr><td><code>p .red</code></td><td>Descendant</td></tr>
+      <tr><td><code>p, h1</code></td><td>Both p AND h1</td></tr>
+    </table>
+</div>
+  </div>
+</div>
+
+<div class="grid2 gap2">
+  <div class="card">
+    <div class="card-title" style="color:var(--css)">📦 Box Model</div>
+    <pre>/* Outer → Inner:
+   Margin → Border → Padding → Content */
+
+div {
+  margin: 10px;        /* OUTSIDE border */
+  border: 2px solid blue;
+  padding: 20px;       /* INSIDE border */
+  width: 200px;        /* content width */
+}</pre>
+    <div class="trap" style="margin-top:0.5rem"><strong>⚠ Padding vs Margin:</strong><br>
+    Padding = space INSIDE border (has background color)<br>
+    Margin = space OUTSIDE border (always transparent)</div>
+  </div>
+  <div class="card">
+    <div class="card-title" style="color:var(--css)">🎨 Colors &amp; Text</div>
+    <pre>/* Color formats */
+color: red;            /* named */
+color: #FF0000;        /* HEX */
+color: rgb(255,0,0);   /* RGB */
+color: rgba(255,0,0,0.5); /* RGBA */
+color: hsl(0,100%,50%); /* HSL */
+
+/* Text properties */
+font-family: Arial, sans-serif;
+font-size: 16px;
+font-weight: bold;     /* or 100–900 */
+font-style: italic;
+text-align: center;
+text-decoration: underline;
+letter-spacing: 2px;
+line-height: 1.5;</pre>
+  </div>
+</div>
+
+<div class="grid2 gap2">
+  <div class="card">
+    <div class="card-title" style="color:var(--css)">📍 Position Values</div>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Value</th><th>Relative To</th><th>Scrolls?</th></tr>
+      <tr><td><code>static</code></td><td>Normal flow (default)</td><td>Yes</td></tr>
+      <tr><td><code>relative</code></td><td>Its OWN normal position</td><td>Yes</td></tr>
+      <tr><td><code>absolute</code></td><td>Nearest positioned ancestor</td><td>Yes</td></tr>
+      <tr><td><code>fixed</code></td><td>Viewport (browser window)</td><td>No — stays!</td></tr>
+      <tr><td><code>sticky</code></td><td>Switches relative ↔ fixed</td><td>Both</td></tr>
+    </table>
+</div>
+    <div class="trap" style="margin-top:0.5rem"><strong>Absolute parent rule:</strong> Parent MUST have <code>position ≠ static</code>, else it positions to <code>&lt;html&gt;</code>!</div>
+  </div>
+  <div class="card">
+    <div class="card-title" style="color:var(--css)">✨ Pseudo-Elements</div>
+    <pre>::first-line   → first line of text
+::first-letter → first character
+::before       → insert BEFORE content
+::after        → insert AFTER content
+::placeholder  → input hint text
+::selection    → highlighted text
+
+/* Example */
+p::before {
+  content: '★ ';
+  color: gold;
+}
+p::after {
+  content: ' ★';
+}</pre>
+  </div>
+</div>
+
+<div class="grid2 gap2">
+  <div class="card">
+    <div class="card-title" style="color:var(--css)">💪 Flexbox</div>
+    <pre>/* Apply to PARENT (container) */
+.container {
+  display: flex;
+  flex-direction: row;    /* row | column */
+  justify-content: center; /* main axis */
+  align-items: center;    /* cross axis */
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* Apply to CHILDREN */
+.item {
+  flex-grow: 1;   /* grow to fill space */
+  order: 2;       /* visual order */
+}</pre>
+    <div class="trap"><strong>⚠ Axes:</strong><br>
+    <code>justify-content</code> = MAIN axis (→ if row)<br>
+    <code>align-items</code> = CROSS axis (↓ if row)</div>
+  </div>
+  <div class="card">
+    <div class="card-title" style="color:var(--css)">🗃 Grid</div>
+    <pre>.container {
+  display: grid;
+  grid-template-columns: 200px 1fr 200px;
+  grid-template-rows: auto;
+  gap: 1rem;
+}
+
+/* Place items */
+.item {
+  grid-column: 1 / 3; /* span col 1–3 */
+  grid-row: 1 / 2;
+  grid-area: header;  /* named area */
+}</pre>
+  </div>
+</div>
+
+<div class="grid3 gap2">
+  <div class="card">
+    <div class="card-title" style="color:var(--css)">🎞 Transitions</div>
+    <pre>/* Shorthand */
+transition: all 0.3s ease;
+
+/* Specific */
+transition-property: color;
+transition-duration: 0.3s;
+transition-delay: 0.1s;
+transition-timing-function: ease;</pre>
+  </div>
+  <div class="card">
+    <div class="card-title" style="color:var(--css)">🎬 Animations</div>
+    <pre>/* Define */
+@keyframes slide {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(100px); }
+}
+
+/* Apply */
+.box {
+  animation: slide 2s ease infinite;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+}</pre>
+    <div class="tip-box"><strong>fill-mode: forwards</strong> = keeps final keyframe style after animation ends</div>
+  </div>
+  <div class="card">
+    <div class="card-title" style="color:var(--css)">🔄 Transform</div>
+    <pre>transform: rotate(45deg);    /* clockwise */
+transform: scale(2);         /* 2x bigger */
+transform: translateX(50px); /* move right */
+transform: translateY(-20px);/* move up */
+transform: skew(10deg);
+
+/* Combine multiple */
+transform: rotate(45deg) scale(2);</pre>
+    <div class="trap"><strong>scale(2)</strong> = 200% size. <strong>scale(0.5)</strong> = 50%</div>
+  </div>
+</div>
+
+<div class="grid2 gap2">
+  <div class="card">
+    <div class="card-title" style="color:var(--css)">📺 Display Values</div>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Value</th><th>New line?</th><th>Width/Height?</th></tr>
+      <tr><td><code>block</code></td><td>Yes</td><td>Yes</td></tr>
+      <tr><td><code>inline</code></td><td>No</td><td><span class="badge b-no">Ignored</span></td></tr>
+      <tr><td><code>inline-block</code></td><td>No</td><td><span class="badge b-yes">Yes</span></td></tr>
+      <tr><td><code>none</code></td><td colspan="2">Hidden, removed from flow</td></tr>
+      <tr><td><code>flex</code></td><td>Block</td><td>Flex container</td></tr>
+      <tr><td><code>grid</code></td><td>Block</td><td>Grid container</td></tr>
+    </table>
+</div>
+  </div>
+  <div class="card">
+    <div class="card-title" style="color:var(--css)">🌊 Float</div>
+    <pre>img {
+  float: left;   /* or right */
+}
+/* Stop float from affecting next elements */
+.clearfix {
+  clear: both;
+}</pre>
+    <ul class="pts">
+      <li>Moves element left/right, text wraps around it</li>
+      <li>Use <code>clear: both</code> to stop wrapping</li>
+      <li>Popular for text-around-image layouts</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- JAVASCRIPT -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section class="section" id="s-js">
+<div class="sh"><span class="sh-icon">🟡</span><div><h2 style="color:var(--js)">JavaScript — Complete Summary</h2><div class="sub">Variables · Scope · DOM · Events · Arrays · Functions · OOP</div></div></div>
+
+<div class="grid3 gap2">
+  <div class="card highlight">
+    <div class="card-title" style="color:var(--red)">🔥 var vs let vs const — CRITICAL</div>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Feature</th><th>var</th><th>let</th><th>const</th></tr>
+      <tr><td>Scope</td><td>Function</td><td>Block {}</td><td>Block {}</td></tr>
+      <tr><td>Re-declare</td><td>✅</td><td>❌</td><td>❌</td></tr>
+      <tr><td>Re-assign</td><td>✅</td><td>✅</td><td>❌</td></tr>
+      <tr><td>Hoisted</td><td>✅</td><td>❌</td><td>❌</td></tr>
+      <tr><td>Init needed</td><td>No</td><td>No</td><td><span class="badge b-warn">YES</span></td></tr>
+    </table>
+</div>
+  </div>
+  <div class="card">
+    <div class="card-title" style="color:var(--js)">📦 7 Data Types</div>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Type</th><th>Example</th></tr>
+      <tr><td>String</td><td><code>"Hello"</code></td></tr>
+      <tr><td>Number</td><td><code>42 / 3.14</code></td></tr>
+      <tr><td>BigInt</td><td><code>BigInt("999...")</code></td></tr>
+      <tr><td>Boolean</td><td><code>true / false</code></td></tr>
+      <tr><td>Undefined</td><td><code>let x;</code></td></tr>
+      <tr><td>Null</td><td><code>let x = null;</code></td></tr>
+      <tr><td>Object</td><td><code>{name:"Ali"}</code></td></tr>
+    </table>
+</div>
+  </div>
+  <div class="card highlight">
+    <div class="card-title" style="color:var(--red)">🔥 typeof null = "object"</div>
+    <pre>typeof "hello"    // "string"
+typeof 42         // "number"
+typeof true       // "boolean"
+typeof undefined  // "undefined"
+typeof null       // "object" ← BUG!
+typeof {}         // "object"
+typeof []         // "object"
+typeof function(){} // "function"</pre>
+    <div class="trap"><strong>Exam Trap:</strong> <code>typeof null</code> returns <code>"object"</code> — this is a famous JavaScript bug kept for compatibility!</div>
+  </div>
+</div>
+
+<div class="grid2 gap2">
+  <div class="card highlight">
+    <div class="card-title" style="color:var(--red)">🔥 == vs === — EXAM FAVOURITE</div>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Expression</th><th>Result</th><th>Why</th></tr>
+      <tr><td><code>5 == '5'</code></td><td><span class="badge b-warn">true</span></td><td>Type coercion: string→number</td></tr>
+      <tr><td><code>5 === '5'</code></td><td><span class="badge b-yes">false</span></td><td>Strict: different types</td></tr>
+      <tr><td><code>null == undefined</code></td><td><span class="badge b-warn">true</span></td><td>Special JS rule</td></tr>
+      <tr><td><code>0 == false</code></td><td><span class="badge b-warn">true</span></td><td>Coercion</td></tr>
+      <tr><td><code>'' == false</code></td><td><span class="badge b-warn">true</span></td><td>Coercion</td></tr>
+    </table>
+</div>
+    <div class="tip-box"><strong>Rule:</strong> Always use <code>===</code> unless you explicitly want type coercion!</div>
+  </div>
+  <div class="card highlight">
+    <div class="card-title" style="color:var(--red)">🔥 Type Coercion — String + Number</div>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Expression</th><th>Result</th><th>Why</th></tr>
+      <tr><td><code>5 + '5' + 1</code></td><td><code>"551"</code></td><td>5+'5'="55", then "55"+1="551"</td></tr>
+      <tr><td><code>16 + "Volvo"</code></td><td><code>"16Volvo"</code></td><td>Number → string</td></tr>
+      <tr><td><code>16 + 4 + "Volvo"</code></td><td><code>"20Volvo"</code></td><td>16+4=20 first, then string</td></tr>
+      <tr><td><code>"Volvo" + 16 + 4</code></td><td><code>"Volvo164"</code></td><td>String first = all concat</td></tr>
+    </table>
+</div>
+    <div class="trap"><strong>Key rule:</strong> Left to right. Once a string appears, + becomes concatenation!</div>
+  </div>
+</div>
+
+<div class="grid2 gap2">
+  <div class="card highlight">
+    <div class="card-title" style="color:var(--red)">🔥 Scope Tracing — Block Scope</div>
+    <pre>const age = 10;
+console.log(age);  // 10
+{
+  const age = 2;
+  console.log(age); // 2 ← new var
+}
+console.log(age);  // 10 ← restored
+
+// let = block scope
+let x = 1;
+if (true) {
+  let x = 2;  // different x!
+}
+// x is still 1 here</pre>
+    <div class="trap"><strong>var in a block = SAME variable globally!</strong><br>
+    <code>var x=1; {var x=2;}</code> → x is now 2 everywhere!</div>
+  </div>
+  <div class="card highlight">
+    <div class="card-title" style="color:var(--red)">🔥 Ternary Trap — Chained Order</div>
+    <pre>let score = 85;
+let grade = score >= 90 ? 'A' :
+            score >= 70 ? 'C' :  // ← TRAP!
+            score >= 80 ? 'B' :
+            score >= 60 ? 'D' : 'F';
+// Answer: 'C' NOT 'B'!
+// 85 >= 90? No. 85 >= 70? YES → 'C'
+// The B check never runs!</pre>
+    <div class="trap"><strong>Ternary evaluates LEFT TO RIGHT!</strong> Order of conditions matters. >=70 matches before >=80 even if score is 85.</div>
+  </div>
+</div>
+
+<div class="grid3 gap2">
+  <div class="card">
+    <div class="card-title" style="color:var(--js)">🌐 DOM Methods</div>
+    <pre>// Select elements
+document.getElementById('id')
+document.querySelector('.class')
+document.querySelectorAll('p')
+
+// Change content
+el.innerHTML = '&lt;b&gt;Bold&lt;/b&gt;';
+el.textContent = 'Plain text';
+
+// Change style
+el.style.color = 'red';
+el.style.display = 'none';
+
+// Change attribute
+el.setAttribute('href', 'url');
+el.src = 'new.jpg';</pre>
+  </div>
+  <div class="card">
+    <div class="card-title" style="color:var(--js)">⚡ Events</div>
+    <pre>// Method 1: inline HTML
+&lt;button onclick="myFn()"&gt;Click&lt;/button&gt;
+
+// Method 2: addEventListener
+btn.addEventListener('click', function(e) {
+  e.preventDefault();    // stop default
+  e.stopPropagation();   // stop bubbling
+  console.log('clicked!');
+});
+
+// Common events
+// click  keydown  keyup
+// submit  change  mouseover</pre>
+  </div>
+  <div class="card">
+    <div class="card-title" style="color:var(--js)">📚 Array Methods</div>
+    <pre>let arr = [1, 2, 3];
+
+// Add/Remove
+arr.push(4);     // add to END → [1,2,3,4]
+arr.pop();       // remove END → [1,2,3]
+arr.unshift(0);  // add to START
+arr.shift();     // remove START
+
+// Find
+arr.indexOf(2);  // returns index
+arr.includes(3); // true/false
+
+// Transform
+arr.map(x => x * 2);   // [2,4,6]
+arr.filter(x => x > 1);// [2,3]
+arr.reduce((a,b) => a+b); // 6</pre>
+  </div>
+</div>
+
+<div class="grid2 gap2">
+  <div class="card">
+    <div class="card-title" style="color:var(--js)">🔧 Functions</div>
+    <pre>// Declaration
+function square(n) {
+  return n * n;
+}
+
+// Arrow function (ES6)
+const square = (n) => n * n;
+
+// IIFE
+(function() { /* runs immediately */ })();
+
+// Closure — function remembers outer scope
+function counter() {
+  let count = 0;
+  return function() { return ++count; };
+}
+const c = counter();
+c(); // 1, c(); // 2</pre>
+  </div>
+  <div class="card">
+    <div class="card-title" style="color:var(--js)">🏗 OOP / Classes</div>
+    <pre>class Animal {
+  constructor(name) {
+    this.name = name;
+  }
+  speak() {
+    return this.name + ' makes a noise';
+  }
+}
+
+class Dog extends Animal {
+  constructor(name) {
+    super(name); // MUST call super first!
+  }
+  speak() {
+    return this.name + ' barks!';
+  }
+}
+
+const d = new Dog('Rex');
+d.speak(); // "Rex barks!"</pre>
+  </div>
+</div>
+
+<div class="card gap2">
+  <div class="card-title" style="color:var(--js)">🔁 Loops Reference</div>
+  <div class="grid3">
+    <div>
+      <h3>for</h3>
+      <pre>for (let i=0; i&lt;5; i++) {
+  console.log(i); // 0 1 2 3 4
+}</pre>
+    </div>
+    <div>
+      <h3>while</h3>
+      <pre>let i = 0;
+while (i &lt; 5) {
+  console.log(i);
+  i++;
+}</pre>
+    </div>
+    <div>
+      <h3>do…while</h3>
+      <pre>let i = 0;
+do {
+  console.log(i);
+  i++;
+} while (i &lt; 5);
+// Runs AT LEAST once!</pre>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- PHP CORE -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section class="section" id="s-php">
+<div class="sh"><span class="sh-icon">🔵</span><div><h2 style="color:var(--php)">PHP Core — Complete Summary</h2><div class="sub">Variables · Types · Strings · Arrays · Functions · Forms · OOP</div></div></div>
+
+<div class="grid3 gap2">
+  <div class="card">
+    <div class="card-title" style="color:var(--php)">📌 PHP Basics</div>
+    <pre>&lt;?php
+  // PHP code goes here
+  echo "Hello World!";
+?&gt;</pre>
+    <ul class="pts" style="margin-top:0.5rem">
+      <li><strong>Server-side</strong> — runs on server, not browser</li>
+      <li>File extension: <code>.php</code></li>
+      <li>Variables start with <code>$</code> sign</li>
+      <li>Variables ARE case-sensitive</li>
+      <li>Function names are NOT case-sensitive</li>
+      <li>No type declaration needed (loosely typed)</li>
+      <li>~70% of known websites use PHP</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-title" style="color:var(--php)">📊 PHP Data Types</div>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Type</th><th>Example</th></tr>
+      <tr><td>Integer</td><td><code>$x = 5985;</code></td></tr>
+      <tr><td>Float</td><td><code>$x = 10.365;</code></td></tr>
+      <tr><td>Boolean</td><td><code>$x = true;</code></td></tr>
+      <tr><td>String</td><td><code>$x = "Hello";</code></td></tr>
+      <tr><td>Array</td><td><code>$a = array(1,2,3);</code></td></tr>
+      <tr><td>Object</td><td><code>$h = new Car();</code></td></tr>
+      <tr><td>NULL</td><td><code>$x = null;</code></td></tr>
+      <tr><td>Resource</td><td>DB connection ref</td></tr>
+    </table>
+</div>
+  </div>
+  <div class="card">
+    <div class="card-title" style="color:var(--php)">🔭 Variable Scope</div>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Scope</th><th>Description</th></tr>
+      <tr><td>Local</td><td>Inside function only</td></tr>
+      <tr><td>Global</td><td>Outside all functions</td></tr>
+      <tr><td>Static</td><td>Local but persists between calls</td></tr>
+    </table>
+</div>
+    <pre style="margin-top:0.5rem">$x = 5; // global
+
+function test() {
+  global $x; // must declare!
+  echo $x;   // now works
+}
+
+function counter() {
+  static $n = 0; // persists!
+  echo $n++;
+}</pre>
+  </div>
+</div>
+
+<div class="grid2 gap2">
+  <div class="card highlight">
+    <div class="card-title" style="color:var(--red)">🔥 echo vs print · . vs +</div>
+    <div class="table-wrap">
+    <table>
+      <tr><th></th><th>echo</th><th>print</th></tr>
+      <tr><td>Return value</td><td>None</td><td>Returns 1</td></tr>
+      <tr><td>Multiple args</td><td>✅ Yes</td><td>❌ No</td></tr>
+      <tr><td>Speed</td><td>Faster</td><td>Slower</td></tr>
+    </table>
+</div>
+    <div class="trap" style="margin-top:0.5rem"><strong>PHP uses DOT (.) for string concat, NOT plus (+)!</strong><br>
+    <code>"Hello" . " World"</code> → "Hello World" ✅<br>
+    <code>"Hello" + " World"</code> → 0 ❌ (arithmetic)</div>
+  </div>
+  <div class="card highlight">
+    <div class="card-title" style="color:var(--red)">🔥 == vs === in PHP (Exam Traps)</div>
+    <pre>var_dump(0 == false);   // TRUE — trap!
+var_dump(0 === false);  // FALSE — correct
+var_dump("5" === 5);    // FALSE — type differs
+var_dump("0" == false); // TRUE — trap!</pre>
+    <div class="trap"><strong>== traps:</strong> 0==false, ""==false, "0"==false, 1==true, "5"==5 all return TRUE!<br>Use <code>===</code> for strict type+value checks.</div>
+  </div>
+</div>
+
+<div class="grid2 gap2">
+  <div class="card">
+    <div class="card-title" style="color:var(--php)">🔤 String Functions</div>
+    <pre>strlen("Hello world!")    // 12
+str_word_count("Hi there") // 2
+strrev("Hello!")           // !olleH
+strpos("Hello world","world") // 6
+str_replace("world","Dolly","Hello world!")
+  // "Hello Dolly!"
+strtoupper("hello") // "HELLO"
+strtolower("HELLO") // "hello"
+trim("  hello  ")   // "hello"
+substr("Hello",1,3) // "ell"</pre>
+  </div>
+  <div class="card">
+    <div class="card-title" style="color:var(--php)">📋 Arrays</div>
+    <pre>// Indexed
+$colors = array('red','blue','green');
+$colors[] = 'purple'; // add
+unset($colors[1]);    // remove
+$colors = array_values($colors); // reindex
+
+// Associative (key => value)
+$age = array("Ali"=>25, "Sara"=>22);
+$age['Bob'] = 30;  // add
+unset($age['Ali']); // remove
+
+// Sort functions
+sort($arr);    // indexed, ascending
+rsort($arr);   // indexed, descending
+asort($arr);   // assoc by VALUE ascending
+arsort($arr);  // assoc by VALUE descending
+ksort($arr);   // assoc by KEY ascending
+count($arr);   // number of elements</pre>
+  </div>
+</div>
+
+<div class="grid3 gap2">
+  <div class="card">
+    <div class="card-title" style="color:var(--php)">🌐 Superglobals</div>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Variable</th><th>Contains</th></tr>
+      <tr><td><code>$_GET</code></td><td>URL form data</td></tr>
+      <tr><td><code>$_POST</code></td><td>Body form data</td></tr>
+      <tr><td><code>$_SESSION</code></td><td>Session variables</td></tr>
+      <tr><td><code>$_COOKIE</code></td><td>Cookie values</td></tr>
+      <tr><td><code>$_FILES</code></td><td>File uploads</td></tr>
+      <tr><td><code>$_SERVER</code></td><td>Server environment</td></tr>
+      <tr><td><code>$_REQUEST</code></td><td>GET + POST + COOKIE</td></tr>
+    </table>
+</div>
+  </div>
+  <div class="card">
+    <div class="card-title" style="color:var(--php)">🔧 Useful Functions</div>
+    <pre>// Check variables
+isset($v)  // declared and not NULL
+empty($v)  // not set, false, null, 0, ""
+
+// Constants (no $ sign, global)
+define("PI", 3.14);
+echo PI;   // 3.14
+
+// Type checking
+is_int($x)
+is_string($x)
+is_array($x)
+is_null($x)
+
+// Sanitize input
+htmlspecialchars($_POST['name']);</pre>
+  </div>
+  <div class="card">
+    <div class="card-title" style="color:var(--php)">🏗 OOP in PHP</div>
+    <pre>class Car {
+  public $model;
+
+  function __construct($m) {
+    $this->model = $m;
+  }
+
+  function getModel() {
+    return $this->model;
+  }
+}
+
+$herbie = new Car("VW");
+echo $herbie->model;  // VW
+echo $herbie->getModel(); // VW</pre>
+    <div class="tip-box"><code>$this->property</code> accesses instance variables. Constructor runs on <code>new Car()</code>.</div>
+  </div>
+</div>
+
+<div class="card gap2">
+  <div class="card-title" style="color:var(--php)">🔁 PHP Loops Reference</div>
+  <div class="grid3">
+    <div>
+      <h3>while</h3>
+      <pre>$x = 1;
+while ($x &lt; 1000) {
+  echo $x;
+  $x = $x * $x;
+}</pre>
+    </div>
+    <div>
+      <h3>for</h3>
+      <pre>for ($i=1; $i&lt;=10; $i++) {
+  echo $i.":".$i*$i;
+}</pre>
+    </div>
+    <div>
+      <h3>foreach (arrays)</h3>
+      <pre>foreach ($colors as $c) {
+  echo $c;
+}
+// With key:
+foreach ($age as $k => $v) {
+  echo "$k = $v";
+}</pre>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- COOKIES & SESSIONS -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section class="section" id="s-cookies">
+<div class="sh"><span class="sh-icon">🟣</span><div><h2 style="color:var(--php2)">PHP Cookies &amp; Sessions</h2><div class="sub">Storage · Security · Comparison · Code Patterns</div></div></div>
+
+<div class="card highlight gap2">
+  <div class="card-title" style="color:var(--red)">🔥 Cookies vs Sessions — EXAM CRITICAL COMPARISON</div>
+  <div class="table-wrap">
+    <table>
+    <tr><th>Attribute</th><th>🍪 Cookies</th><th>🔐 Sessions</th></tr>
+    <tr><td>Storage Location</td><td><strong>Client (Browser)</strong></td><td><strong>Server</strong></td></tr>
+    <tr><td>Data Size Limit</td><td>~4KB max</td><td>No strict limit</td></tr>
+    <tr><td>Security</td><td><span class="badge b-no">Lower — user can edit</span></td><td><span class="badge b-yes">Higher — server only</span></td></tr>
+    <tr><td>Expiry Control</td><td>Custom date or browser close</td><td>Browser close (unless DB)</td></tr>
+    <tr><td>PHP Superglobal</td><td><code>$_COOKIE</code></td><td><code>$_SESSION</code></td></tr>
+    <tr><td>Start Function</td><td><code>setcookie()</code></td><td><code>session_start()</code></td></tr>
+    <tr><td>Data Type</td><td>String only</td><td>Any PHP type (arrays, objects)</td></tr>
+    <tr><td>Server Load</td><td>None</td><td>Some (stores on server)</td></tr>
+    <tr><td>Ideal Use</td><td>Remember Me, preferences</td><td>Login auth, shopping cart</td></tr>
+  </table>
+</div>
+</div>
+
+<div class="grid2 gap2">
+  <div class="card">
+    <div class="card-title" style="color:var(--orange)">🍪 Cookie Code Patterns</div>
+    <pre>&lt;?php
+// SET a cookie (expires in 1 hour)
+setcookie("name", "John", time()+3600, "/");
+setcookie("age", "36", time()+3600, "/");
+
+// READ a cookie
+echo $_COOKIE["name"];  // John
+
+// CHECK if cookie exists
+if (isset($_COOKIE["name"])) {
+  echo "Welcome " . $_COOKIE["name"];
+} else {
+  echo "Not recognized";
+}
+
+// DELETE a cookie (set past expiry)
+setcookie("name", "", time()-60, "/");
+?&gt;</pre>
+    <div class="trap"><strong>⚠ setcookie() MUST be before ANY HTML output including &lt;html&gt;!</strong><br>Each cookie needs a separate setcookie() call.</div>
+  </div>
+  <div class="card">
+    <div class="card-title" style="color:var(--php2)">🔐 Session Code Patterns</div>
+    <pre>&lt;?php
+session_start(); // MUST be before HTML!
+?&gt;
+&lt;html&gt;&lt;body&gt;
+&lt;?php
+// Set session variables
+$_SESSION["FName"] = "ABC";
+$_SESSION["Lname"] = "XYZ";
+
+// Read session variables
+echo $_SESSION["FName"]; // ABC
+
+// Page visit counter
+if (isset($_SESSION['count'])) {
+  $_SESSION['count'] += 1;
+} else {
+  $_SESSION['count'] = 1;
+}
+
+// Delete ONE variable
+unset($_SESSION['product']);
+
+// Destroy ENTIRE session (logout)
+session_unset();     // clear vars
+session_destroy();   // destroy session
+header("Location: login.php");
+exit();
+?&gt;</pre>
+  </div>
+</div>
+
+<div class="grid3 gap2">
+  <div class="card highlight">
+    <div class="card-title" style="color:var(--red)">🔥 Time Expiry Reference</div>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Duration</th><th>Code</th></tr>
+      <tr><td>1 Hour</td><td><code>time() + 3600</code></td></tr>
+      <tr><td>1 Day</td><td><code>time() + 86400</code></td></tr>
+      <tr><td>1 Week</td><td><code>time() + 604800</code></td></tr>
+      <tr><td>1 Month</td><td><code>time() + 2592000</code></td></tr>
+      <tr><td>Delete!</td><td><code>time() - 60</code></td></tr>
+      <tr><td>Session only</td><td>0 or omit</td></tr>
+    </table>
+</div>
+  </div>
+  <div class="card highlight">
+    <div class="card-title" style="color:var(--red)">🔥 session_destroy vs unset</div>
+    <ul class="pts">
+      <li class="no"><code>session_destroy()</code> = removes ALL session data + SESSID cookie</li>
+      <li class="yes"><code>unset($_SESSION['key'])</code> = removes ONE variable; rest stays</li>
+      <li class="hot">Always call <code>session_unset()</code> BEFORE <code>session_destroy()</code> for clean logout</li>
+    </ul>
+    <div class="trap" style="margin-top:0.5rem"><strong>Session Flow:</strong><br>
+    session_start() → set $_SESSION → access on other pages (call session_start first) → logout: session_unset() + session_destroy()</div>
+  </div>
+  <div class="card">
+    <div class="card-title" style="color:var(--php2)">⚙ How Sessions Work Internally</div>
+    <ul class="pts">
+      <li><code>session_start()</code> creates a unique session ID</li>
+      <li>Session ID stored as cookie named <code>PHPSESSID</code> in browser</li>
+      <li>Actual data stored in server's temp files</li>
+      <li>Browser sends PHPSESSID on every request</li>
+      <li>PHP finds and loads data from server storage</li>
+      <li>Sessions work even if cookies are blocked (URL rewriting)</li>
+    </ul>
+  </div>
+</div>
+
+<div class="card gap2">
+  <div class="card-title" style="color:var(--php2)">setcookie() Parameters</div>
+  <div class="table-wrap">
+    <table>
+    <tr><th>Param</th><th>Type</th><th>Required?</th><th>Notes</th></tr>
+    <tr><td><code>name</code></td><td>string</td><td><span class="badge b-warn">Required</span></td><td>Cookie identifier</td></tr>
+    <tr><td><code>value</code></td><td>string</td><td><span class="badge b-warn">Required</span></td><td>Data to store</td></tr>
+    <tr><td><code>expire</code></td><td>int</td><td>Optional</td><td>Unix timestamp. <code>time()+3600</code></td></tr>
+    <tr><td><code>path</code></td><td>string</td><td>Optional</td><td><code>"/"</code> = entire site</td></tr>
+    <tr><td><code>domain</code></td><td>string</td><td>Optional</td><td>Domain scope</td></tr>
+    <tr><td><code>secure</code></td><td>int</td><td>Optional</td><td>1 = HTTPS only</td></tr>
+  </table>
+</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- PHP FILE I/O -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section class="section" id="s-fileio">
+<div class="sh"><span class="sh-icon">🟢</span><div><h2 style="color:var(--green)">PHP File Handling</h2><div class="sub">fopen · Reading · Writing · Directories · File Uploads</div></div></div>
+
+<div class="grid2 gap2">
+  <div class="card highlight">
+    <div class="card-title" style="color:var(--red)">🔥 fopen() Modes — EXAM CRITICAL</div>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Mode</th><th>Read</th><th>Write</th><th>Truncates?</th><th>Must Exist?</th></tr>
+      <tr><td><code>r</code></td><td>✅</td><td>❌</td><td>No</td><td>YES</td></tr>
+      <tr><td><code>r+</code></td><td>✅</td><td>✅</td><td>No</td><td>YES</td></tr>
+      <tr><td><code>w</code></td><td>❌</td><td>✅</td><td><span class="badge b-no">⚠ YES!</span></td><td>No (creates)</td></tr>
+      <tr><td><code>w+</code></td><td>✅</td><td>✅</td><td><span class="badge b-no">⚠ YES!</span></td><td>No (creates)</td></tr>
+      <tr><td><code>a</code></td><td>❌</td><td>✅</td><td>No</td><td>No (creates)</td></tr>
+      <tr><td><code>a+</code></td><td>✅</td><td>✅ Append</td><td>No</td><td>No (creates)</td></tr>
+      <tr><td><code>x</code></td><td>❌</td><td>✅</td><td>N/A</td><td>Fails if exists!</td></tr>
+    </table>
+</div>
+    <div class="trap"><strong>⚠ Danger Zone:</strong> <code>w</code> and <code>w+</code> ERASE the file the MOMENT fopen() is called — even before you write anything!<br><strong>Safe choice:</strong> Use <code>x</code> to fail if file exists (prevents overwrite).</div>
+  </div>
+  <div class="card">
+    <div class="card-title" style="color:var(--green)">📖 Reading Functions — Which to Use?</div>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Function</th><th>Returns</th><th>Handle?</th><th>Best For</th></tr>
+      <tr><td><code>readfile()</code></td><td>Byte count</td><td>No</td><td>File downloads to browser</td></tr>
+      <tr><td><code>file_get_contents()</code></td><td>String</td><td>No</td><td>Read all, manipulate, URLs</td></tr>
+      <tr><td><code>fread()</code></td><td>String</td><td>Yes</td><td>Binary files, chunked read</td></tr>
+      <tr><td><code>fgets()</code></td><td>String</td><td>Yes</td><td>Line-by-line (CSV, logs)</td></tr>
+    </table>
+</div>
+    <div class="tip-box" style="margin-top:0.5rem"><strong>Key difference:</strong> <code>readfile()</code> outputs to browser directly. <code>file_get_contents()</code> returns content as a PHP string.</div>
+  </div>
+</div>
+
+<div class="grid2 gap2">
+  <div class="card">
+    <div class="card-title" style="color:var(--green)">✍ Writing Functions</div>
+    <pre>// HIGH-LEVEL (simpler)
+file_put_contents('file.txt', 'Hello');        // overwrite
+file_put_contents('log.txt', $entry, FILE_APPEND);    // append
+file_put_contents('log.txt', $entry, FILE_APPEND | LOCK_EX); // safe
+
+// LOW-LEVEL (more control)
+$handle = fopen('export.csv', 'w');
+if ($handle === false) exit('Cannot open');
+
+fwrite($handle, "id,name\n");  // write header
+foreach ($users as $u) {
+  fwrite($handle, $u['id'].','.$u['name']."\n");
+}
+fclose($handle); // ← NEVER forget this!</pre>
+    <div class="trap"><strong>⚠ Always check return value!</strong> file_put_contents() returns false on error (disk full, permissions). Never assume success!</div>
+  </div>
+  <div class="card">
+    <div class="card-title" style="color:var(--green)">📁 Reading Patterns</div>
+    <pre>// readfile() — download
+header('Content-Disposition: attachment; filename="r.pdf"');
+readfile('/files/report.pdf');
+
+// file_get_contents — manipulate
+$content = file_get_contents('template.html');
+$output = str_replace('{{NAME}}', 'Alice', $content);
+echo $output;
+
+// fgets() — line by line (most memory efficient)
+$handle = fopen('users.csv', 'r');
+while (($line = fgets($handle)) !== false) {
+  $row = str_getcsv(trim($line));
+  // process $row...
+}
+fclose($handle);
+
+// Best practice pattern:
+$handle = fopen($path, 'r');
+if ($handle === false) throw new Exception("Cannot open");
+try {
+  while (($line = fgets($handle)) !== false) {
+    processLine(trim($line));
+  }
+} finally {
+  fclose($handle); // runs even if error!
+}</pre>
+  </div>
+</div>
+
+<div class="grid2 gap2">
+  <div class="card">
+    <div class="card-title" style="color:var(--green)">📂 Directory Functions</div>
+    <pre>// Create directory
+if (!is_dir('uploads/2025')) {
+  mkdir('uploads/2025', 0755, true); // recursive
+}
+
+// Scan directory
+$items = scandir('./uploads');
+$files = array_diff($items, ['.', '..']); // filter . and ..
+
+foreach ($files as $file) {
+  if (is_file('./uploads/' . $file)) {
+    echo $file . "\n";
+  }
+}</pre>
+    <div class="trap"><strong>⚠ scandir() always includes <code>.</code> and <code>..</code></strong> — always use <code>array_diff</code> to filter them out!</div>
+  </div>
+  <div class="card">
+    <div class="card-title" style="color:var(--green)">📤 File Uploads — $_FILES</div>
+    <pre>// HTML form must have:
+// enctype="multipart/form-data"
+
+// $_FILES structure
+$_FILES["avatar"] = [
+  "name"     => "profile.jpg",   // UNTRUSTED
+  "type"     => "image/jpeg",    // UNTRUSTED
+  "tmp_name" => "/tmp/php7hGb",  // safe temp path
+  "error"    => 0,               // 0 = success!
+  "size"     => 48392            // bytes
+];
+
+// Security checklist:
+// ✅ Check error === UPLOAD_ERR_OK (0)
+// ✅ Validate size against your max
+// ✅ Use finfo_file() to check MIME type
+// ❌ NEVER trust $_FILES['type'] (browser-supplied)
+// ❌ NEVER use original filename directly
+// ✅ Move with move_uploaded_file()
+move_uploaded_file($_FILES["f"]["tmp_name"], "uploads/safe.jpg");</pre>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- FINAL EXAMS -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section class="section" id="s-finals">
+<div class="sh"><span class="sh-icon">🔴</span><div><h2 style="color:var(--red)">3 Full Final Exam Models</h2><div class="sub">Based on your question bank patterns · Mixed types · Answer key included</div></div></div>
+
+<!-- MODEL 1 -->
+<div class="model-header">
+  <div><div class="model-title">📝 Model Exam 1 — Foundations</div><div class="model-meta">30 Questions · Covers: HTML, CSS, JavaScript basics · ~40 min</div></div>
+  <div><span class="badge b-info">Mixed Types</span></div>
+</div>
+
+<div class="section-divider">Part A — Multiple Choice (15 questions)</div>
+<div class="final-q"><div class="qn">Q1 · HTML · Easy</div><div class="qt">What does HTML stand for?</div><div class="opts"><div class="opt"><span>A.</span> Hot Typing Markup Language</div><div class="opt"><span>B.</span> Home Typing Modern Language</div><div class="opt"><span>C.</span> Hyper Text Markup Language</div><div class="opt"><span>D.</span> Home Testing Mixed Language</div></div></div>
+<div class="final-q"><div class="qn">Q2 · HTML · Easy</div><div class="qt">Which heading tag is the LARGEST and most important?</div><div class="opts"><div class="opt"><span>A.</span> &lt;h6&gt;</div><div class="opt"><span>B.</span> &lt;h1&gt;</div><div class="opt"><span>C.</span> &lt;h3&gt;</div><div class="opt"><span>D.</span> &lt;head&gt;</div></div></div>
+<div class="final-q"><div class="qn">Q3 · HTML Forms · Easy</div><div class="qt">Which HTTP method sends form data VISIBLE in the URL?</div><div class="opts"><div class="opt"><span>A.</span> POST</div><div class="opt"><span>B.</span> PUSH</div><div class="opt"><span>C.</span> GET</div><div class="opt"><span>D.</span> SEND</div></div></div>
+<div class="final-q"><div class="qn">Q4 · HTML Forms · Medium</div><div class="qt">What is the difference between 'readonly' and 'disabled' attributes on an input?</div><div class="opts"><div class="opt"><span>A.</span> They are identical</div><div class="opt"><span>B.</span> readonly prevents modification but still submits the value; disabled does not submit</div><div class="opt"><span>C.</span> disabled still submits; readonly does not</div><div class="opt"><span>D.</span> Neither submits the value</div></div></div>
+<div class="final-q"><div class="qn">Q5 · CSS · Easy</div><div class="qt">What does 'padding' represent in CSS?</div><div class="opts"><div class="opt"><span>A.</span> Space outside the border</div><div class="opt"><span>B.</span> The border thickness</div><div class="opt"><span>C.</span> Space between content and the border</div><div class="opt"><span>D.</span> The element size</div></div></div>
+<div class="final-q"><div class="qn">Q6 · CSS · Medium</div><div class="qt">Which CSS type has the HIGHEST specificity?</div><div class="opts"><div class="opt"><span>A.</span> Class selectors (.box)</div><div class="opt"><span>B.</span> Element selectors (p)</div><div class="opt"><span>C.</span> ID selectors (#box)</div><div class="opt"><span>D.</span> Inline styles (style="")</div></div></div>
+<div class="final-q"><div class="qn">Q7 · CSS · Medium</div><div class="qt">Which property aligns flex items along the CROSS AXIS?</div><div class="opts"><div class="opt"><span>A.</span> justify-content</div><div class="opt"><span>B.</span> align-items</div><div class="opt"><span>C.</span> flex-direction</div><div class="opt"><span>D.</span> flex-wrap</div></div></div>
+<div class="final-q"><div class="qn">Q8 · CSS · Medium</div><div class="qt">Which display value keeps elements on the SAME LINE but allows width and height?</div><div class="opts"><div class="opt"><span>A.</span> block</div><div class="opt"><span>B.</span> inline</div><div class="opt"><span>C.</span> inline-block</div><div class="opt"><span>D.</span> flex</div></div></div>
+<div class="final-q"><div class="qn">Q9 · JavaScript · Easy</div><div class="qt">What is the value of 'typeof null' in JavaScript?</div><div class="opts"><div class="opt"><span>A.</span> "null"</div><div class="opt"><span>B.</span> "undefined"</div><div class="opt"><span>C.</span> "object"</div><div class="opt"><span>D.</span> "number"</div></div></div>
+<div class="final-q"><div class="qn">Q10 · JavaScript · Medium</div><div class="qt">What is the difference between == and === in JavaScript?</div><div class="opts"><div class="opt"><span>A.</span> They are identical</div><div class="opt"><span>B.</span> == checks value and type; === checks value only</div><div class="opt"><span>C.</span> == checks value only; === checks value AND type (strict)</div><div class="opt"><span>D.</span> == is for strings; === is for numbers</div></div></div>
+<div class="final-q"><div class="qn">Q11 · JavaScript · Medium</div><div class="qt">What is the difference between 'var' and 'let' in terms of scope?</div><div class="opts"><div class="opt"><span>A.</span> var has block scope; let has function scope</div><div class="opt"><span>B.</span> var has function scope; let has block scope</div><div class="opt"><span>C.</span> They have the same scope</div><div class="opt"><span>D.</span> var is global only; let is local only</div></div></div>
+<div class="final-q"><div class="qn">Q12 · JavaScript · Easy</div><div class="qt">Which method removes an element from the END of a JavaScript array?</div><div class="opts"><div class="opt"><span>A.</span> shift()</div><div class="opt"><span>B.</span> push()</div><div class="opt"><span>C.</span> pop()</div><div class="opt"><span>D.</span> unshift()</div></div></div>
+<div class="final-q"><div class="qn">Q13 · PHP · Easy</div><div class="qt">PHP variables must begin with:</div><div class="opts"><div class="opt"><span>A.</span> @</div><div class="opt"><span>B.</span> #</div><div class="opt"><span>C.</span> $</div><div class="opt"><span>D.</span> %</div></div></div>
+<div class="final-q"><div class="qn">Q14 · PHP · Easy</div><div class="qt">The operator used to JOIN strings in PHP is:</div><div class="opts"><div class="opt"><span>A.</span> +</div><div class="opt"><span>B.</span> &amp;</div><div class="opt"><span>C.</span> *</div><div class="opt"><span>D.</span> . (dot)</div></div></div>
+<div class="final-q"><div class="qn">Q15 · PHP · Easy</div><div class="qt">Which function STARTS a PHP session?</div><div class="opts"><div class="opt"><span>A.</span> start_session()</div><div class="opt"><span>B.</span> begin_session()</div><div class="opt"><span>C.</span> session_start()</div><div class="opt"><span>D.</span> init_session()</div></div></div>
+
+<div class="section-divider">Part B — True / False (8 questions)</div>
+<div class="final-q"><div class="qn">Q16 · HTML · Easy · True/False</div><div class="qt">Empty elements like &lt;br&gt; and &lt;img&gt; must have a closing tag in HTML.</div></div>
+<div class="final-q"><div class="qn">Q17 · CSS · Easy · True/False</div><div class="qt">Padding is the space between the element's content and its border.</div></div>
+<div class="final-q"><div class="qn">Q18 · CSS · Medium · True/False</div><div class="qt">flex-direction: row arranges items vertically.</div></div>
+<div class="final-q"><div class="qn">Q19 · CSS · Medium · True/False</div><div class="qt">The transform property can only apply one transformation at a time.</div></div>
+<div class="final-q"><div class="qn">Q20 · JavaScript · Medium · True/False</div><div class="qt">If a variable is declared using the 'let' keyword, it can never change its data type.</div></div>
+<div class="final-q"><div class="qn">Q21 · JavaScript · Easy · True/False</div><div class="qt">alert(8) and window.alert(8) produce the same result.</div></div>
+<div class="final-q"><div class="qn">Q22 · PHP · Easy · True/False</div><div class="qt">PHP runs inside the user's browser.</div></div>
+<div class="final-q"><div class="qn">Q23 · PHP · Easy · True/False</div><div class="qt">Sessions are safer than cookies because session data is stored on the server.</div></div>
+
+<div class="section-divider">Part C — Fill in the Blank (4 questions)</div>
+<div class="final-q"><div class="qn">Q24 · HTML · Easy · Fill</div><div class="qt">The attribute used to specify alternative text for an image is:<br><code>&lt;img src='logo.png' _____='Company Logo'&gt;</code></div></div>
+<div class="final-q"><div class="qn">Q25 · HTML · Easy · Fill</div><div class="qt">To open a link in a new tab, use: <code>&lt;a href='...' _____='_blank'&gt;</code></div></div>
+<div class="final-q"><div class="qn">Q26 · JavaScript · Medium · Fill</div><div class="qt">Complete: <code>document.getElementById('demo').________ = 'Hello World!';</code></div></div>
+<div class="final-q"><div class="qn">Q27 · PHP · Medium · Fill</div><div class="qt">To use a global variable inside a PHP function, use the ________ keyword.</div></div>
+
+<div class="section-divider">Part D — Output Prediction (3 questions)</div>
+<div class="final-q"><div class="qn">Q28 · JavaScript · Medium · Output</div><div class="qt">What is the output?<br><pre>let score = 85;
+let grade = score >= 90 ? 'A' :
+            score >= 70 ? 'C' :
+            score >= 80 ? 'B' :
+            score >= 60 ? 'D' : 'F';
+console.log('Grade:', grade);</pre></div></div>
+<div class="final-q"><div class="qn">Q29 · JavaScript · Medium · Output</div><div class="qt">What does this code output?<br><pre>document.body.innerHTML = 5 + '5' + 1;</pre></div></div>
+<div class="final-q"><div class="qn">Q30 · PHP · Easy · Output</div><div class="qt">What is the output of: <code>echo strrev('Hello world!');</code></div></div>
+
+<!-- ANSWER KEY 1 -->
+<div class="card tip gap2" style="margin-top:1.5rem">
+  <div class="card-title" style="color:var(--green)">✅ Model 1 Answer Key</div>
+  <div class="answer-key">
+    <span class="a">Q1: C</span> — Q2: <span class="a">B</span> — Q3: <span class="a">C</span> — Q4: <span class="a">B</span> — Q5: <span class="a">C</span> — Q6: <span class="a">D</span> — Q7: <span class="a">B</span> — Q8: <span class="a">C</span> — Q9: <span class="a">C ("object")</span> — Q10: <span class="a">C</span><br>
+    Q11: <span class="a">B</span> — Q12: <span class="a">C</span> — Q13: <span class="a">C ($)</span> — Q14: <span class="a">D (.)</span> — Q15: <span class="a">C</span><br>
+    Q16: <span class="a">FALSE</span> — Q17: <span class="a">TRUE</span> — Q18: <span class="a">FALSE (horizontal)</span> — Q19: <span class="a">FALSE (can combine)</span> — Q20: <span class="a">FALSE (dynamic typing)</span> — Q21: <span class="a">TRUE</span> — Q22: <span class="a">FALSE (server-side)</span> — Q23: <span class="a">TRUE</span><br>
+    Q24: <span class="a">alt</span> — Q25: <span class="a">target</span> — Q26: <span class="a">innerHTML</span> — Q27: <span class="a">global</span><br>
+    Q28: <span class="a">"Grade: C" (NOT B — 85>=70 matches first!)</span> — Q29: <span class="a">"551"</span> — Q30: <span class="a">!dlrow olleH</span>
+  </div>
+</div>
+
+<!-- MODEL 2 -->
+<div class="model-header" style="margin-top:2rem">
+  <div><div class="model-title">📝 Model Exam 2 — Advanced Topics</div><div class="model-meta">30 Questions · Covers: CSS advanced, JS scope/OOP, PHP cookies/sessions/file I/O · ~45 min</div></div>
+  <div><span class="badge b-warn">Medium–Hard</span></div>
+</div>
+
+<div class="section-divider">Part A — Multiple Choice (15 questions)</div>
+<div class="final-q"><div class="qn">Q1 · CSS · Medium</div><div class="qt">Which CSS Grid property defines the WIDTH of columns?</div><div class="opts"><div class="opt"><span>A.</span> grid-template-rows</div><div class="opt"><span>B.</span> grid-template-columns</div><div class="opt"><span>C.</span> grid-column</div><div class="opt"><span>D.</span> grid-area</div></div></div>
+<div class="final-q"><div class="qn">Q2 · CSS · Medium</div><div class="qt">What does 'transform: scale(2)' do?</div><div class="opts"><div class="opt"><span>A.</span> Enlarges width only</div><div class="opt"><span>B.</span> Makes element twice as large</div><div class="opt"><span>C.</span> Shrinks the element</div><div class="opt"><span>D.</span> Moves the element</div></div></div>
+<div class="final-q"><div class="qn">Q3 · CSS · Medium</div><div class="qt">Which CSS at-rule defines animation keyframes?</div><div class="opts"><div class="opt"><span>A.</span> @transition</div><div class="opt"><span>B.</span> @animation</div><div class="opt"><span>C.</span> @keyframes</div><div class="opt"><span>D.</span> @frames</div></div></div>
+<div class="final-q"><div class="qn">Q4 · CSS · Medium</div><div class="qt">Which property specifies WHICH CSS properties will be affected by a transition?</div><div class="opts"><div class="opt"><span>A.</span> transition-duration</div><div class="opt"><span>B.</span> transition-delay</div><div class="opt"><span>C.</span> transition-property</div><div class="opt"><span>D.</span> transition-style</div></div></div>
+<div class="final-q"><div class="qn">Q5 · CSS · Medium</div><div class="qt">Which position value keeps an element FIXED on screen even when scrolling?</div><div class="opts"><div class="opt"><span>A.</span> relative</div><div class="opt"><span>B.</span> absolute</div><div class="opt"><span>C.</span> sticky</div><div class="opt"><span>D.</span> fixed</div></div></div>
+<div class="final-q"><div class="qn">Q6 · JavaScript · Medium</div><div class="qt">What is a CLOSURE in JavaScript?</div><div class="opts"><div class="opt"><span>A.</span> A function that takes no arguments</div><div class="opt"><span>B.</span> A variable accessible within a function</div><div class="opt"><span>C.</span> A function that accesses variables from its outer (enclosing) scope</div><div class="opt"><span>D.</span> A built-in JavaScript class</div></div></div>
+<div class="final-q"><div class="qn">Q7 · JavaScript · Medium</div><div class="qt">What is the purpose of the 'super' keyword in JavaScript classes?</div><div class="opts"><div class="opt"><span>A.</span> Creates a new instance</div><div class="opt"><span>B.</span> Calls the parent class constructor</div><div class="opt"><span>C.</span> Stops function execution</div><div class="opt"><span>D.</span> Accesses static methods only</div></div></div>
+<div class="final-q"><div class="qn">Q8 · JavaScript · Medium</div><div class="qt">Which method PREVENTS default browser behavior (like form submission)?</div><div class="opts"><div class="opt"><span>A.</span> event.stopPropagation()</div><div class="opt"><span>B.</span> event.preventDefault()</div><div class="opt"><span>C.</span> event.pause()</div><div class="opt"><span>D.</span> event.stop()</div></div></div>
+<div class="final-q"><div class="qn">Q9 · PHP · Medium</div><div class="qt">Which PHP function sorts an ASSOCIATIVE ARRAY BY VALUE in ascending order?</div><div class="opts"><div class="opt"><span>A.</span> sort()</div><div class="opt"><span>B.</span> arsort()</div><div class="opt"><span>C.</span> ksort()</div><div class="opt"><span>D.</span> asort()</div></div></div>
+<div class="final-q"><div class="qn">Q10 · PHP · Medium</div><div class="qt">To use a GLOBAL variable inside a PHP function, you must use which keyword?</div><div class="opts"><div class="opt"><span>A.</span> include</div><div class="opt"><span>B.</span> require</div><div class="opt"><span>C.</span> static</div><div class="opt"><span>D.</span> global</div></div></div>
+<div class="final-q"><div class="qn">Q11 · PHP Cookies · Medium</div><div class="qt">Which PHP function is used to CREATE A COOKIE?</div><div class="opts"><div class="opt"><span>A.</span> createcookie()</div><div class="opt"><span>B.</span> addcookie()</div><div class="opt"><span>C.</span> setcookie()</div><div class="opt"><span>D.</span> makecookie()</div></div></div>
+<div class="final-q"><div class="qn">Q12 · PHP Sessions · Easy</div><div class="qt">Where are SESSION VARIABLES stored?</div><div class="opts"><div class="opt"><span>A.</span> Client computer</div><div class="opt"><span>B.</span> Browser cache</div><div class="opt"><span>C.</span> Server temporary directory</div><div class="opt"><span>D.</span> Database</div></div></div>
+<div class="final-q"><div class="qn">Q13 · PHP File I/O · Medium</div><div class="qt">Which fopen() mode TRUNCATES (erases) the file the moment it is called?</div><div class="opts"><div class="opt"><span>A.</span> r</div><div class="opt"><span>B.</span> a</div><div class="opt"><span>C.</span> w</div><div class="opt"><span>D.</span> x</div></div></div>
+<div class="final-q"><div class="qn">Q14 · PHP File I/O · Medium</div><div class="qt">Which reading function sends file content DIRECTLY to the browser output?</div><div class="opts"><div class="opt"><span>A.</span> file_get_contents()</div><div class="opt"><span>B.</span> fread()</div><div class="opt"><span>C.</span> fgets()</div><div class="opt"><span>D.</span> readfile()</div></div></div>
+<div class="final-q"><div class="qn">Q15 · PHP File I/O · Medium</div><div class="qt">What does scandir() ALWAYS include in its results?</div><div class="opts"><div class="opt"><span>A.</span> Only files, never directories</div><div class="opt"><span>B.</span> . (current) and .. (parent) entries</div><div class="opt"><span>C.</span> Hidden files only</div><div class="opt"><span>D.</span> Only the first 10 files</div></div></div>
+
+<div class="section-divider">Part B — True / False (8 questions)</div>
+<div class="final-q"><div class="qn">Q16 · CSS · Medium · True/False</div><div class="qt">animation-fill-mode: forwards means the element keeps its final keyframe style after animation ends.</div></div>
+<div class="final-q"><div class="qn">Q17 · CSS · Medium · True/False</div><div class="qt">animation-duration must be written in seconds only.</div></div>
+<div class="final-q"><div class="qn">Q18 · PHP · Easy · True/False</div><div class="qt">PHP function names are case-sensitive.</div></div>
+<div class="final-q"><div class="qn">Q19 · PHP · Easy · True/False</div><div class="qt">PHP variable names cannot start with a number.</div></div>
+<div class="final-q"><div class="qn">Q20 · PHP Cookies · Easy · True/False</div><div class="qt">Cookies can store large amounts of data (multiple megabytes).</div></div>
+<div class="final-q"><div class="qn">Q21 · PHP · Easy · True/False</div><div class="qt">PHP variables are case-sensitive.</div></div>
+<div class="final-q"><div class="qn">Q22 · JavaScript · Hard · True/False</div><div class="qt">const prevents you from changing elements inside an array (e.g., cars[0] = "Toyota" would fail).</div></div>
+<div class="final-q"><div class="qn">Q23 · PHP File I/O · Medium · True/False</div><div class="qt">The 'w' mode in fopen() creates the file if it doesn't exist.</div></div>
+
+<div class="section-divider">Part C — Output Prediction (4 questions)</div>
+<div class="final-q"><div class="qn">Q24 · JavaScript · Hard · Output</div><div class="qt">What is the output?<br><pre>const age = 10;
+console.log(age);
+{
+  const age = 2;
+  console.log(age);
+}
+console.log(age);</pre></div></div>
+<div class="final-q"><div class="qn">Q25 · JavaScript · Hard · Output</div><div class="qt">What is the output?<br><pre>let x = 1;
+if (true) { let x = 2; }
+document.body.innerHTML = x;</pre></div></div>
+<div class="final-q"><div class="qn">Q26 · PHP · Easy · Output</div><div class="qt">What is the output of: <code>echo str_replace('world', 'Dolly', 'Hello world!');</code></div></div>
+<div class="final-q"><div class="qn">Q27 · CSS · Medium · Output</div><div class="qt">What color will the text appear?<br><pre>.box { color: blue; }
+&lt;p class='box' style='color: red;'&gt;Hello&lt;/p&gt;</pre></div></div>
+
+<div class="section-divider">Part D — Short Code (3 questions)</div>
+<div class="final-q"><div class="qn">Q28 · JavaScript · Medium · Code</div><div class="qt">Write JavaScript to change the content of <code>&lt;p id="demo"&gt;</code> to "Hello World!"</div></div>
+<div class="final-q"><div class="qn">Q29 · CSS · Easy · Code</div><div class="qt">Write a CSS ID selector named 'special' that sets text color to blue.</div></div>
+<div class="final-q"><div class="qn">Q30 · PHP · Medium · Code</div><div class="qt">Write PHP code to: (1) start a session, (2) store username "Alice" in session, (3) display a welcome message using the session variable.</div></div>
+
+<!-- ANSWER KEY 2 -->
+<div class="card tip gap2" style="margin-top:1.5rem">
+  <div class="card-title" style="color:var(--green)">✅ Model 2 Answer Key</div>
+  <div class="answer-key">
+    Q1: <span class="a">B</span> — Q2: <span class="a">B</span> — Q3: <span class="a">C</span> — Q4: <span class="a">C</span> — Q5: <span class="a">D</span> — Q6: <span class="a">C</span> — Q7: <span class="a">B</span> — Q8: <span class="a">B</span> — Q9: <span class="a">D (asort)</span> — Q10: <span class="a">D</span><br>
+    Q11: <span class="a">C</span> — Q12: <span class="a">C</span> — Q13: <span class="a">C (w)</span> — Q14: <span class="a">D (readfile)</span> — Q15: <span class="a">B (. and ..)</span><br>
+    Q16: <span class="a">TRUE</span> — Q17: <span class="a">FALSE (ms works too)</span> — Q18: <span class="a">FALSE (NOT case-sensitive)</span> — Q19: <span class="a">TRUE</span> — Q20: <span class="a">FALSE (~4KB limit)</span> — Q21: <span class="a">TRUE</span> — Q22: <span class="a">FALSE (can change elements, just not reassign)</span> — Q23: <span class="a">TRUE</span><br>
+    Q24: <span class="a">10, 2, 10</span> — Q25: <span class="a">1 (let is block-scoped)</span> — Q26: <span class="a">Hello Dolly!</span> — Q27: <span class="a">Red (inline style wins)</span><br>
+    Q28: <span class="a">document.getElementById('demo').innerHTML = 'Hello World!';</span><br>
+    Q29: <span class="a">#special { color: blue; }</span><br>
+    Q30: <span class="a">&lt;?php session_start(); $_SESSION["username"]="Alice"; echo "Welcome ".$_SESSION["username"]; ?&gt;</span>
+  </div>
+</div>
+
+<!-- MODEL 3 -->
+<div class="model-header" style="margin-top:2rem">
+  <div><div class="model-title">📝 Model Exam 3 — Mixed Full Coverage</div><div class="model-meta">30 Questions · All topics including File I/O · Hardest model · ~50 min</div></div>
+  <div><span class="badge b-no">Challenging</span></div>
+</div>
+
+<div class="section-divider">Part A — Multiple Choice (12 questions)</div>
+<div class="final-q"><div class="qn">Q1 · HTML · Easy</div><div class="qt">Which HTML element is used to EMBED JavaScript?</div><div class="opts"><div class="opt"><span>A.</span> &lt;java&gt;</div><div class="opt"><span>B.</span> &lt;javascript&gt;</div><div class="opt"><span>C.</span> &lt;script&gt;</div><div class="opt"><span>D.</span> &lt;js&gt;</div></div></div>
+<div class="final-q"><div class="qn">Q2 · HTML · Medium</div><div class="qt">Which statement about NESTED lists is TRUE?</div><div class="opts"><div class="opt"><span>A.</span> HTML does not support nested lists</div><div class="opt"><span>B.</span> ul can only nest inside another ul</div><div class="opt"><span>C.</span> Nested lists must be placed outside li elements</div><div class="opt"><span>D.</span> Nested lists are placed inside li elements and can mix types</div></div></div>
+<div class="final-q"><div class="qn">Q3 · CSS · Medium</div><div class="qt">Which transform function rotates an element 45 degrees?</div><div class="opts"><div class="opt"><span>A.</span> transform: rotateX(45deg)</div><div class="opt"><span>B.</span> transform: turn(45deg)</div><div class="opt"><span>C.</span> transform: rotate(45deg)</div><div class="opt"><span>D.</span> transform: angle(45deg)</div></div></div>
+<div class="final-q"><div class="qn">Q4 · CSS · Medium</div><div class="qt">What does 'display: flex' do?</div><div class="opts"><div class="opt"><span>A.</span> Makes elements block-level</div><div class="opt"><span>B.</span> Hides all child elements</div><div class="opt"><span>C.</span> Makes parent a flexible container</div><div class="opt"><span>D.</span> Makes all children inline</div></div></div>
+<div class="final-q"><div class="qn">Q5 · JavaScript · Medium</div><div class="qt">What is the purpose of try...catch in JavaScript?</div><div class="opts"><div class="opt"><span>A.</span> To create a loop</div><div class="opt"><span>B.</span> To handle exceptions and errors</div><div class="opt"><span>C.</span> To define a function</div><div class="opt"><span>D.</span> To declare a variable</div></div></div>
+<div class="final-q"><div class="qn">Q6 · JavaScript · Medium</div><div class="qt">JavaScript statement: let x = ''; and let y;<br>What is true about x and y?</div><div class="opts"><div class="opt"><span>A.</span> Both are undefined</div><div class="opt"><span>B.</span> x is undefined</div><div class="opt"><span>C.</span> y is undefined</div><div class="opt"><span>D.</span> None of the above</div></div></div>
+<div class="final-q"><div class="qn">Q7 · PHP · Easy</div><div class="qt">What does strlen() return?</div><div class="opts"><div class="opt"><span>A.</span> Reverses a string</div><div class="opt"><span>B.</span> Counts words</div><div class="opt"><span>C.</span> The string LENGTH</div><div class="opt"><span>D.</span> Replaces text</div></div></div>
+<div class="final-q"><div class="qn">Q8 · PHP · Easy</div><div class="qt">Where are cookies STORED?</div><div class="opts"><div class="opt"><span>A.</span> Server</div><div class="opt"><span>B.</span> Database</div><div class="opt"><span>C.</span> Client computer (browser)</div><div class="opt"><span>D.</span> PHP session file</div></div></div>
+<div class="final-q"><div class="qn">Q9 · PHP Sessions · Medium</div><div class="qt">What is the correct way to DELETE a specific session variable?</div><div class="opts"><div class="opt"><span>A.</span> session_destroy()</div><div class="opt"><span>B.</span> delete($_SESSION['key'])</div><div class="opt"><span>C.</span> unset($_SESSION['key'])</div><div class="opt"><span>D.</span> $_SESSION['key'] = null</div></div></div>
+<div class="final-q"><div class="qn">Q10 · PHP File I/O · Medium</div><div class="qt">Which fopen() mode is SAFEST for creating a new file (fails if file already exists)?</div><div class="opts"><div class="opt"><span>A.</span> w</div><div class="opt"><span>B.</span> a</div><div class="opt"><span>C.</span> r+</div><div class="opt"><span>D.</span> x</div></div></div>
+<div class="final-q"><div class="qn">Q11 · PHP File I/O · Medium</div><div class="qt">Which flag in file_put_contents() appends to a file instead of overwriting?</div><div class="opts"><div class="opt"><span>A.</span> FILE_WRITE</div><div class="opt"><span>B.</span> FILE_APPEND</div><div class="opt"><span>C.</span> LOCK_EX</div><div class="opt"><span>D.</span> FILE_ADD</div></div></div>
+<div class="final-q"><div class="qn">Q12 · PHP File I/O · Medium</div><div class="qt">When handling file uploads, which $_FILES value is UNTRUSTED (can be forged by browser)?</div><div class="opts"><div class="opt"><span>A.</span> tmp_name</div><div class="opt"><span>B.</span> error</div><div class="opt"><span>C.</span> type</div><div class="opt"><span>D.</span> size</div></div></div>
+
+<div class="section-divider">Part B — True / False (8 questions)</div>
+<div class="final-q"><div class="qn">Q13 · PHP · Easy · True/False</div><div class="qt">About 70% of known websites use PHP.</div></div>
+<div class="final-q"><div class="qn">Q14 · HTML · Easy · True/False</div><div class="qt">HTML paragraphs always start on a new line.</div></div>
+<div class="final-q"><div class="qn">Q15 · CSS · Medium · True/False</div><div class="qt">position: absolute positions an element relative to the viewport (browser window).</div></div>
+<div class="final-q"><div class="qn">Q16 · CSS · Medium · True/False</div><div class="qt">justify-content controls alignment on the MAIN axis in flexbox.</div></div>
+<div class="final-q"><div class="qn">Q17 · JavaScript · Easy · True/False</div><div class="qt">A do...while loop always executes its body at least once, even if the condition is false.</div></div>
+<div class="final-q"><div class="qn">Q18 · PHP · Medium · True/False</div><div class="qt">In PHP, the 'static' keyword inside a function makes the variable persist its value between function calls.</div></div>
+<div class="final-q"><div class="qn">Q19 · PHP File I/O · Medium · True/False</div><div class="qt">You must always call fclose() after fopen() to release the file handle.</div></div>
+<div class="final-q"><div class="qn">Q20 · PHP Cookies · Medium · True/False</div><div class="qt">To delete a cookie in PHP, you set its expiry time to a timestamp in the past.</div></div>
+
+<div class="section-divider">Part C — Output Prediction (5 questions)</div>
+<div class="final-q"><div class="qn">Q21 · JavaScript · Hard · Output</div><div class="qt">What is the output?<br><pre>for (var i = 0; i &lt; 5; i++) {
+  console.log(i);
+}</pre></div></div>
+<div class="final-q"><div class="qn">Q22 · PHP · Medium · Output</div><div class="qt">What is the output?<br><pre>&lt;?php
+class Car {
+  function Car() { $this->model = 'VW'; }
+}
+$herbie = new Car();
+echo $herbie->model;
+?&gt;</pre></div></div>
+<div class="final-q"><div class="qn">Q23 · CSS · Medium · Output</div><div class="qt">What is visible on the page?<br><pre>#hide { display: none; }
+&lt;p id="hide"&gt;Hidden&lt;/p&gt;
+&lt;p&gt;Visible&lt;/p&gt;</pre></div></div>
+<div class="final-q"><div class="qn">Q24 · PHP · Easy · Output</div><div class="qt">What is the output of: <code>echo str_word_count("Hello beautiful world!");</code></div></div>
+<div class="final-q"><div class="qn">Q25 · JavaScript · Medium · Output</div><div class="qt">What is the output?<br><pre>let arr = [1, 2, 3, 4];
+arr.pop();
+arr.push(10);
+console.log(arr);</pre></div></div>
+
+<div class="section-divider">Part D — Matching (3 questions)</div>
+<div class="final-q"><div class="qn">Q26 · HTML · Easy · Matching</div><div class="qt">Match each HTML element to its description:<br>A. &lt;select&gt; &nbsp;&nbsp; B. &lt;textarea&gt; &nbsp;&nbsp; C. &lt;input type="radio"&gt; &nbsp;&nbsp; D. &lt;input type="checkbox"&gt;<br><br>1. Multiple selection allowed &nbsp;&nbsp; 2. Only one selection allowed &nbsp;&nbsp; 3. Dropdown list &nbsp;&nbsp; 4. Multi-line text input</div></div>
+<div class="final-q"><div class="qn">Q27 · PHP · Medium · Matching</div><div class="qt">Match each PHP superglobal to its use:<br>A. $_SESSION &nbsp;&nbsp; B. $_COOKIE &nbsp;&nbsp; C. $_POST &nbsp;&nbsp; D. $_FILES<br><br>1. Cookie data &nbsp;&nbsp; 2. Form body data &nbsp;&nbsp; 3. Server-side session data &nbsp;&nbsp; 4. Uploaded file info</div></div>
+<div class="final-q"><div class="qn">Q28 · PHP File I/O · Medium · Matching</div><div class="qt">Match each reading function to its best use case:<br>A. readfile() &nbsp;&nbsp; B. file_get_contents() &nbsp;&nbsp; C. fgets() &nbsp;&nbsp; D. fread()<br><br>1. Line-by-line CSV parsing &nbsp;&nbsp; 2. Download file directly to browser &nbsp;&nbsp; 3. Read binary/image file in chunks &nbsp;&nbsp; 4. Read entire file as string for manipulation</div></div>
+
+<div class="section-divider">Part E — Code Writing (2 questions)</div>
+<div class="final-q"><div class="qn">Q29 · PHP Cookies · Medium · Code</div><div class="qt">Write PHP code to: (1) set a cookie named "user" with value "Admin" that expires in 1 day, (2) check if the cookie exists and display a welcome message, (3) delete the cookie.</div></div>
+<div class="final-q"><div class="qn">Q30 · PHP File I/O · Medium · Code</div><div class="qt">Write PHP code to safely APPEND a log entry "User logged in\n" to a file named "app.log" using the simplest method available. Make it thread-safe.</div></div>
+
+<!-- ANSWER KEY 3 -->
+<div class="card tip gap2" style="margin-top:1.5rem">
+  <div class="card-title" style="color:var(--green)">✅ Model 3 Answer Key</div>
+  <div class="answer-key">
+    Q1: <span class="a">C</span> — Q2: <span class="a">D</span> — Q3: <span class="a">C</span> — Q4: <span class="a">C</span> — Q5: <span class="a">B</span> — Q6: <span class="a">C (y is undefined, x = empty string)</span><br>
+    Q7: <span class="a">C</span> — Q8: <span class="a">C</span> — Q9: <span class="a">C (unset)</span> — Q10: <span class="a">D (x)</span> — Q11: <span class="a">B (FILE_APPEND)</span> — Q12: <span class="a">C (type)</span><br>
+    Q13: <span class="a">TRUE</span> — Q14: <span class="a">TRUE</span> — Q15: <span class="a">FALSE (absolute → positioned ancestor; fixed → viewport)</span> — Q16: <span class="a">TRUE</span><br>
+    Q17: <span class="a">TRUE</span> — Q18: <span class="a">TRUE</span> — Q19: <span class="a">TRUE</span> — Q20: <span class="a">TRUE</span><br>
+    Q21: <span class="a">0 1 2 3 4</span> — Q22: <span class="a">VW</span> — Q23: <span class="a">Only "Visible" shows; "Hidden" is invisible (display:none)</span> — Q24: <span class="a">3</span> — Q25: <span class="a">[1, 2, 3, 10]</span><br>
+    Q26: <span class="a">A→3, B→4, C→2, D→1</span> — Q27: <span class="a">A→3, B→1, C→2, D→4</span> — Q28: <span class="a">A→2, B→4, C→1, D→3</span><br>
+    Q29: <span class="a">setcookie("user","Admin",time()+86400,"/"); if(isset($_COOKIE["user"])){echo "Welcome ".$_COOKIE["user"];} setcookie("user","",time()-60,"/");</span><br>
+    Q30: <span class="a">file_put_contents('app.log', "User logged in\n", FILE_APPEND | LOCK_EX);</span>
+  </div>
+</div>
+
+<!-- FINAL NIGHT CHEAT CARD -->
+<div class="card highlight" style="margin-top:2rem">
+  <div class="card-title" style="color:var(--red)">🔥 LAST-MINUTE MUST-KNOW — TOP 15 EXAM TRAPS</div>
+  <div class="trap">1. <strong>typeof null = "object"</strong> — JavaScript bug, kept for compatibility</div>
+  <div class="trap">2. <strong>PHP uses . (dot) for concat, NOT +</strong> — JavaScript uses +</div>
+  <div class="trap">3. <strong>GET = visible in URL | POST = hidden in body</strong> — POST is safer for passwords</div>
+  <div class="trap">4. <strong>disabled fields are NOT submitted</strong> | readonly fields ARE submitted</div>
+  <div class="trap">5. <strong>Cookies stored on CLIENT | Sessions stored on SERVER</strong></div>
+  <div class="trap">6. <strong>setcookie() must be before ANY HTML output</strong> (including &lt;html&gt;)</div>
+  <div class="trap">7. <strong>let = block scope | var = function scope</strong></div>
+  <div class="trap">8. <strong>Ternary evaluates left→right</strong> — >=70 matches before >=80 if score is 85!</div>
+  <div class="trap">9. <strong>5 + '5' + 1 = "551"</strong> — once string appears, + becomes concat</div>
+  <div class="trap">10. <strong>fopen('file','w') IMMEDIATELY erases the file</strong> — even before writing!</div>
+  <div class="trap">11. <strong>scandir() always returns . and ..</strong> — filter with array_diff</div>
+  <div class="trap">12. <strong>Inline style > ID > Class > Element</strong> — specificity order</div>
+  <div class="trap">13. <strong>align-items = cross axis | justify-content = main axis</strong> in flexbox</div>
+  <div class="trap">14. <strong>PHP function names are NOT case-sensitive</strong> | variables ARE</div>
+  <div class="trap">15. <strong>do...while always runs at least once</strong> — condition checked AFTER body</div>
+</div>
+</section>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = !html.hasAttribute('data-theme');
+  const icon = document.querySelector('.theme-toggle i');
+  
+  if (isDark) {
+    html.setAttribute('data-theme', 'light');
+    icon.classList.replace('fa-moon', 'fa-sun');
+    localStorage.setItem('theme', 'light');
+  } else {
+    html.removeAttribute('data-theme');
+    icon.classList.replace('fa-sun', 'fa-moon');
+    localStorage.setItem('theme', 'dark');
+  }
+}
+
+// Load saved theme
+(function() {
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+    document.querySelector('.theme-toggle i').classList.replace('fa-moon', 'fa-sun');
+  }
+})();
+
+function show(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('s-' + id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo(0, 0);
+}
+</script>
+</body>
+</html>
